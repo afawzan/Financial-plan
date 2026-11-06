@@ -140,7 +140,7 @@ svg text{fill:var(--muted);font-family:var(--font-body)}
 "use strict";
 document.documentElement.dir="rtl"; document.documentElement.lang="ar";
 var AR_M=["يناير","فبراير","مارس","أبريل","مايو","يونيو","يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"];
-var LS="finplan-state-v1", CID=Math.random().toString(36).slice(2,10);
+var LS="finplan-state-v2", CID=Math.random().toString(36).slice(2,10);
 function addM(k,n){var p=k.split("-").map(Number),y=p[0],m=p[1]-1+n;y+=Math.floor(m/12);m=((m%12)+12)%12;return y+"-"+String(m+1).padStart(2,"0")}
 function diffM(a,b){var x=a.split("-").map(Number),y=b.split("-").map(Number);return (y[0]-x[0])*12+(y[1]-x[1])}
 function mlabel(k){if(!k)return "—";var p=k.split("-").map(Number);return AR_M[p[1]-1]+" "+p[0]}
@@ -152,7 +152,7 @@ function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return
 function atOrBefore(list,m){var v=0,best="";(list||[]).forEach(function(e){if(e.from<=m&&e.from>=best){best=e.from;v=+e.amount||0}});return v}
 function sum(a,f){return a.reduce(function(t,x){return t+(+f(x)||0)},0)}
 
-var ENC={"salt": "ggp4NbTbRyOUCPfnD43ocQ==", "iv": "sEPCeYikWyhvz+dD", "iter": 310000, "ct": "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"};
+var ENC={"salt": "i4+l7Bfsr1aSBRYfclrOYA==", "iv": "W5l08/Hb2+fjal9z", "iter": 310000, "ct": "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"};
 var S=null, SIM=null;
 var ui={view:"home",month:null,debt:null,armed:null};
 try{var u=JSON.parse(localStorage.getItem("finplan-ui")||"{}");if(u.debt)ui.debt=u.debt}catch(e){}
@@ -162,7 +162,8 @@ function simulate(S){
   var N=+S.horizon||60, months=[], bal={}, bb={}, ev={}, sched={};
   S.debts.forEach(function(d){bal[d.id]=+d.balance||0;bb[d.id]=+d.balloon||0;sched[d.id]=[]});
   var F={car:+(S.funds.car0||0),ef:+(S.funds.ef0||0),box:+(S.funds.box0||0),dep:+(S.funds.dep0||0),fund:+(S.funds.fund0||0)};
-  var contrib=F.dep+F.fund, paid=S.paid||{}, G=S.goals, I=S.invest;
+  var contrib=F.dep+F.fund, paid=S.paid||{}, G=S.goals, I=S.invest, SK={};
+  (S.sinks||[]).forEach(function(k){SK[k.id]=+k.start0||0});
   var carDebt=S.debts.find(function(d){return (+d.balloon>0)&&d.balloonMonth});
   for(var i=0;i<N;i++){
     var m=addM(S.start,i);
@@ -177,6 +178,14 @@ function simulate(S){
       var k="bill:"+b.id,c=conf(k),p=+b.amount||0,a=c?+c.amount:p;
       lines.push({key:k,label:b.name,group:"bills",planned:p,amount:a,confirmed:!!c}); cash-=p;
     });
+    (S.sinks||[]).forEach(function(b){
+      if(b.from&&m<b.from)return; if(b.to&&m>b.to)return;
+      var k="sink:"+b.id,c=conf(k),p=+b.monthly||0,a=c?+c.amount:p; if(!(p>0)&&!c)return;
+      SK[b.id]=(SK[b.id]||0)+a;
+      lines.push({key:k,label:b.name,group:"sinks",planned:p,amount:a,confirmed:!!c,sink:b.id}); cash-=p;
+    });
+    var sko=(S.sinkOut||[]).filter(function(x){return x.m===m});
+    sko.forEach(function(x){SK[x.sink]=(SK[x.sink]||0)-(+x.amount||0)});
     var plan={};
     S.debts.forEach(function(d){
       if(d.start&&m<d.start)return; if(bal[d.id]<=0.5)return;
@@ -204,8 +213,8 @@ function simulate(S){
       fl.car=take(Math.ceil(need/left/50)*50);
     }
     if(snowDone){
-      fl.box=take(Math.min(+G.boxMonthly||0,Math.max(0,(+G.boxTarget||0)-F.box)));
       fl.ef=take(Math.max(0,(+G.efTarget||0)-F.ef));
+      fl.box=take(Math.min(+G.boxMonthly||0,Math.max(0,(+G.boxTarget||0)-F.box)));
     }
     if(cash>0&&+I.prepayPct>0&&I.prepayId){
       var pd=S.debts.find(function(d){return d.id===I.prepayId});
@@ -243,7 +252,7 @@ function simulate(S){
     if(!ev.invStart&&(fl.dep+fl.fund)>0)ev.invStart=m;
     var totalDebt=0;Object.keys(bal).forEach(function(id){totalDebt+=bal[id]+bb[id]});
     var spends=(S.spend||[]).filter(function(x){return x.m===m});
-    months.push({m:m,inc:inc,wind:wind,living:living,lines:lines,surplus0:surplus0,bal:Object.assign({},bal),bb:Object.assign({},bb),F:Object.assign({},F),contrib:contrib,totalDebt:totalDebt,spent:sum(spends,function(x){return x.amount}),spends:spends,buys:buys,efo:efo,deficit:surplus0<-0.5});
+    months.push({m:m,inc:inc,wind:wind,living:living,lines:lines,surplus0:surplus0,bal:Object.assign({},bal),bb:Object.assign({},bb),F:Object.assign({},F),SK:Object.assign({},SK),sko:sko,contrib:contrib,totalDebt:totalDebt,spent:sum(spends,function(x){return x.amount}),spends:spends,buys:buys,efo:efo,deficit:surplus0<-0.5});
     if(totalDebt<=0.5&&!ev.debtFree)ev.debtFree=m;
   }
   var startDebt=0;S.debts.forEach(function(d){startDebt+=(+d.balance||0)+(+d.balloon||0)});
@@ -261,15 +270,13 @@ function flush(){timer=null;if(!docRef)return;if(writing){dirty=true;return}writ
   .then(function(){writing=false;if(dirty){dirty=false;flush()}})}
 function adopt(st){S=normalize(st);if(!ui.month){var t=todayKey();ui.month=(t<S.start)?S.start:t;var last=addM(S.start,(+S.horizon||60)-1);if(ui.month>last)ui.month=last}loaded=true;render()}
 function normalize(s){s.debts=s.debts||[];s.bills=s.bills||[];s.incomes=s.incomes||[];s.living=s.living||[];s.paid=s.paid||{};s.funds=s.funds||{};s.goals=s.goals||{};s.invest=s.invest||{split:50,rateDep:4.5,rateFund:7,prepayPct:0};
-  ["windfalls","boxBuys","efOut","spend"].forEach(function(k){s[k]=s[k]||[]});s.horizon=s.horizon||60;return s}
+  ["windfalls","boxBuys","efOut","spend","sinks","sinkOut"].forEach(function(k){s[k]=s[k]||[]});s.horizon=s.horizon||60;return s}
 function blankState(){var t=todayKey();return {start:t,horizon:60,incomes:[{from:t,amount:0}],living:[{from:t,amount:3500}],bills:[],debts:[],funds:{},goals:{efTarget:10000,boxTarget:5000,boxMonthly:500},invest:{split:50,rateDep:4.5,rateFund:7,prepayPct:0},paid:{},windfalls:[],boxBuys:[],efOut:[],spend:[]}}
 function localFallback(){try{var raw=localStorage.getItem(LS);if(raw){adopt(JSON.parse(raw));setStatus("محفوظ على هذا الجوال");return}}catch(e){}if(ENC){loaded=true;setStatus("مقفل");showLock();return}loaded=true;setStatus("محفوظ على هذا الجوال");render()}
-
 function b64(x){return Uint8Array.from(atob(x),function(c){return c.charCodeAt(0)})}
 function showLock(){document.getElementById("view").innerHTML='<div class="card empty"><h2>خطتك مقفلة</h2><p class="note">اكتب الرمز السري لفتح أرقامك. بعد أول فتح تتحفظ على هذا الجوال.</p><form class="row" data-form="unlock" style="justify-content:center;margin-top:12px"><input type="password" inputmode="numeric" id="pin" autocomplete="current-password" style="width:160px;text-align:center" aria-label="الرمز السري"><button class="primary">فتح</button></form><p class="note" id="pinMsg"></p></div>'}
 function unlock(pin){var enc=new TextEncoder();return crypto.subtle.importKey("raw",enc.encode(pin),"PBKDF2",false,["deriveKey"]).then(function(k){return crypto.subtle.deriveKey({name:"PBKDF2",salt:b64(ENC.salt),iterations:ENC.iter,hash:"SHA-256"},k,{name:"AES-GCM",length:256},false,["decrypt"])}).then(function(key){return crypto.subtle.decrypt({name:"AES-GCM",iv:b64(ENC.iv)},key,b64(ENC.ct))}).then(function(buf){return JSON.parse(new TextDecoder().decode(buf))})}
 document.addEventListener("submit",function(e){if(e.target.dataset.form!=="unlock")return;e.preventDefault();var m=document.getElementById("pinMsg");m.textContent="جارٍ الفتح…";unlock(document.getElementById("pin").value).then(function(st){adopt(st);try{localStorage.setItem(LS,JSON.stringify(S))}catch(x){}setStatus("محفوظ على هذا الجوال")},function(){m.textContent="الرمز غير صحيح."})});
-
 function boot(){
   var useP=(window.claude&&window.claude.use)?window.claude.use("db"):Promise.resolve(null);
   Promise.resolve(useP).then(function(d){
@@ -312,15 +319,15 @@ function vHome(){
   if(F.box<0)warns.push("صرفت من صندوق المشتريات أكثر من رصيده.");
   if(carD&&carD.balloonMonth){var bi=mi(carD.balloonMonth);if(bi>0){var pre=SIM.months[bi-1];if(pre&&pre.F.car<carT-1&&ui.month<carD.balloonMonth)warns.push("ادخار السيارة متوقع يوصل "+fmtT(pre.F.car)+" فقط قبل الدفعة الأخيرة.")}}
   h+=warns.map(function(w){return '<div class="warnbox">'+w+'</div>'}).join("");
-  h+='<div class="grid2"><div class="stack">'+vMonthCard(M)+'</div><div class="stack">'+vSpendCard(M)+vChartCard()+vMiles()+'</div></div>';
+  h+='<div class="grid2"><div class="stack">'+vMonthCard(M)+vSinksCard(M)+'</div><div class="stack">'+vSpendCard(M)+vChartCard()+vMiles()+'</div></div>';
   return h;
 }
 function vMonthCard(M){
-  var groups={bills:"فواتير واشتراكات",debts:"الأقساط",extra:"سداد إضافي",funds:"ادخار واستثمار"};
+  var groups={bills:"فواتير واشتراكات",sinks:"صناديق دورية",debts:"الأقساط",extra:"سداد إضافي",funds:"ادخار واستثمار"};
   var nConf=M.lines.filter(function(l){return l.confirmed}).length;
   var h='<div class="card"><div class="row" style="justify-content:space-between"><h2>مدفوعات '+mlabel(M.m)+'</h2><span class="pill '+(nConf===M.lines.length&&M.lines.length?"ok":"")+'">'+nConf+' من '+M.lines.length+' مؤكد</span></div>'+
     '<p class="sub">الدخل '+fmtT(M.inc)+(M.wind?" + دخل إضافي "+fmtT(M.wind):"")+' · المعيشة '+fmtT(M.living)+' · الفائض للأهداف '+fmtT(Math.max(0,M.surplus0))+'. اكتب المبلغ اللي دفعته فعلاً واضغط تأكيد، والخطة تتحدث.</p><div class="lines">';
-  ["bills","debts","extra","funds"].forEach(function(g){
+  ["bills","sinks","debts","extra","funds"].forEach(function(g){
     var ls=M.lines.filter(function(l){return l.group===g}); if(!ls.length)return;
     h+='<div class="grp">'+groups[g]+'</div>';
     ls.forEach(function(l){
@@ -336,6 +343,14 @@ function vMonthCard(M){
   h+='</div>'+(nConf<M.lines.length?'<div class="row" style="margin-top:12px"><button data-confall="1">تأكيد كل البنود بالمبلغ المخطط</button></div>':"")+'</div>';
   return h;
 }
+function vSinksCard(M){
+  var sk=S.sinks||[]; if(!sk.length)return "";
+  var h='<div class="card"><h2>الصناديق الدورية</h2><p class="sub">تتعبى كل شهر، وتصرف منها وقت ما يجي المصروف (صيانة، جيم، مكملات) بدون ما تلمس مصروفك أو الطوارئ.</p><div class="lines">';
+  sk.forEach(function(b){var v=M.SK[b.id]||0;h+='<div class="line"><div class="nm"><b>'+esc(b.name)+'</b><small>'+fmtT(b.monthly)+' بالشهر</small></div><span class="num" style="'+(v<0?"color:var(--bad)":"")+'">'+fmtT(v)+'</span><span></span></div>'});
+  h+='</div><form class="row" data-form="sinkout" style="margin-top:10px"><select id="soSink">'+sk.map(function(b){return '<option value="'+b.id+'">'+esc(b.name)+'</option>'}).join("")+'</select><input type="number" inputmode="decimal" id="soAmt" placeholder="المبلغ" style="width:100px" required><input id="soNote" placeholder="ملاحظة" style="flex:1;min-width:100px"><button>صرف منه</button></form>';
+  if(M.sko.length)h+='<div class="lines" style="margin-top:8px">'+M.sko.map(function(x){var b=sk.find(function(y){return y.id===x.sink});return '<div class="line"><div class="nm">'+esc((b?b.name:"")+(x.note?" · "+x.note:""))+'</div><span class="num">'+fmtT(x.amount)+'</span>'+delBtn("sinkOut",x.id)+'</div>'}).join("")+'</div>';
+  return h+'</div>';
+}
 function vSpendCard(M){
   var h='<div class="card"><h2>مصروفي هذا الشهر</h2><p class="sub">سجّل أي صرفة بمبلغها فقط، بدون تصنيف. المتبقي '+fmtT(M.living-M.spent)+' من '+fmtT(M.living)+'.</p>'+
    '<div class="bar" style="margin-bottom:12px"><i style="width:'+(M.living?Math.min(100,M.spent/M.living*100):0)+'%;'+(M.spent>M.living*0.8?"background:var(--warn)":"")+'"></i></div>'+
@@ -349,7 +364,7 @@ function vSpendCard(M){
 function delBtn(list,id){var a=ui.armed===list+":"+id;return '<button class="small ghost danger" data-del="'+list+'" data-id="'+esc(id)+'">'+(a?"متأكد؟":"حذف")+'</button>'}
 function vChartCard(){
   var ms=SIM.months,W=640,H=230,pl=48,pr=12,pt=14,pb=28;
-  var sav=ms.map(function(x){return x.F.ef+x.F.box+x.F.car+x.F.dep+x.F.fund});
+  var sav=ms.map(function(x){var t=x.F.ef+x.F.box+x.F.car+x.F.dep+x.F.fund;Object.keys(x.SK).forEach(function(k){t+=Math.max(0,x.SK[k])});return t});
   var max=Math.max.apply(null,ms.map(function(x){return x.totalDebt}).concat(sav,[1]));
   var step=Math.pow(10,Math.floor(Math.log10(max)));var nice=Math.ceil(max/step)*step;if(nice/step<=2)step/=2;
   var X=function(i){return pl+(W-pl-pr)*i/Math.max(1,ms.length-1)},Y=function(v){return pt+(H-pt-pb)*(1-v/nice)};
@@ -379,7 +394,7 @@ function vMiles(){
    '</div><p class="note" style="margin-top:8px">'+smalls.length+' ديون صغيرة تُسدد بطريقة كرة الثلج: الأصغر أولاً، وقسط كل دين ينقفل ينضم للي بعده.</p></div>';
 }
 function vPlan(){
-  var h='<div class="card"><h2>الخطة الخمسية شهر بشهر</h2><p class="sub">كل الأرقام بالريال. الأشهر المؤكدة تعتمد مبالغك الفعلية، والقادمة محسوبة من الأرصدة الحالية. اضغط أي شهر لفتحه.</p></div><div class="tblwrap"><table><thead><tr><th>الشهر</th><th>الدخل</th><th>فواتير وأقساط</th><th>المعيشة</th><th>سداد إضافي</th><th>ادخار السيارة</th><th>المشتريات</th><th>الطوارئ</th><th>استثمار</th><th>الديون المتبقية</th><th>المدخرات</th><th>الحالة</th></tr></thead><tbody>';
+  var h='<div class="card"><h2>الخطة الخمسية شهر بشهر</h2><p class="sub">كل الأرقام بالريال. الأشهر المؤكدة تعتمد مبالغك الفعلية، والقادمة محسوبة من الأرصدة الحالية. اضغط أي شهر لفتحه.</p></div><div class="tblwrap"><table><thead><tr><th>الشهر</th><th>الدخل</th><th>فواتير وأقساط</th><th>المعيشة</th><th>صناديق دورية</th><th>سداد إضافي</th><th>ادخار السيارة</th><th>المشتريات</th><th>الطوارئ</th><th>استثمار</th><th>الديون المتبقية</th><th>المدخرات</th><th>الحالة</th></tr></thead><tbody>';
   SIM.months.forEach(function(x){
     var s=function(f){return sum(x.lines.filter(f),function(l){return l.amount})};
     var fixed=s(function(l){return l.group==="bills"})+sum(x.lines.filter(function(l){return l.group==="debts"}),function(l){return l.reg!=null?(l.confirmed?Math.min(l.amount,l.reg):l.reg):l.amount});
@@ -388,7 +403,7 @@ function vPlan(){
     var nC=x.lines.filter(function(l){return l.confirmed}).length;
     var st=nC===0?'<span class="pill">مخطط</span>':nC===x.lines.length?'<span class="pill ok">مؤكد</span>':'<span class="pill warn">'+nC+'/'+x.lines.length+'</span>';
     var savT=x.F.ef+x.F.box+x.F.car+x.F.dep+x.F.fund;
-    h+='<tr class="'+(x.m===ui.month?"cur ":"")+(x.m.slice(5)==="01"?"yr":"")+'" data-goto="'+x.m+'" style="cursor:pointer"><td><b>'+mlabel(x.m)+'</b></td><td>'+fmt(x.inc+x.wind)+'</td><td>'+fmt(fixed)+'</td><td>'+fmt(x.living)+'</td><td>'+(extra?fmt(extra):"—")+'</td><td>'+(fd("car")?fmt(fd("car")):"—")+'</td><td>'+(fd("box")?fmt(fd("box")):"—")+'</td><td>'+(fd("ef")?fmt(fd("ef")):"—")+'</td><td>'+((fd("dep")+fd("fund"))?fmt(fd("dep")+fd("fund")):"—")+'</td><td class="neg">'+fmt(x.totalDebt)+'</td><td>'+fmt(savT)+'</td><td>'+st+'</td></tr>';
+    h+='<tr class="'+(x.m===ui.month?"cur ":"")+(x.m.slice(5)==="01"?"yr":"")+'" data-goto="'+x.m+'" style="cursor:pointer"><td><b>'+mlabel(x.m)+'</b></td><td>'+fmt(x.inc+x.wind)+'</td><td>'+fmt(fixed)+'</td><td>'+fmt(x.living)+'</td><td>'+(s(function(l){return l.group==="sinks"})?fmt(s(function(l){return l.group==="sinks"})):"—")+'</td><td>'+(extra?fmt(extra):"—")+'</td><td>'+(fd("car")?fmt(fd("car")):"—")+'</td><td>'+(fd("box")?fmt(fd("box")):"—")+'</td><td>'+(fd("ef")?fmt(fd("ef")):"—")+'</td><td>'+((fd("dep")+fd("fund"))?fmt(fd("dep")+fd("fund")):"—")+'</td><td class="neg">'+fmt(x.totalDebt)+'</td><td>'+fmt(savT)+'</td><td>'+st+'</td></tr>';
   });
   return h+'</tbody></table></div>';
 }
@@ -446,6 +461,7 @@ function vEdit(){
   h+='<div class="card"><h2>الدخل</h2><p class="sub">كل سطر يبدأ من شهره ويستمر لين يجي سطر بعده.</p>'+listRows("incomes",[["from","من","month"],["amount","المبلغ","num",'style="width:110px"']])+'<button data-add="incomes">إضافة تغيير في الراتب</button></div>';
   h+='<div class="card"><h2>المعيشة (أكل، بنزين، ترفيه، شخصي)</h2><p class="sub">مبلغ واحد بدون تفاصيل. الحد الأدنى المتفق عليه 3,500 من يناير 2027.</p>'+listRows("living",[["from","من","month"],["amount","المبلغ","num",'style="width:110px" min="0"']])+'<button data-add="living">إضافة تغيير</button></div>';
   h+='<div class="card"><h2>الفواتير والاشتراكات</h2>'+(S.bills.map(function(b,i){return '<div class="row" style="margin-bottom:6px">'+inp("bills."+i+".name",b.name,"text",'style="flex:1;min-width:120px"')+inp("bills."+i+".amount",b.amount,"num",'style="width:90px"')+'<label class="note">من '+inp("bills."+i+".from",b.from,"month")+'</label><label class="note">إلى '+inp("bills."+i+".to",b.to,"month")+'</label>'+delBtn("bills",b.id)+'</div>'}).join(""))+'<button data-add="bills">إضافة فاتورة أو اشتراك</button></div>';
+  h+='<div class="card"><h2>الصناديق الدورية</h2><p class="sub">للمصاريف اللي تجي كل كم شهر بمبالغ مختلفة. تحط مبلغ ثابت كل شهر وتصرف منه وقتها.</p>'+((S.sinks||[]).map(function(b,i){return '<div class="row" style="margin-bottom:6px">'+inp("sinks."+i+".name",b.name,"text",'style="flex:1;min-width:120px"')+'<label class="note">شهرياً '+inp("sinks."+i+".monthly",b.monthly,"num",'style="width:80px"')+'</label><label class="note">من '+inp("sinks."+i+".from",b.from,"month")+'</label><label class="note">رصيد حالي '+inp("sinks."+i+".start0",b.start0,"num",'style="width:80px"')+'</label>'+delBtn("sinks",b.id)+'</div>'}).join(""))+'<button data-add="sinks">إضافة صندوق دوري</button></div>';
   h+='<div class="card"><h2>الأهداف</h2><div class="fields">'+
     '<label>هدف صندوق الطوارئ'+inp("goals.efTarget",S.goals.efTarget,"num")+'</label>'+
     '<label>هدف صندوق المشتريات'+inp("goals.boxTarget",S.goals.boxTarget,"num")+'</label>'+
@@ -453,7 +469,7 @@ function vEdit(){
     '<label>بدء ادخار السيارة مبكراً (اختياري)'+inp("goals.carStart",S.goals.carStart,"month")+'</label>'+
     '<label>بداية الخطة'+inp("start",S.start,"month")+'</label>'+
     '<label>مدة الخطة (شهر)'+inp("horizon",S.horizon,"num")+'</label>'+
-  '</div><p class="note" style="margin-top:8px">الترتيب: الالتزامات ثم المعيشة ثم الديون الصغيرة ثم ادخار السيارة ثم المشتريات ثم الطوارئ ثم الاستثمار. ادخار السيارة يتحسب تلقائياً عشان يكتمل قبل الدفعة الأخيرة.</p></div>';
+  '</div><p class="note" style="margin-top:8px">الترتيب: الالتزامات والصناديق الدورية ثم المعيشة ثم الديون الصغيرة ثم ادخار السيارة ثم الطوارئ ثم المشتريات ثم الاستثمار. ادخار السيارة يتحسب تلقائياً عشان يكتمل قبل الدفعة الأخيرة.</p></div>';
   h+='<div class="card"><h2>دخل إضافي (مكافأة، عيدية)</h2><p class="sub">ينضاف لفائض شهره ويروح للهدف الحالي.</p>'+listRows("windfalls",[["m","الشهر","month"],["amount","المبلغ","num",'style="width:100px"'],["note","","text",'placeholder="ملاحظة"']])+'<button data-add="windfalls">إضافة دخل إضافي</button></div>';
   h+='<div class="card"><h2>سحب من الطوارئ</h2><p class="sub">الخطة ترجّع تعبئته تلقائياً من الأشهر اللي بعده.</p>'+listRows("efOut",[["m","الشهر","month"],["amount","المبلغ","num",'style="width:100px"'],["note","","text",'placeholder="السبب"']])+'<button data-add="efOut">تسجيل سحب</button></div>';
   h+='</div><div class="stack"><div class="card"><div class="row" style="justify-content:space-between"><h2>الديون والمبالغ المطلوبة</h2><button class="primary" data-add="debts">إضافة دين أو مبلغ</button></div><p class="sub">المبلغ لمرة واحدة (مثل مخالفة) قسطه صفر. "يُسدد مبكراً" يعني يدخل في كرة الثلج، والأولوية الأقل رقماً تنسدد أول، وعند التساوي الأصغر رصيداً أول.</p><div class="stack">';
@@ -501,6 +517,7 @@ document.addEventListener("change",function(e){
 document.addEventListener("submit",function(e){
   e.preventDefault(); if(!S)return; var f=e.target.dataset.form;
   if(f==="spend"){var a=+document.getElementById("spAmt").value;if(!(a>0))return;var d=new Date();S.spend.push({id:uid(),m:ui.month,amount:a,note:document.getElementById("spNote").value.trim(),d:d.getDate()+"/"+(d.getMonth()+1)});commit()}
+  if(f==="sinkout"){var sa=+document.getElementById("soAmt").value;if(!(sa>0))return;S.sinkOut.push({id:uid(),m:ui.month,sink:document.getElementById("soSink").value,amount:sa,note:document.getElementById("soNote").value.trim()});commit()}
   if(f==="buy"){var b=+document.getElementById("byAmt").value;if(!(b>0))return;S.boxBuys.push({id:uid(),m:ui.month,amount:b,note:document.getElementById("byNote").value.trim()});commit()}
 });
 document.addEventListener("click",function(e){
@@ -516,6 +533,7 @@ document.addEventListener("click",function(e){
   if(ds.debt){ui.debt=ds.debt;try{localStorage.setItem("finplan-ui",JSON.stringify({debt:ui.debt}))}catch(x){}render();return}
   if(ds.add){var k=ds.add,m=ui.month||todayKey();
     if(k==="incomes"||k==="living")S[k].push({id:uid(),from:m,amount:k==="living"?3500:0});
+    if(k==="sinks")S.sinks.push({id:uid(),name:"صندوق جديد",monthly:0,from:m});
     if(k==="bills")S.bills.push({id:uid(),name:"اشتراك جديد",amount:0,from:m});
     if(k==="windfalls"||k==="efOut")S[k].push({id:uid(),m:m,amount:0,note:""});
     if(k==="debts")S.debts.push({id:uid(),name:"دين جديد",balance:0,monthly:0,start:m,prio:5,extra:true});
