@@ -1,0 +1,549 @@
+<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#0b6a56"><meta name="apple-mobile-web-app-capable" content="yes"><style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style><title>خطتي المالية الخمسية</title>
+<link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="icon-512.png"><meta name="apple-mobile-web-app-title" content="خطتي المالية">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Readex+Pro:wght@500;600;700&display=swap">
+<style>
+/* Layout: a ledger app shell. Sticky header with the month switcher, a tab bar, then cards: one column on phones, two on desktop. */
+:root{
+  --bg:#eef3f1; --surface:#ffffff; --surface2:#e3ebe8; --ink:#13201c; --muted:#56675f; --line:#d3ddd9;
+  --accent:#0b6a56; --accent-ink:#ffffff; --accent-soft:#d3ebe3;
+  --debt:#b0502a; --debt-soft:#f6e1d7; --good:#1d7a3e; --warn:#9a6400; --warn-soft:#f7ead0; --bad:#b3261e;
+  --font-body:"IBM Plex Sans Arabic","Segoe UI",Tahoma,sans-serif;
+  --font-display:"Readex Pro","IBM Plex Sans Arabic",Tahoma,sans-serif;
+  --r:10px;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#0c1311; --surface:#131c19; --surface2:#1a2522; --ink:#e4ede9; --muted:#93a69e; --line:#283631;
+  --accent:#4cbf9d; --accent-ink:#04211a; --accent-soft:#163a30;
+  --debt:#e88b60; --debt-soft:#3a2219; --good:#5cc985; --warn:#e2aa3d; --warn-soft:#3a2d12; --bad:#f07167; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --bg:#0c1311; --surface:#131c19; --surface2:#1a2522; --ink:#e4ede9; --muted:#93a69e; --line:#283631;
+  --accent:#4cbf9d; --accent-ink:#04211a; --accent-soft:#163a30;
+  --debt:#e88b60; --debt-soft:#3a2219; --good:#5cc985; --warn:#e2aa3d; --warn-soft:#3a2d12; --bad:#f07167; color-scheme:dark }
+body{background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:15px;line-height:1.6}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--surface)}
+*{box-sizing:border-box}
+.num{font-variant-numeric:tabular-nums;direction:ltr;unicode-bidi:isolate}
+.wrap{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--surface);border-bottom:1px solid var(--line)}
+header.top .wrap{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;padding-block:10px}
+h1{font-family:var(--font-display);font-size:20px;margin:0;font-weight:700;letter-spacing:0}
+h2{font-family:var(--font-display);font-size:17px;margin:0 0 4px;font-weight:600;text-wrap:balance}
+h3{font-size:15px;margin:0;font-weight:600}
+.monthsw{display:flex;align-items:center;gap:6px;margin-inline-start:auto}
+.monthsw .lbl{min-width:120px;text-align:center;font-weight:600}
+button,.btn{font:inherit;border:1px solid var(--line);background:var(--surface2);color:var(--ink);border-radius:8px;padding:6px 12px;cursor:pointer;line-height:1.4}
+button:hover{border-color:var(--accent)}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+button.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+button.ghost{background:transparent}
+button.small{padding:3px 9px;font-size:13px}
+button.danger{color:var(--bad)}
+.status{font-size:12px;color:var(--muted);padding:2px 8px;border-radius:99px;background:var(--surface2)}
+.status.err{color:var(--bad)}
+nav.tabs{display:flex;gap:4px;overflow-x:auto;padding-block:8px;scrollbar-width:none}
+nav.tabs a{white-space:nowrap;text-decoration:none;color:var(--muted);padding:6px 12px;border-radius:8px;font-weight:500}
+nav.tabs a.on{background:var(--accent-soft);color:var(--ink);font-weight:600}
+main{padding-block:16px 48px;display:grid;gap:16px}
+.grid2{display:grid;gap:16px;grid-template-columns:1fr}
+@media(min-width:900px){.grid2{grid-template-columns:1.25fr 1fr}}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;min-width:0}
+.card .sub{color:var(--muted);font-size:13px;margin:0 0 12px}
+.kpis{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(165px,1fr))}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.kpi .k{font-size:12.5px;color:var(--muted)}
+.kpi .v{font-family:var(--font-display);font-size:22px;font-weight:600}
+.kpi .s{font-size:12px;color:var(--muted)}
+.kpi.debt .v{color:var(--debt)}
+.kpi.main{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.kpi.main .k,.kpi.main .s{color:var(--accent-ink);opacity:.85}
+.bar{height:6px;background:var(--surface2);border-radius:99px;overflow:hidden;margin-top:6px}
+.bar i{display:block;height:100%;background:var(--accent);border-radius:99px}
+.kpi.main .bar{background:rgba(255,255,255,.25)}
+.kpi.main .bar i{background:var(--accent-ink)}
+.pill{display:inline-block;font-size:12px;padding:1px 8px;border-radius:99px;background:var(--surface2);color:var(--muted);white-space:nowrap}
+.pill.ok{background:var(--accent-soft);color:var(--good)}
+.pill.warn{background:var(--warn-soft);color:var(--warn)}
+.pill.debt{background:var(--debt-soft);color:var(--debt)}
+.lines{display:flex;flex-direction:column}
+.line{display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)}
+.line:last-child{border-bottom:0}
+.line .nm{min-width:0}
+.line .nm small{display:block;color:var(--muted);font-size:12px}
+.line input{width:96px}
+.line.done .nm b{color:var(--good)}
+.grp{font-size:12px;color:var(--muted);letter-spacing:.3px;margin-top:10px;padding-bottom:2px;border-bottom:1px solid var(--line);font-weight:600}
+input,select{font:inherit;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:7px;padding:5px 8px;min-width:0}
+input[type=number]{direction:ltr;text-align:left}
+input[type=checkbox]{width:18px;height:18px;accent-color:var(--accent)}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.row > *{min-width:0}
+.tblwrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th,td{padding:7px 10px;text-align:right;white-space:nowrap;border-bottom:1px solid var(--line)}
+th{background:var(--surface2);font-weight:600;font-size:12.5px;color:var(--muted);position:sticky;top:0}
+tr.cur td{background:var(--accent-soft)}
+tr.yr td{border-top:2px solid var(--line)}
+td.neg{color:var(--debt)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.chips button.on{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.miles{display:grid;gap:8px}
+.mile{display:flex;justify-content:space-between;gap:12px;border-bottom:1px dashed var(--line);padding-bottom:6px}
+.mile:last-child{border-bottom:0}
+.fields{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+.fields label{display:flex;flex-direction:column;gap:3px;font-size:12.5px;color:var(--muted)}
+.fields label.chk{flex-direction:row;align-items:center;gap:8px;color:var(--ink)}
+.debtcard{border:1px solid var(--line);border-radius:var(--r);padding:12px;display:grid;gap:10px}
+.stack{display:grid;gap:12px}
+.note{font-size:13px;color:var(--muted)}
+.warnbox{background:var(--warn-soft);color:var(--warn);border-radius:8px;padding:8px 12px;font-size:13.5px}
+.empty{text-align:center;padding:48px 16px}
+.legend{display:flex;gap:16px;font-size:12.5px;color:var(--muted);flex-wrap:wrap}
+.legend i{display:inline-block;width:12px;height:3px;border-radius:2px;vertical-align:middle;margin-inline-end:5px}
+svg text{fill:var(--muted);font-family:var(--font-body)}
+.opts{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.opt{border:1px solid var(--line);border-radius:var(--r);padding:12px}
+.opt h3{margin-bottom:4px}
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+</style>
+
+</head><body><div dir="rtl" id="app">
+  <header class="top">
+    <div class="wrap">
+      <h1>خطتي المالية</h1>
+      <span class="status" id="status">جارٍ التحميل…</span>
+      <div class="monthsw">
+        <button class="small" id="mPrev" aria-label="الشهر السابق">›</button>
+        <span class="lbl" id="mLbl">—</span>
+        <button class="small" id="mNext" aria-label="الشهر التالي">‹</button>
+        <button class="small ghost" id="mNow">اليوم</button>
+      </div>
+    </div>
+    <div class="wrap">
+      <nav class="tabs" id="tabs">
+        <a href="#home" data-v="home">الرئيسية</a>
+        <a href="#plan" data-v="plan">الخطة الخمسية</a>
+        <a href="#schedules" data-v="schedules">جداول السداد</a>
+        <a href="#invest" data-v="invest">الاستثمار</a>
+        <a href="#edit" data-v="edit">التعديل والإضافة</a>
+      </nav>
+    </div>
+  </header>
+  <main class="wrap" id="view">
+    <div class="card empty"><h2>جارٍ تحميل خطتك</h2><p class="note">تظهر هنا ديونك وأقساطك والمتوفر للمصاريف بمجرد وصول البيانات.</p></div>
+  </main>
+</div>
+
+<script>
+(function(){
+"use strict";
+document.documentElement.dir="rtl"; document.documentElement.lang="ar";
+var AR_M=["يناير","فبراير","مارس","أبريل","مايو","يونيو","يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"];
+var LS="finplan-state-v1", CID=Math.random().toString(36).slice(2,10);
+function addM(k,n){var p=k.split("-").map(Number),y=p[0],m=p[1]-1+n;y+=Math.floor(m/12);m=((m%12)+12)%12;return y+"-"+String(m+1).padStart(2,"0")}
+function diffM(a,b){var x=a.split("-").map(Number),y=b.split("-").map(Number);return (y[0]-x[0])*12+(y[1]-x[1])}
+function mlabel(k){if(!k)return "—";var p=k.split("-").map(Number);return AR_M[p[1]-1]+" "+p[0]}
+function fmt(n){n=Math.round(+n||0);return '<span class="num">'+n.toLocaleString("en-US")+'</span>'}
+function fmtT(n){return Math.round(+n||0).toLocaleString("en-US")}
+function uid(){return Math.random().toString(36).slice(2,9)}
+function todayKey(){var d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")}
+function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function atOrBefore(list,m){var v=0,best="";(list||[]).forEach(function(e){if(e.from<=m&&e.from>=best){best=e.from;v=+e.amount||0}});return v}
+function sum(a,f){return a.reduce(function(t,x){return t+(+f(x)||0)},0)}
+
+var ENC={"salt": "ggp4NbTbRyOUCPfnD43ocQ==", "iv": "sEPCeYikWyhvz+dD", "iter": 310000, "ct": "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"};
+var S=null, SIM=null;
+var ui={view:"home",month:null,debt:null,armed:null};
+try{var u=JSON.parse(localStorage.getItem("finplan-ui")||"{}");if(u.debt)ui.debt=u.debt}catch(e){}
+
+/* ---------------- engine ---------------- */
+function simulate(S){
+  var N=+S.horizon||60, months=[], bal={}, bb={}, ev={}, sched={};
+  S.debts.forEach(function(d){bal[d.id]=+d.balance||0;bb[d.id]=+d.balloon||0;sched[d.id]=[]});
+  var F={car:+(S.funds.car0||0),ef:+(S.funds.ef0||0),box:+(S.funds.box0||0),dep:+(S.funds.dep0||0),fund:+(S.funds.fund0||0)};
+  var contrib=F.dep+F.fund, paid=S.paid||{}, G=S.goals, I=S.invest;
+  var carDebt=S.debts.find(function(d){return (+d.balloon>0)&&d.balloonMonth});
+  for(var i=0;i<N;i++){
+    var m=addM(S.start,i);
+    var inc=atOrBefore(S.incomes,m);
+    var wind=sum((S.windfalls||[]).filter(function(w){return w.m===m}),function(w){return w.amount});
+    var living=atOrBefore(S.living,m);
+    var lines=[];
+    var conf=function(k){return paid[m+"|"+k]};
+    var cash=inc+wind-living;
+    (S.bills||[]).forEach(function(b){
+      if(b.from&&m<b.from)return; if(b.to&&m>b.to)return;
+      var k="bill:"+b.id,c=conf(k),p=+b.amount||0,a=c?+c.amount:p;
+      lines.push({key:k,label:b.name,group:"bills",planned:p,amount:a,confirmed:!!c}); cash-=p;
+    });
+    var plan={};
+    S.debts.forEach(function(d){
+      if(d.start&&m<d.start)return; if(bal[d.id]<=0.5)return;
+      var r=Math.min(+d.monthly||0,bal[d.id]); if(r>0){plan[d.id]={reg:r,extra:0};cash-=r}
+    });
+    var bl=null;
+    S.debts.forEach(function(d){
+      if(bb[d.id]>0&&d.balloonMonth===m){var need=bb[d.id],ff=Math.min(F.car,need);bl={d:d,need:need,fromFund:ff,fromCash:need-ff};cash-=need-ff}
+    });
+    var surplus0=cash;
+    var take=function(x){x=Math.max(0,Math.min(x,cash));cash-=x;return x};
+    var rem=function(d){var p=plan[d.id];return bal[d.id]-(p?p.reg+p.extra:0)};
+    var sn=S.debts.filter(function(d){return d.extra&&(!d.start||m>=d.start)&&rem(d)>0.5})
+      .sort(function(a,b){return ((+a.prio||9)-(+b.prio||9))||(rem(a)-rem(b))});
+    sn.forEach(function(d){
+      var p=plan[d.id]||{reg:0,extra:0}, cap=rem(d);
+      if(+d.cap>0)cap=Math.min(cap,+d.cap-p.reg);
+      var x=take(cap); if(x>0){p.extra+=x;plan[d.id]=p}
+    });
+    var snowDone=S.debts.filter(function(d){return d.extra}).every(function(d){return rem(d)<=0.5});
+    if(snowDone&&!ev.snowDone)ev.snowDone=m;
+    var fl={car:0,box:0,ef:0,dep:0,fund:0};
+    if(carDebt&&m<carDebt.balloonMonth&&(snowDone||(G.carStart&&m>=G.carStart))){
+      var left=Math.max(1,diffM(m,carDebt.balloonMonth)), need=Math.max(0,bb[carDebt.id]-F.car);
+      fl.car=take(Math.ceil(need/left/50)*50);
+    }
+    if(snowDone){
+      fl.box=take(Math.min(+G.boxMonthly||0,Math.max(0,(+G.boxTarget||0)-F.box)));
+      fl.ef=take(Math.max(0,(+G.efTarget||0)-F.ef));
+    }
+    if(cash>0&&+I.prepayPct>0&&I.prepayId){
+      var pd=S.debts.find(function(d){return d.id===I.prepayId});
+      if(pd&&(!pd.start||m>=pd.start)&&rem(pd)>0.5){var x=take(Math.min(rem(pd),cash*(+I.prepayPct)/100));var pp=plan[pd.id]||{reg:0,extra:0};pp.extra+=x;plan[pd.id]=pp}
+    }
+    if(cash>0){var dsh=Math.min(100,Math.max(0,+I.split||0))/100;fl.dep=Math.round(cash*dsh);fl.fund=cash-fl.dep;cash=0}
+    // debts lines
+    S.debts.forEach(function(d){
+      var p=plan[d.id],k="debt:"+d.id,c=conf(k); if(!p&&!c)return;
+      var planned=p?p.reg+p.extra:0,a=c?+c.amount:planned,before=bal[d.id];
+      bal[d.id]=Math.max(0,before-a);
+      lines.push({key:k,label:d.name,group:(p&&p.reg>0)?"debts":"extra",planned:planned,amount:a,confirmed:!!c,reg:p?p.reg:0,extra:p?p.extra:0,after:bal[d.id],debt:d.id});
+      sched[d.id].push({m:m,reg:p?p.reg:0,extra:p?p.extra:0,planned:planned,amount:a,confirmed:!!c,before:before,after:bal[d.id]});
+      if(bal[d.id]<=0.5&&bb[d.id]<=0.5&&!ev["close:"+d.id])ev["close:"+d.id]=m;
+    });
+    if(bl){
+      var k2="balloon:"+bl.d.id,c2=conf(k2),a2=c2?+c2.amount:bl.need;
+      bb[bl.d.id]=Math.max(0,bb[bl.d.id]-a2); F.car=Math.max(0,F.car-Math.min(F.car,a2));
+      lines.push({key:k2,label:"الدفعة الأخيرة: "+bl.d.name,group:"debts",planned:bl.need,amount:a2,confirmed:!!c2,note:"من ادخار السيارة "+fmtT(bl.fromFund)+(bl.fromCash>0?" + من الفائض "+fmtT(bl.fromCash):"")});
+      sched[bl.d.id].push({m:m,reg:0,extra:0,planned:bl.need,amount:a2,confirmed:!!c2,before:bl.need,after:bb[bl.d.id],balloon:true});
+      if(bal[bl.d.id]<=0.5&&bb[bl.d.id]<=0.5&&!ev["close:"+bl.d.id])ev["close:"+bl.d.id]=m;
+    }
+    var FN={car:"ادخار دفعة السيارة الأخيرة",box:"صندوق المشتريات",ef:"صندوق الطوارئ",dep:"استثمار: ودائع ومرابحة",fund:"استثمار: صناديق"};
+    ["car","box","ef","dep","fund"].forEach(function(f){
+      var k="fund:"+f,c=conf(k); if(!(fl[f]>0)&&!c)return;
+      var a=c?+c.amount:fl[f]; F[f]+=a; if(f==="dep"||f==="fund")contrib+=a;
+      lines.push({key:k,label:FN[f],group:"funds",planned:fl[f],amount:a,confirmed:!!c,fund:f});
+    });
+    var buys=(S.boxBuys||[]).filter(function(b){return b.m===m});
+    F.box-=sum(buys,function(b){return b.amount});
+    var efo=(S.efOut||[]).filter(function(b){return b.m===m});
+    F.ef-=sum(efo,function(b){return b.amount});
+    F.dep*=1+(+I.rateDep||0)/1200; F.fund*=1+(+I.rateFund||0)/1200;
+    if(F.ef>=(+G.efTarget||0)-0.5&&!ev.efDone&&+G.efTarget>0)ev.efDone=m;
+    if(!ev.invStart&&(fl.dep+fl.fund)>0)ev.invStart=m;
+    var totalDebt=0;Object.keys(bal).forEach(function(id){totalDebt+=bal[id]+bb[id]});
+    var spends=(S.spend||[]).filter(function(x){return x.m===m});
+    months.push({m:m,inc:inc,wind:wind,living:living,lines:lines,surplus0:surplus0,bal:Object.assign({},bal),bb:Object.assign({},bb),F:Object.assign({},F),contrib:contrib,totalDebt:totalDebt,spent:sum(spends,function(x){return x.amount}),spends:spends,buys:buys,efo:efo,deficit:surplus0<-0.5});
+    if(totalDebt<=0.5&&!ev.debtFree)ev.debtFree=m;
+  }
+  var startDebt=0;S.debts.forEach(function(d){startDebt+=(+d.balance||0)+(+d.balloon||0)});
+  return {months:months,sched:sched,ev:ev,startDebt:startDebt};
+}
+function mi(m){return SIM.months.findIndex(function(x){return x.m===m})}
+
+/* ---------------- storage ---------------- */
+var db=null,docRef=null,writing=false,dirty=false,timer=null,loaded=false;
+function setStatus(t,err){var s=document.getElementById("status");s.textContent=t;s.className="status"+(err?" err":"")}
+function commit(){S.rev=(S.rev||0)+1;S.by=CID;try{localStorage.setItem(LS,JSON.stringify(S))}catch(e){}
+  setStatus(docRef?"جارٍ الحفظ…":"محفوظ على هذا الجوال");clearTimeout(timer);timer=setTimeout(flush,600);render()}
+function flush(){timer=null;if(!docRef)return;if(writing){dirty=true;return}writing=true;
+  docRef.set({json:JSON.stringify(S),updatedAt:Date.now()}).then(function(){setStatus("محفوظ")},function(e){setStatus("تعذّر الحفظ، أعد المحاولة",true)})
+  .then(function(){writing=false;if(dirty){dirty=false;flush()}})}
+function adopt(st){S=normalize(st);if(!ui.month){var t=todayKey();ui.month=(t<S.start)?S.start:t;var last=addM(S.start,(+S.horizon||60)-1);if(ui.month>last)ui.month=last}loaded=true;render()}
+function normalize(s){s.debts=s.debts||[];s.bills=s.bills||[];s.incomes=s.incomes||[];s.living=s.living||[];s.paid=s.paid||{};s.funds=s.funds||{};s.goals=s.goals||{};s.invest=s.invest||{split:50,rateDep:4.5,rateFund:7,prepayPct:0};
+  ["windfalls","boxBuys","efOut","spend"].forEach(function(k){s[k]=s[k]||[]});s.horizon=s.horizon||60;return s}
+function blankState(){var t=todayKey();return {start:t,horizon:60,incomes:[{from:t,amount:0}],living:[{from:t,amount:3500}],bills:[],debts:[],funds:{},goals:{efTarget:10000,boxTarget:5000,boxMonthly:500},invest:{split:50,rateDep:4.5,rateFund:7,prepayPct:0},paid:{},windfalls:[],boxBuys:[],efOut:[],spend:[]}}
+function localFallback(){try{var raw=localStorage.getItem(LS);if(raw){adopt(JSON.parse(raw));setStatus("محفوظ على هذا الجوال");return}}catch(e){}if(ENC){loaded=true;setStatus("مقفل");showLock();return}loaded=true;setStatus("محفوظ على هذا الجوال");render()}
+
+function b64(x){return Uint8Array.from(atob(x),function(c){return c.charCodeAt(0)})}
+function showLock(){document.getElementById("view").innerHTML='<div class="card empty"><h2>خطتك مقفلة</h2><p class="note">اكتب الرمز السري لفتح أرقامك. بعد أول فتح تتحفظ على هذا الجوال.</p><form class="row" data-form="unlock" style="justify-content:center;margin-top:12px"><input type="password" inputmode="numeric" id="pin" autocomplete="current-password" style="width:160px;text-align:center" aria-label="الرمز السري"><button class="primary">فتح</button></form><p class="note" id="pinMsg"></p></div>'}
+function unlock(pin){var enc=new TextEncoder();return crypto.subtle.importKey("raw",enc.encode(pin),"PBKDF2",false,["deriveKey"]).then(function(k){return crypto.subtle.deriveKey({name:"PBKDF2",salt:b64(ENC.salt),iterations:ENC.iter,hash:"SHA-256"},k,{name:"AES-GCM",length:256},false,["decrypt"])}).then(function(key){return crypto.subtle.decrypt({name:"AES-GCM",iv:b64(ENC.iv)},key,b64(ENC.ct))}).then(function(buf){return JSON.parse(new TextDecoder().decode(buf))})}
+document.addEventListener("submit",function(e){if(e.target.dataset.form!=="unlock")return;e.preventDefault();var m=document.getElementById("pinMsg");m.textContent="جارٍ الفتح…";unlock(document.getElementById("pin").value).then(function(st){adopt(st);try{localStorage.setItem(LS,JSON.stringify(S))}catch(x){}setStatus("محفوظ على هذا الجوال")},function(){m.textContent="الرمز غير صحيح."})});
+
+function boot(){
+  var useP=(window.claude&&window.claude.use)?window.claude.use("db"):Promise.resolve(null);
+  Promise.resolve(useP).then(function(d){
+    db=d; if(!db){localFallback();return}
+    docRef=db.doc("plan/state");
+    var to=setTimeout(function(){if(!loaded){setStatus("تعذّر الوصول للبيانات الآن",true);localFallback()}},10000);
+    docRef.onSnapshot(function(snap){
+      var d=snap.data();
+      if(!snap.metadata||!snap.metadata.fromCache)clearTimeout(to);
+      if(!d||!d.json){if(!S){loaded=true;setStatus("لا توجد بيانات بعد");render()}return}
+      var st;try{st=JSON.parse(d.json)}catch(e){return}
+      if(S&&(timer||writing))return;
+      if(S&&st.by===CID&&(st.rev||0)<=(S.rev||0))return;
+      adopt(st);setStatus("محفوظ");
+    },function(e){clearTimeout(to);setStatus("انقطع الاتصال بالبيانات",true);if(!S)localFallback()});
+  },function(){localFallback()});
+}
+
+/* ---------------- views ---------------- */
+function kpi(k,v,s,cls,pct){return '<div class="kpi '+(cls||"")+'"><span class="k">'+k+'</span><span class="v">'+v+'</span>'+(s?'<span class="s">'+s+'</span>':"")+(pct!=null?'<div class="bar"><i style="width:'+Math.max(0,Math.min(100,pct))+'%"></i></div>':"")+'</div>'}
+function vHome(){
+  var M=SIM.months[mi(ui.month)]; if(!M)return "";
+  var idx=mi(ui.month), G=S.goals, F=M.F;
+  var paidToDate=0;SIM.months.slice(0,idx+1).forEach(function(x){x.lines.forEach(function(l){if(l.confirmed&&(l.group==="debts"||l.group==="extra"))paidToDate+=l.amount})});
+  var avail=M.living-M.spent;
+  var carD=S.debts.find(function(d){return +d.balloon>0});
+  var carT=carD?+carD.balloon:0;
+  var inv=F.dep+F.fund;
+  var h='<div class="kpis">'+
+    kpi("متوفر للمصاريف هذا الشهر",fmt(avail),"من "+fmtT(M.living)+" للأكل والبنزين والترفيه والشخصي","main",M.living?avail/M.living*100:0)+
+    kpi("إجمالي الديون المتبقية",fmt(M.totalDebt),"المسدد المؤكد حتى الآن "+fmtT(paidToDate),"debt",SIM.startDebt?(1-M.totalDebt/SIM.startDebt)*100:0)+
+    kpi("صندوق المشتريات",fmt(F.box),"الهدف "+fmtT(G.boxTarget)+": جوال، ماوس، أجهزة","",G.boxTarget?F.box/G.boxTarget*100:0)+
+    kpi("صندوق الطوارئ",fmt(F.ef),"الهدف "+fmtT(G.efTarget),"",G.efTarget?F.ef/G.efTarget*100:0)+
+    (carT?kpi("ادخار دفعة السيارة",fmt(F.car),"الهدف "+fmtT(carT)+" في "+mlabel(carD.balloonMonth),"",F.car/carT*100):"")+
+    kpi("قيمة الاستثمار",fmt(inv),"المساهمات "+fmtT(M.contrib)+" · الربح التقديري "+fmtT(inv-M.contrib),"")+
+  '</div>';
+  var warns=[];
+  if(M.deficit)warns.push("الدخل هذا الشهر ما يغطي الالتزامات والمعيشة. العجز "+fmtT(-M.surplus0)+" ريال.");
+  if(M.living<3500&&M.m>="2027-01")warns.push("المعيشة أقل من 3,500. عدّلها من صفحة التعديل.");
+  if(F.box<0)warns.push("صرفت من صندوق المشتريات أكثر من رصيده.");
+  if(carD&&carD.balloonMonth){var bi=mi(carD.balloonMonth);if(bi>0){var pre=SIM.months[bi-1];if(pre&&pre.F.car<carT-1&&ui.month<carD.balloonMonth)warns.push("ادخار السيارة متوقع يوصل "+fmtT(pre.F.car)+" فقط قبل الدفعة الأخيرة.")}}
+  h+=warns.map(function(w){return '<div class="warnbox">'+w+'</div>'}).join("");
+  h+='<div class="grid2"><div class="stack">'+vMonthCard(M)+'</div><div class="stack">'+vSpendCard(M)+vChartCard()+vMiles()+'</div></div>';
+  return h;
+}
+function vMonthCard(M){
+  var groups={bills:"فواتير واشتراكات",debts:"الأقساط",extra:"سداد إضافي",funds:"ادخار واستثمار"};
+  var nConf=M.lines.filter(function(l){return l.confirmed}).length;
+  var h='<div class="card"><div class="row" style="justify-content:space-between"><h2>مدفوعات '+mlabel(M.m)+'</h2><span class="pill '+(nConf===M.lines.length&&M.lines.length?"ok":"")+'">'+nConf+' من '+M.lines.length+' مؤكد</span></div>'+
+    '<p class="sub">الدخل '+fmtT(M.inc)+(M.wind?" + دخل إضافي "+fmtT(M.wind):"")+' · المعيشة '+fmtT(M.living)+' · الفائض للأهداف '+fmtT(Math.max(0,M.surplus0))+'. اكتب المبلغ اللي دفعته فعلاً واضغط تأكيد، والخطة تتحدث.</p><div class="lines">';
+  ["bills","debts","extra","funds"].forEach(function(g){
+    var ls=M.lines.filter(function(l){return l.group===g}); if(!ls.length)return;
+    h+='<div class="grp">'+groups[g]+'</div>';
+    ls.forEach(function(l){
+      var sub=l.note||"";
+      if(l.debt!=null){var s=[];if(l.reg)s.push("قسط "+fmtT(l.reg));if(l.extra)s.push("إضافي "+fmtT(l.extra));s.push("المتبقي بعده "+fmtT(l.after));sub=s.join(" · ")}
+      if(l.confirmed&&Math.round(l.amount)!==Math.round(l.planned))sub+=(sub?" · ":"")+"المخطط "+fmtT(l.planned);
+      h+='<div class="line'+(l.confirmed?" done":"")+'"><div class="nm"><b>'+esc(l.label)+'</b>'+(sub?'<small>'+sub+'</small>':"")+'</div>'+
+        (l.confirmed?'<span class="num">'+fmtT(l.amount)+'</span><button class="small ghost" data-unconf="'+esc(l.key)+'">تراجع</button>'
+          :'<input type="number" inputmode="decimal" id="amt-'+esc(l.key).replace(/[^a-z0-9]/gi,"_")+'" value="'+Math.round(l.planned)+'" aria-label="المبلغ المدفوع"><button class="small primary" data-conf="'+esc(l.key)+'">تأكيد</button>')+'</div>';
+    });
+  });
+  if(!M.lines.length)h+='<p class="note">لا توجد مدفوعات مخططة لهذا الشهر.</p>';
+  h+='</div>'+(nConf<M.lines.length?'<div class="row" style="margin-top:12px"><button data-confall="1">تأكيد كل البنود بالمبلغ المخطط</button></div>':"")+'</div>';
+  return h;
+}
+function vSpendCard(M){
+  var h='<div class="card"><h2>مصروفي هذا الشهر</h2><p class="sub">سجّل أي صرفة بمبلغها فقط، بدون تصنيف. المتبقي '+fmtT(M.living-M.spent)+' من '+fmtT(M.living)+'.</p>'+
+   '<div class="bar" style="margin-bottom:12px"><i style="width:'+(M.living?Math.min(100,M.spent/M.living*100):0)+'%;'+(M.spent>M.living*0.8?"background:var(--warn)":"")+'"></i></div>'+
+   '<form class="row" data-form="spend"><input type="number" inputmode="decimal" id="spAmt" placeholder="المبلغ" style="width:110px" required><input id="spNote" placeholder="ملاحظة (اختياري)" style="flex:1;min-width:120px"><button class="primary">إضافة</button></form>';
+  if(M.spends.length){h+='<div class="lines" style="margin-top:8px">'+M.spends.slice().reverse().map(function(x){return '<div class="line"><div class="nm">'+esc(x.note||"مصروف")+'<small>'+esc(x.d||"")+'</small></div><span class="num">'+fmtT(x.amount)+'</span>'+delBtn("spend",x.id)+'</div>'}).join("")+'</div>'}
+  h+='<div class="grp" style="margin-top:16px">شراء من صندوق المشتريات (الرصيد '+fmtT(M.F.box)+')</div>'+
+   '<form class="row" data-form="buy" style="margin-top:8px"><input type="number" inputmode="decimal" id="byAmt" placeholder="المبلغ" style="width:110px" required><input id="byNote" placeholder="مثلاً جوال جديد" style="flex:1;min-width:120px"><button>سحب</button></form>';
+  if(M.buys.length)h+='<div class="lines" style="margin-top:8px">'+M.buys.map(function(x){return '<div class="line"><div class="nm">'+esc(x.note||"مشتريات")+'</div><span class="num">'+fmtT(x.amount)+'</span>'+delBtn("boxBuys",x.id)+'</div>'}).join("")+'</div>';
+  return h+'</div>';
+}
+function delBtn(list,id){var a=ui.armed===list+":"+id;return '<button class="small ghost danger" data-del="'+list+'" data-id="'+esc(id)+'">'+(a?"متأكد؟":"حذف")+'</button>'}
+function vChartCard(){
+  var ms=SIM.months,W=640,H=230,pl=48,pr=12,pt=14,pb=28;
+  var sav=ms.map(function(x){return x.F.ef+x.F.box+x.F.car+x.F.dep+x.F.fund});
+  var max=Math.max.apply(null,ms.map(function(x){return x.totalDebt}).concat(sav,[1]));
+  var step=Math.pow(10,Math.floor(Math.log10(max)));var nice=Math.ceil(max/step)*step;if(nice/step<=2)step/=2;
+  var X=function(i){return pl+(W-pl-pr)*i/Math.max(1,ms.length-1)},Y=function(v){return pt+(H-pt-pb)*(1-v/nice)};
+  var path=function(arr){return arr.map(function(v,i){return (i?"L":"M")+X(i).toFixed(1)+","+Y(v).toFixed(1)}).join("")};
+  var g="";for(var v=0;v<=nice+1;v+=step){g+='<line x1="'+pl+'" x2="'+(W-pr)+'" y1="'+Y(v)+'" y2="'+Y(v)+'" stroke="var(--line)" stroke-width="1"/><text x="'+(pl-6)+'" y="'+(Y(v)+4)+'" font-size="10.5" text-anchor="end">'+(v>=1000?Math.round(v/1000)+"k":v)+'</text>'}
+  ms.forEach(function(x,i){if(x.m.slice(5)==="01"){g+='<line x1="'+X(i)+'" x2="'+X(i)+'" y1="'+pt+'" y2="'+(H-pb)+'" stroke="var(--line)" stroke-dasharray="2 3"/><text x="'+X(i)+'" y="'+(H-8)+'" font-size="10.5" text-anchor="middle">'+x.m.slice(0,4)+'</text>'}});
+  var ci=mi(ui.month),debt=ms.map(function(x){return x.totalDebt});
+  var area=path(debt)+"L"+X(ms.length-1)+","+Y(0)+"L"+X(0)+","+Y(0)+"Z";
+  return '<div class="card"><h2>الديون مقابل المدخرات</h2><p class="sub">60 شهراً، والخط العمودي هو الشهر المعروض.</p><div class="legend"><span><i style="background:var(--debt)"></i>إجمالي الديون (مع الدفعة الأخيرة)</span><span><i style="background:var(--accent)"></i>المدخرات والاستثمار</span></div>'+
+   '<svg dir="ltr" viewBox="0 0 '+W+' '+H+'" width="100%" role="img" aria-label="منحنى الديون والمدخرات">'+g+
+   '<path d="'+area+'" fill="var(--debt)" fill-opacity=".10"/><path d="'+path(debt)+'" fill="none" stroke="var(--debt)" stroke-width="2.2"/>'+
+   '<path d="'+path(sav)+'" fill="none" stroke="var(--accent)" stroke-width="2.2"/>'+
+   (ci>=0?'<line x1="'+X(ci)+'" x2="'+X(ci)+'" y1="'+pt+'" y2="'+(H-pb)+'" stroke="var(--ink)" stroke-width="1.2"/><circle cx="'+X(ci)+'" cy="'+Y(debt[ci])+'" r="4" fill="var(--debt)"/><circle cx="'+X(ci)+'" cy="'+Y(sav[ci])+'" r="4" fill="var(--accent)"/>':"")+
+   '</svg></div>';
+}
+function vMiles(){
+  var ev=SIM.ev, items=[];
+  var smalls=S.debts.filter(function(d){return d.extra});
+  if(ev.snowDone)items.push(["إقفال كل الديون الصغيرة والمخالفات",ev.snowDone]);
+  S.debts.forEach(function(d){if(!d.extra&&ev["close:"+d.id])items.push(["إقفال "+d.name,ev["close:"+d.id]])});
+  S.debts.forEach(function(d){if(!d.extra&&!ev["close:"+d.id])items.push(["إقفال "+d.name,null])});
+  if(ev.efDone)items.push(["اكتمال صندوق الطوارئ",ev.efDone]);
+  if(ev.invStart)items.push(["بداية الاستثمار",ev.invStart]);
+  if(ev.debtFree)items.push(["بدون أي دين",ev.debtFree]);
+  items.sort(function(a,b){return (a[1]||"9999")<(b[1]||"9999")?-1:1});
+  return '<div class="card"><h2>المحطات</h2><div class="miles">'+items.map(function(x){var past=x[1]&&x[1]<=ui.month;return '<div class="mile"><span>'+esc(x[0])+'</span><span class="pill '+(past?"ok":"")+'">'+(x[1]?mlabel(x[1]):"بعد نهاية الخطة")+'</span></div>'}).join("")+
+   '</div><p class="note" style="margin-top:8px">'+smalls.length+' ديون صغيرة تُسدد بطريقة كرة الثلج: الأصغر أولاً، وقسط كل دين ينقفل ينضم للي بعده.</p></div>';
+}
+function vPlan(){
+  var h='<div class="card"><h2>الخطة الخمسية شهر بشهر</h2><p class="sub">كل الأرقام بالريال. الأشهر المؤكدة تعتمد مبالغك الفعلية، والقادمة محسوبة من الأرصدة الحالية. اضغط أي شهر لفتحه.</p></div><div class="tblwrap"><table><thead><tr><th>الشهر</th><th>الدخل</th><th>فواتير وأقساط</th><th>المعيشة</th><th>سداد إضافي</th><th>ادخار السيارة</th><th>المشتريات</th><th>الطوارئ</th><th>استثمار</th><th>الديون المتبقية</th><th>المدخرات</th><th>الحالة</th></tr></thead><tbody>';
+  SIM.months.forEach(function(x){
+    var s=function(f){return sum(x.lines.filter(f),function(l){return l.amount})};
+    var fixed=s(function(l){return l.group==="bills"})+sum(x.lines.filter(function(l){return l.group==="debts"}),function(l){return l.reg!=null?(l.confirmed?Math.min(l.amount,l.reg):l.reg):l.amount});
+    var extra=sum(x.lines.filter(function(l){return l.debt!=null}),function(l){return l.confirmed?Math.max(0,l.amount-(l.reg||0)):l.extra});
+    var fd=function(f){return s(function(l){return l.fund===f})};
+    var nC=x.lines.filter(function(l){return l.confirmed}).length;
+    var st=nC===0?'<span class="pill">مخطط</span>':nC===x.lines.length?'<span class="pill ok">مؤكد</span>':'<span class="pill warn">'+nC+'/'+x.lines.length+'</span>';
+    var savT=x.F.ef+x.F.box+x.F.car+x.F.dep+x.F.fund;
+    h+='<tr class="'+(x.m===ui.month?"cur ":"")+(x.m.slice(5)==="01"?"yr":"")+'" data-goto="'+x.m+'" style="cursor:pointer"><td><b>'+mlabel(x.m)+'</b></td><td>'+fmt(x.inc+x.wind)+'</td><td>'+fmt(fixed)+'</td><td>'+fmt(x.living)+'</td><td>'+(extra?fmt(extra):"—")+'</td><td>'+(fd("car")?fmt(fd("car")):"—")+'</td><td>'+(fd("box")?fmt(fd("box")):"—")+'</td><td>'+(fd("ef")?fmt(fd("ef")):"—")+'</td><td>'+((fd("dep")+fd("fund"))?fmt(fd("dep")+fd("fund")):"—")+'</td><td class="neg">'+fmt(x.totalDebt)+'</td><td>'+fmt(savT)+'</td><td>'+st+'</td></tr>';
+  });
+  return h+'</tbody></table></div>';
+}
+function vSchedules(){
+  if(!S.debts.length)return '<div class="card empty"><h2>لا توجد ديون</h2><p class="note">أضف ديناً من صفحة التعديل والإضافة.</p></div>';
+  if(!ui.debt||!S.debts.some(function(d){return d.id===ui.debt}))ui.debt=S.debts[0].id;
+  var d=S.debts.find(function(x){return x.id===ui.debt}), rows=SIM.sched[d.id]||[];
+  var cur=SIM.months[mi(ui.month)], curBal=cur?cur.bal[d.id]+cur.bb[d.id]:0;
+  var totalPaid=sum(rows.filter(function(r){return r.confirmed}),function(r){return r.amount});
+  var hasP=+d.principal>0&&d.monthly>0, nInst=hasP?Math.ceil((+d.balance)/(+d.monthly)):0, profPer=hasP?((+d.balance)-(+d.principal))/nInst:0;
+  var h='<div class="chips">'+S.debts.map(function(x){var c=SIM.ev["close:"+x.id];return '<button class="'+(x.id===d.id?"on":"")+'" data-debt="'+x.id+'">'+esc(x.name)+(c&&c<=ui.month?" ✓":"")+'</button>'}).join("")+'</div>';
+  h+='<div class="kpis">'+kpi("الرصيد في نهاية "+mlabel(ui.month),fmt(curBal),"البداية "+fmtT((+d.balance||0)+(+d.balloon||0)),"debt",(+d.balance+(+d.balloon||0))?(1-curBal/((+d.balance)+(+d.balloon||0)))*100:0)+
+     kpi("القسط الشهري",fmt(d.monthly),d.extra?"يُسدد مبكراً من الفائض":"قسط ثابت")+
+     kpi("آخر دفعة متوقعة",SIM.ev["close:"+d.id]?mlabel(SIM.ev["close:"+d.id]):"بعد نهاية الخطة","",null)+
+     kpi("المدفوع المؤكد",fmt(totalPaid),rows.filter(function(r){return r.confirmed}).length+" دفعة")+'</div>';
+  if(!hasP&&d.monthly>0&&!d.extra)h+='<p class="note">الرصيد هنا مجموع الأقساط المتبقية. لو أدخلت "أصل التمويل المتبقي" من كشف البنك في صفحة التعديل، يقسم الجدول كل قسط إلى أصل وربح مثل جداول البنوك.</p>';
+  h+='<div class="tblwrap"><table><thead><tr><th>#</th><th>الشهر</th><th>القسط</th><th>سداد إضافي</th><th>المدفوع</th>'+(hasP?'<th>منها أصل</th><th>منها ربح</th>':'')+'<th>الرصيد بعد الدفعة</th><th>الحالة</th></tr></thead><tbody>';
+  rows.forEach(function(r,i){
+    var prof=hasP&&!r.balloon?Math.min(profPer,r.amount):0;
+    h+='<tr class="'+(r.m===ui.month?"cur":"")+'"><td class="num">'+(i+1)+'</td><td>'+mlabel(r.m)+(r.balloon?' <span class="pill debt">دفعة أخيرة</span>':'')+'</td><td>'+fmt(r.balloon?r.planned:r.reg)+'</td><td>'+(r.extra?fmt(r.extra):"—")+'</td><td>'+fmt(r.amount)+'</td>'+(hasP?'<td>'+fmt(r.amount-prof)+'</td><td>'+fmt(prof)+'</td>':'')+'<td>'+fmt(r.after+(r.balloon?0:(SIM.months[mi(r.m)]||{bb:{}}).bb[d.id]||0))+'</td><td>'+(r.confirmed?'<span class="pill ok">مدفوع</span>':(r.m<todayKey()?'<span class="pill warn">غير مؤكد</span>':'<span class="pill">قادم</span>'))+'</td></tr>';
+  });
+  if(!rows.length)h+='<tr><td colspan="9" class="note">لا توجد دفعات ضمن مدة الخطة.</td></tr>';
+  return h+'</tbody></table></div>';
+}
+function vInvest(){
+  var I=S.invest, ms=SIM.months, last=ms[ms.length-1];
+  var yrs=ms.filter(function(x,i){return x.m.slice(5)==="12"||i===ms.length-1});
+  var loans=S.debts.filter(function(d){return !d.extra&&d.monthly>0});
+  var h='<div class="grid2"><div class="stack"><div class="card"><h2>الاستثمار بعد الطوارئ</h2><p class="sub">بعد إقفال الديون الصغيرة واكتمال الطوارئ وصندوق المشتريات، كل الفائض الشهري يروح للاستثمار. الزواج بيكون بقرض، فالاستثمار يبني لك سيولة تسند أقساطه.</p>'+
+   '<div class="kpis">'+kpi("القيمة المتوقعة في "+mlabel(last.m),fmt(last.F.dep+last.F.fund),"","main")+kpi("مجموع المساهمات",fmt(last.contrib),"تبدأ "+(SIM.ev.invStart?mlabel(SIM.ev.invStart):"—"))+kpi("الربح التقديري",fmt(last.F.dep+last.F.fund-last.contrib),"غير مضمون")+'</div></div>'+
+   '<div class="card"><h2>توزيع الاستثمار</h2><div class="fields" style="margin-top:8px">'+
+   '<label>ودائع ومرابحة (%)<input type="number" min="0" max="100" data-bind="invest.split" data-type="num" value="'+esc(I.split)+'"></label>'+
+   '<label>عائد الودائع السنوي المفترض (%)<input type="number" step="0.1" data-bind="invest.rateDep" data-type="num" value="'+esc(I.rateDep)+'"></label>'+
+   '<label>عائد الصناديق السنوي المفترض (%)<input type="number" step="0.1" data-bind="invest.rateFund" data-type="num" value="'+esc(I.rateFund)+'"></label>'+
+   '<label>نسبة من الفائض للسداد المبكر (%)<input type="number" min="0" max="100" data-bind="invest.prepayPct" data-type="num" value="'+esc(I.prepayPct)+'"></label>'+
+   '<label>القرض اللي يُسدد مبكراً<select data-bind="invest.prepayId" data-type="text"><option value="">—</option>'+loans.map(function(d){return '<option value="'+d.id+'"'+(I.prepayId===d.id?" selected":"")+'>'+esc(d.name)+'</option>'}).join("")+'</select></label>'+
+   '</div><p class="note" style="margin-top:10px">العوائد هنا افتراضات للتقدير فقط. تأكد من العائد والرسوم الحالية من نشرة كل صندوق أو من البنك قبل ما تستثمر.</p></div></div>'+
+   '<div class="stack"><div class="card"><h2>الخيارات المتاحة</h2><div class="opts" style="margin-top:8px">'+
+   '<div class="opt"><h3>ودائع المرابحة لأجل</h3><p class="note">ربح ثابت متفق عليه لمدة (3 أو 6 أو 12 شهر). مخاطرة منخفضة، والسحب المبكر قد يلغي الربح. مناسبة لجزء تحتاجه خلال سنة.</p><span class="pill ok">مخاطرة منخفضة</span></div>'+
+   '<div class="opt"><h3>صناديق أسواق النقد (المرابحة)</h3><p class="note">مثل صناديق المرابحة بالريال في الراجحي المالية وغيرها. تسحب منها خلال أيام، وعائدها قريب من الودائع. أفضل مكان لاحتياطي قرض الزواج.</p><span class="pill ok">مخاطرة منخفضة</span></div>'+
+   '<div class="opt"><h3>صناديق الصكوك</h3><p class="note">أدوات دين متوافقة مع الشريعة. عائد أعلى قليلاً من المرابحة مع تذبذب بسيط. مدة مناسبة: سنة إلى ثلاث.</p><span class="pill warn">مخاطرة متوسطة</span></div>'+
+   '<div class="opt"><h3>صناديق الأسهم والمؤشرات</h3><p class="note">صناديق أسهم سعودية أو عالمية متوافقة مع الشريعة. عائد أعلى على المدى الطويل لكنها تنزل وتطلع. لا تحط فيها فلوس تحتاجها قبل 3 إلى 5 سنين.</p><span class="pill debt">مخاطرة أعلى</span></div>'+
+   '</div><p class="note" style="margin-top:10px">طريقة عملية: استثمار شهري ثابت يوم الراتب (متوسط التكلفة)، ونص في المرابحة ونص في صندوق مؤشر. وقبل ما تاخذ قرض الزواج أضفه في صفحة التعديل كدين جديد بشهر بدايته، والخطة تعيد الحساب.</p></div></div></div>'+
+   '<div class="tblwrap"><table><thead><tr><th>نهاية</th><th>المساهمات التراكمية</th><th>ودائع ومرابحة</th><th>صناديق</th><th>الإجمالي</th><th>الربح التقديري</th></tr></thead><tbody>'+
+   yrs.map(function(x){var t=x.F.dep+x.F.fund;return '<tr><td>'+mlabel(x.m)+'</td><td>'+fmt(x.contrib)+'</td><td>'+fmt(x.F.dep)+'</td><td>'+fmt(x.F.fund)+'</td><td><b>'+fmt(t)+'</b></td><td>'+fmt(t-x.contrib)+'</td></tr>'}).join("")+'</tbody></table></div>';
+  return h;
+}
+function inp(path,val,type,attrs){return '<input '+(type==="num"?'type="number" inputmode="decimal"':type==="month"?'type="month"':'')+' data-bind="'+path+'" data-type="'+type+'" value="'+esc(val==null?"":val)+'" '+(attrs||"")+'>'}
+function listRows(key,cols){
+  return (S[key]||[]).map(function(e,i){return '<div class="row" style="margin-bottom:6px">'+cols.map(function(c){return '<label class="note" style="display:flex;gap:6px;align-items:center">'+c[1]+inp(key+"."+i+"."+c[0],e[c[0]],c[2],c[3]||"")+'</label>'}).join("")+delBtn(key,e.id||String(i))+'</div>'}).join("");
+}
+function vEdit(){
+  S.incomes.forEach(function(e){e.id=e.id||uid()});S.living.forEach(function(e){e.id=e.id||uid()});
+  var h='<div class="grid2"><div class="stack">';
+  h+='<div class="card"><h2>الدخل</h2><p class="sub">كل سطر يبدأ من شهره ويستمر لين يجي سطر بعده.</p>'+listRows("incomes",[["from","من","month"],["amount","المبلغ","num",'style="width:110px"']])+'<button data-add="incomes">إضافة تغيير في الراتب</button></div>';
+  h+='<div class="card"><h2>المعيشة (أكل، بنزين، ترفيه، شخصي)</h2><p class="sub">مبلغ واحد بدون تفاصيل. الحد الأدنى المتفق عليه 3,500 من يناير 2027.</p>'+listRows("living",[["from","من","month"],["amount","المبلغ","num",'style="width:110px" min="0"']])+'<button data-add="living">إضافة تغيير</button></div>';
+  h+='<div class="card"><h2>الفواتير والاشتراكات</h2>'+(S.bills.map(function(b,i){return '<div class="row" style="margin-bottom:6px">'+inp("bills."+i+".name",b.name,"text",'style="flex:1;min-width:120px"')+inp("bills."+i+".amount",b.amount,"num",'style="width:90px"')+'<label class="note">من '+inp("bills."+i+".from",b.from,"month")+'</label><label class="note">إلى '+inp("bills."+i+".to",b.to,"month")+'</label>'+delBtn("bills",b.id)+'</div>'}).join(""))+'<button data-add="bills">إضافة فاتورة أو اشتراك</button></div>';
+  h+='<div class="card"><h2>الأهداف</h2><div class="fields">'+
+    '<label>هدف صندوق الطوارئ'+inp("goals.efTarget",S.goals.efTarget,"num")+'</label>'+
+    '<label>هدف صندوق المشتريات'+inp("goals.boxTarget",S.goals.boxTarget,"num")+'</label>'+
+    '<label>تعبئة المشتريات شهرياً'+inp("goals.boxMonthly",S.goals.boxMonthly,"num")+'</label>'+
+    '<label>بدء ادخار السيارة مبكراً (اختياري)'+inp("goals.carStart",S.goals.carStart,"month")+'</label>'+
+    '<label>بداية الخطة'+inp("start",S.start,"month")+'</label>'+
+    '<label>مدة الخطة (شهر)'+inp("horizon",S.horizon,"num")+'</label>'+
+  '</div><p class="note" style="margin-top:8px">الترتيب: الالتزامات ثم المعيشة ثم الديون الصغيرة ثم ادخار السيارة ثم المشتريات ثم الطوارئ ثم الاستثمار. ادخار السيارة يتحسب تلقائياً عشان يكتمل قبل الدفعة الأخيرة.</p></div>';
+  h+='<div class="card"><h2>دخل إضافي (مكافأة، عيدية)</h2><p class="sub">ينضاف لفائض شهره ويروح للهدف الحالي.</p>'+listRows("windfalls",[["m","الشهر","month"],["amount","المبلغ","num",'style="width:100px"'],["note","","text",'placeholder="ملاحظة"']])+'<button data-add="windfalls">إضافة دخل إضافي</button></div>';
+  h+='<div class="card"><h2>سحب من الطوارئ</h2><p class="sub">الخطة ترجّع تعبئته تلقائياً من الأشهر اللي بعده.</p>'+listRows("efOut",[["m","الشهر","month"],["amount","المبلغ","num",'style="width:100px"'],["note","","text",'placeholder="السبب"']])+'<button data-add="efOut">تسجيل سحب</button></div>';
+  h+='</div><div class="stack"><div class="card"><div class="row" style="justify-content:space-between"><h2>الديون والمبالغ المطلوبة</h2><button class="primary" data-add="debts">إضافة دين أو مبلغ</button></div><p class="sub">المبلغ لمرة واحدة (مثل مخالفة) قسطه صفر. "يُسدد مبكراً" يعني يدخل في كرة الثلج، والأولوية الأقل رقماً تنسدد أول، وعند التساوي الأصغر رصيداً أول.</p><div class="stack">';
+  S.debts.forEach(function(d,i){
+    var p="debts."+i+".";
+    h+='<div class="debtcard"><div class="row" style="justify-content:space-between">'+inp(p+"name",d.name,"text",'style="flex:1;font-weight:600"')+delBtn("debts",d.id)+'</div><div class="fields">'+
+      '<label>الرصيد المتبقي'+inp(p+"balance",d.balance,"num")+'</label>'+
+      '<label>القسط الشهري'+inp(p+"monthly",d.monthly,"num")+'</label>'+
+      '<label>يبدأ من'+inp(p+"start",d.start,"month")+'</label>'+
+      '<label>الأولوية'+inp(p+"prio",d.prio,"num")+'</label>'+
+      '<label>حد أقصى شهري (اختياري)'+inp(p+"cap",d.cap,"num")+'</label>'+
+      '<label>أصل التمويل المتبقي (اختياري)'+inp(p+"principal",d.principal,"num")+'</label>'+
+      '<label>دفعة أخيرة'+inp(p+"balloon",d.balloon,"num")+'</label>'+
+      '<label>شهر الدفعة الأخيرة'+inp(p+"balloonMonth",d.balloonMonth,"month")+'</label>'+
+      '<label class="chk"><input type="checkbox" data-bind="'+p+'extra" data-type="bool"'+(d.extra?" checked":"")+'>يُسدد مبكراً من الفائض</label>'+
+    '</div></div>';
+  });
+  h+='</div></div><div class="card"><h2>نسخة احتياطية</h2><p class="sub">خطتك محفوظة تلقائياً. وتقدر تنزل نسخة أو تستعيد نسخة سابقة.</p><div class="row"><button data-export="1">تنزيل نسخة</button><label class="btn" for="impFile">استعادة من ملف</label><input type="file" id="impFile" accept="application/json,.json" hidden></div><p class="note" id="impMsg"></p></div></div></div>';
+  return h;
+}
+function vEmpty(){return '<div class="card empty"><h2>ما فيه خطة محفوظة بعد</h2><p class="note">ابدأ خطة فارغة وأضف دخلك وديونك من صفحة التعديل، أو استعد نسخة احتياطية.</p><div class="row" style="justify-content:center;margin-top:12px"><button class="primary" data-blank="1">ابدأ خطة فارغة</button><label class="btn" for="impFile">استعادة من ملف</label><input type="file" id="impFile" accept="application/json,.json" hidden></div><p class="note" id="impMsg"></p></div>'}
+
+function render(){
+  var v=document.getElementById("view");
+  document.querySelectorAll("#tabs a").forEach(function(a){a.classList.toggle("on",a.dataset.v===ui.view)});
+  if(!loaded)return;
+  if(!S){v.innerHTML=vEmpty();document.getElementById("mLbl").textContent="—";return}
+  SIM=simulate(S);
+  var last=addM(S.start,(+S.horizon||60)-1);
+  if(!ui.month||ui.month<S.start)ui.month=S.start; if(ui.month>last)ui.month=last;
+  document.getElementById("mLbl").textContent=mlabel(ui.month);
+  var sx=window.scrollY;
+  v.innerHTML=({home:vHome,plan:vPlan,schedules:vSchedules,invest:vInvest,edit:vEdit}[ui.view]||vHome)();
+  window.scrollTo(0,sx);
+}
+
+/* ---------------- interactions ---------------- */
+function setPath(path,val){var p=path.split("."),o=S;for(var i=0;i<p.length-1;i++){o=o[p[i]]}o[p[p.length-1]]=val}
+document.addEventListener("change",function(e){
+  var t=e.target; if(t.id==="impFile"){importFile(t.files&&t.files[0]);return}
+  if(!t.dataset||!t.dataset.bind||!S)return;
+  var ty=t.dataset.type,val=ty==="num"?(t.value===""?null:+t.value):ty==="bool"?t.checked:(t.value||null);
+  setPath(t.dataset.bind,val);commit();
+});
+document.addEventListener("submit",function(e){
+  e.preventDefault(); if(!S)return; var f=e.target.dataset.form;
+  if(f==="spend"){var a=+document.getElementById("spAmt").value;if(!(a>0))return;var d=new Date();S.spend.push({id:uid(),m:ui.month,amount:a,note:document.getElementById("spNote").value.trim(),d:d.getDate()+"/"+(d.getMonth()+1)});commit()}
+  if(f==="buy"){var b=+document.getElementById("byAmt").value;if(!(b>0))return;S.boxBuys.push({id:uid(),m:ui.month,amount:b,note:document.getElementById("byNote").value.trim()});commit()}
+});
+document.addEventListener("click",function(e){
+  var t=e.target.closest("button,[data-goto]"); if(!t)return;
+  var ds=t.dataset;
+  if(ds.del){var key=ds.del+":"+ds.id;if(ui.armed!==key){ui.armed=key;render();return}ui.armed=null;
+    var arr=S[ds.del];var ix=arr.findIndex(function(x,i){return (x.id||String(i))===ds.id});if(ix>=0)arr.splice(ix,1);commit();return}
+  if(ui.armed){ui.armed=null}
+  if(ds.conf){var el=document.getElementById("amt-"+ds.conf.replace(/[^a-z0-9]/gi,"_"));var a=el?+el.value:0;S.paid[ui.month+"|"+ds.conf]={amount:isFinite(a)?a:0,at:Date.now()};commit();return}
+  if(ds.unconf){delete S.paid[ui.month+"|"+ds.unconf];commit();return}
+  if(ds.confall){var M=SIM.months[mi(ui.month)];M.lines.forEach(function(l){if(!l.confirmed){var el=document.getElementById("amt-"+l.key.replace(/[^a-z0-9]/gi,"_"));S.paid[ui.month+"|"+l.key]={amount:el?+el.value:l.planned,at:Date.now()}}});commit();return}
+  if(ds.goto){ui.month=ds.goto;location.hash="home";return}
+  if(ds.debt){ui.debt=ds.debt;try{localStorage.setItem("finplan-ui",JSON.stringify({debt:ui.debt}))}catch(x){}render();return}
+  if(ds.add){var k=ds.add,m=ui.month||todayKey();
+    if(k==="incomes"||k==="living")S[k].push({id:uid(),from:m,amount:k==="living"?3500:0});
+    if(k==="bills")S.bills.push({id:uid(),name:"اشتراك جديد",amount:0,from:m});
+    if(k==="windfalls"||k==="efOut")S[k].push({id:uid(),m:m,amount:0,note:""});
+    if(k==="debts")S.debts.push({id:uid(),name:"دين جديد",balance:0,monthly:0,start:m,prio:5,extra:true});
+    commit();return}
+  if(ds.blank){S=blankState();ui.month=S.start;commit();return}
+  if(ds.export){exportFile();return}
+  if(t.id==="mPrev"&&S){ui.month=addM(ui.month,-1);render()}
+  if(t.id==="mNext"&&S){ui.month=addM(ui.month,1);render()}
+  if(t.id==="mNow"&&S){ui.month=todayKey();render()}
+});
+function exportFile(){
+  var data=JSON.stringify(S,null,1);
+  var p=(window.claude&&window.claude.use)?window.claude.use("downloads"):Promise.resolve(null);
+  Promise.resolve(p).then(function(dl){
+    var msg=document.getElementById("impMsg");
+    if(!dl){var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([data],{type:"application/json"}));a.download="finplan-"+todayKey()+".json";document.body.appendChild(a);a.click();a.remove();if(msg)msg.textContent="تم تنزيل النسخة.";return}
+    dl.save({filename:"finplan-"+todayKey()+".json",data:new Blob([data],{type:"application/json"})}).then(function(){if(msg)msg.textContent="تم تنزيل النسخة."},function(){if(msg)msg.textContent="ما تم التنزيل."});
+  });
+}
+function importFile(f){
+  if(!f)return; var r=new FileReader();
+  r.onload=function(){try{var st=JSON.parse(r.result);if(!st.debts||!st.start)throw 0;S=normalize(st);commit()}catch(x){var m=document.getElementById("impMsg");if(m)m.textContent="الملف غير صالح. اختر ملف نسخة نزلته من هنا."}};
+  r.readAsText(f);
+}
+function route(){var h=(location.hash||"#home").slice(1);ui.view=["home","plan","schedules","invest","edit"].indexOf(h)>=0?h:"home";render()}
+window.addEventListener("hashchange",route);
+route();boot();
+if("serviceWorker" in navigator&&location.protocol==="https:"){navigator.serviceWorker.register("sw.js").catch(function(){})}
+})();
+</script>
+</body></html>
