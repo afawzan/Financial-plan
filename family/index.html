@@ -1,0 +1,1014 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0e5a50">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="خطتي المالية">
+<title>خطتي المالية</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="../icon-512.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  --bg:#f1f4f3; --surface:#ffffff; --surface2:#e9eeec; --ink:#0f1d1a; --muted:#5b6b66; --faint:#8a9893; --line:#dbe3e0;
+  --accent:#0e5a50; --accent-2:#13786a; --accent-ink:#ffffff; --accent-soft:#dcefea;
+  --debt:#b4532a; --debt-soft:#f8e4da; --bad:#b3261e; --bad-soft:#fbe3e1; --warn:#8f6000; --warn-soft:#f8ecd2; --good:#1c7a42; --good-soft:#dcf1e4;
+  --c-ess:#8c9a96; --c-loan:#55637a; --c-debt:#c0602f; --c-goal:#b58a1b; --c-ef:#13786a; --c-box:#7a4fa3; --c-inv:#2f62b0; --c-free:#5aa36d;
+  --font:"IBM Plex Sans Arabic",system-ui,-apple-system,"Segoe UI",Tahoma,sans-serif;
+  --r:14px; --shadow:0 1px 2px rgba(15,29,26,.05),0 4px 16px rgba(15,29,26,.05);
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0b1210; --surface:#121b19; --surface2:#1a2522; --ink:#e6eeeb; --muted:#9aaba5; --faint:#6f7f7a; --line:#26332f;
+  --accent:#3fb39c; --accent-2:#56c7af; --accent-ink:#04201a; --accent-soft:#143a32;
+  --debt:#e98d62; --debt-soft:#3a2219; --bad:#f07167; --bad-soft:#3b1a18; --warn:#e2b04a; --warn-soft:#3a2d12; --good:#62c98a; --good-soft:#143523;
+  --c-ess:#7d8c88; --c-loan:#8796b0; --c-debt:#e0814f; --c-goal:#d9ad3c; --c-ef:#3fb39c; --c-box:#a982cf; --c-inv:#6b97e0; --c-free:#7cc48d;
+  --shadow:none; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0b1210; --surface:#121b19; --surface2:#1a2522; --ink:#e6eeeb; --muted:#9aaba5; --faint:#6f7f7a; --line:#26332f;
+  --accent:#3fb39c; --accent-2:#56c7af; --accent-ink:#04201a; --accent-soft:#143a32;
+  --debt:#e98d62; --debt-soft:#3a2219; --bad:#f07167; --bad-soft:#3b1a18; --warn:#e2b04a; --warn-soft:#3a2d12; --good:#62c98a; --good-soft:#143523;
+  --c-ess:#7d8c88; --c-loan:#8796b0; --c-debt:#e0814f; --c-goal:#d9ad3c; --c-ef:#3fb39c; --c-box:#a982cf; --c-inv:#6b97e0; --c-free:#7cc48d;
+  --shadow:none; color-scheme:dark}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:15px;line-height:1.55;-webkit-tap-highlight-color:transparent}
+[hidden]{display:none!important}
+.stack,.items,.field,.rv,.item,.sheet .wrap,.bbar .wrap{grid-template-columns:minmax(0,1fr)}
+input,select{min-width:0}
+.num{font-variant-numeric:tabular-nums;direction:ltr;unicode-bidi:isolate;white-space:nowrap}
+button{font:inherit;color:inherit;cursor:pointer}
+input,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+svg.i{width:20px;height:20px;flex:none;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+/* app shell */
+.top{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:saturate(1.4) blur(10px);-webkit-backdrop-filter:saturate(1.4) blur(10px);padding-top:env(safe-area-inset-top,0px)}
+.wrap{max-width:760px;margin:0 auto;padding-inline:max(16px,env(safe-area-inset-left,0px)) max(16px,env(safe-area-inset-right,0px))}
+.topbar{display:flex;align-items:center;gap:10px;height:56px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:17px;min-width:0}
+.logo{width:32px;height:32px;border-radius:9px;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;flex:none}
+.logo svg{width:18px;height:18px}
+.saved{margin-inline-start:auto;display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);white-space:nowrap}
+.saved i{width:7px;height:7px;border-radius:50%;background:var(--good)}
+.saved.err i{background:var(--bad)}
+.iconbtn{width:40px;height:40px;border-radius:12px;border:1px solid var(--line);background:var(--surface);display:grid;place-items:center;flex:none}
+main{padding-bottom:calc(120px + env(safe-area-inset-bottom,0px))}
+
+/* progress */
+.prog{padding:4px 0 12px}
+.prog-head{display:flex;justify-content:space-between;align-items:baseline;font-size:12.5px;color:var(--muted);margin-bottom:8px}
+.prog-head b{color:var(--ink);font-weight:600}
+.segs{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:4px}
+.segs button{height:6px;border-radius:99px;border:0;padding:0;background:var(--surface2)}
+.segs button.done{background:var(--accent-2);opacity:.55}
+.segs button.on{background:var(--accent)}
+
+/* step */
+.step-h{display:flex;gap:14px;align-items:flex-start;margin:8px 0 18px}
+.step-ic{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;flex:none;background:var(--accent-soft);color:var(--accent)}
+.step-ic svg{width:24px;height:24px}
+.step-h h1{font-size:22px;line-height:1.3;margin:2px 0 4px;font-weight:700}
+.step-h p{margin:0;color:var(--muted);font-size:14px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;box-shadow:var(--shadow);min-width:0}
+.stack{display:grid;gap:12px}
+.field{display:grid;gap:6px}
+.field>label,.lbl{font-size:13.5px;font-weight:600;color:var(--ink)}
+.field .hint,.hint{font-size:12.5px;color:var(--muted);margin:0}
+.inp{position:relative;display:flex;align-items:center}
+.inp input,.inp select,.txt{width:100%;height:50px;border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:0 14px;font-size:16px;outline:none;transition:border-color .15s,box-shadow .15s;-webkit-appearance:none;appearance:none}
+.inp input:focus,.inp select:focus,.txt:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.inp.money input{padding-inline-end:56px;font-weight:600;direction:ltr;text-align:right;font-variant-numeric:tabular-nums}
+.inp.money::after{content:"ريال";position:absolute;inset-inline-end:14px;font-size:13px;color:var(--faint);pointer-events:none}
+.inp.pct input{padding-inline-end:40px;direction:ltr;text-align:right;font-weight:600}
+.inp.pct::after{content:"%";position:absolute;inset-inline-end:16px;color:var(--faint);pointer-events:none}
+.inp.cnt input{padding-inline-end:56px;direction:ltr;text-align:right;font-weight:600}
+.inp.cnt::after{content:"شهر";position:absolute;inset-inline-end:14px;font-size:13px;color:var(--faint);pointer-events:none}
+.inp select{padding-inline-end:34px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238a9893' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-position:left 12px center;background-size:16px 16px;background-repeat:no-repeat}
+.big input{height:60px;font-size:24px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mpick{display:grid;grid-template-columns:1.3fr 1fr;gap:8px}
+.err-t{color:var(--bad);font-size:12.5px}
+.inp input.bad{border-color:var(--bad)}
+
+/* segmented */
+.seg{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;background:var(--surface2);border-radius:12px;padding:4px;gap:4px}
+.seg button{border:0;background:transparent;border-radius:9px;min-height:40px;padding:6px 8px;font-size:13.5px;font-weight:500;color:var(--muted);line-height:1.3}
+.seg button.on{background:var(--surface);color:var(--ink);font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.seg button small{display:block;font-size:11.5px;font-weight:400;color:var(--faint)}
+
+/* items */
+.items{display:grid;gap:10px}
+.item{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px;display:grid;gap:10px;box-shadow:var(--shadow)}
+.item-h{display:flex;align-items:center;gap:8px}
+.item-h .nm{flex:1;min-width:0;height:44px;border:1px solid transparent;background:var(--surface2);border-radius:10px;padding:0 12px;font-size:15px;font-weight:600;outline:none}
+.item-h .nm:focus{border-color:var(--accent);background:var(--surface)}
+.item-h .nm::placeholder{color:var(--faint);font-weight:500}
+.del{width:44px;height:44px;border-radius:10px;border:1px solid var(--line);background:transparent;color:var(--muted);display:grid;place-items:center;flex:none}
+.del:active{background:var(--bad-soft);color:var(--bad)}
+.add{display:flex;align-items:center;justify-content:center;gap:8px;height:52px;border:1.5px dashed color-mix(in srgb,var(--accent) 45%,var(--line));border-radius:var(--r);background:transparent;color:var(--accent);font-weight:600;width:100%}
+.add:active{background:var(--accent-soft)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:99px;padding:7px 14px;font-size:13.5px;min-height:36px}
+.chip:active,.chip.on{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.empty{text-align:center;padding:22px 16px;color:var(--muted);font-size:14px;border:1px dashed var(--line);border-radius:var(--r)}
+.toggle{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:44px}
+.toggle .t{font-size:14px;font-weight:500}
+.toggle .t small{display:block;color:var(--muted);font-weight:400;font-size:12.5px}
+.sw{position:relative;width:50px;height:30px;border-radius:99px;border:0;background:var(--surface2);flex:none;transition:background .15s;box-shadow:inset 0 0 0 1px var(--line)}
+.sw::after{content:"";position:absolute;top:3px;right:3px;width:24px;height:24px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:transform .18s}
+.sw[aria-checked="true"]{background:var(--accent)}
+.sw[aria-checked="true"]::after{transform:translateX(-20px)}
+.sub-t{font-size:12.5px;color:var(--muted)}
+.calc{display:flex;justify-content:space-between;align-items:center;gap:8px;background:var(--surface2);border-radius:10px;padding:10px 12px;font-size:13.5px}
+.calc b{font-weight:700}
+.sec-t{font-size:13px;font-weight:700;color:var(--muted);margin:22px 2px 10px;letter-spacing:0}
+
+/* bottom bar */
+.bbar{position:fixed;inset:auto 0 0 0;z-index:25;background:var(--surface);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px)}
+.bbar .wrap{display:grid;gap:8px;padding-block:10px}
+.live{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--muted)}
+.live b{font-size:15px;color:var(--ink)}
+.live b.neg{color:var(--bad)}
+.btns{display:grid;grid-template-columns:auto 1fr;gap:10px}
+.btn{height:50px;border-radius:12px;border:1px solid var(--line);background:var(--surface);font-weight:600;padding:0 18px;display:inline-flex;align-items:center;justify-content:center;gap:8px;font-size:15px}
+.btn.pri{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.pri:disabled{opacity:.45}
+.btn.sm{height:40px;font-size:13.5px;padding:0 14px;border-radius:10px}
+.btn.danger{color:var(--bad)}
+
+/* review */
+.rv{display:grid;gap:10px}
+.rv-row{display:flex;align-items:center;gap:12px;padding:12px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r)}
+.rv-row .ic{width:36px;height:36px;border-radius:10px;background:var(--surface2);color:var(--muted);display:grid;place-items:center;flex:none}
+.rv-row .ic svg{width:18px;height:18px}
+.rv-row .tx{flex:1;min-width:0}
+.rv-row .tx b{display:block;font-size:14px}
+.rv-row .tx span{font-size:12.5px;color:var(--muted)}
+.rv-row .v{font-weight:700;font-size:15px}
+.rv-row button{border:0;background:none;color:var(--accent);font-size:13px;font-weight:600;padding:8px 4px}
+.note{display:flex;gap:10px;padding:12px 14px;border-radius:12px;font-size:13.5px;align-items:flex-start;line-height:1.6}
+.note svg{width:18px;height:18px;margin-top:2px}
+.note.bad{background:var(--bad-soft);color:var(--bad)}
+.note.warn{background:var(--warn-soft);color:var(--warn)}
+.note.ok{background:var(--good-soft);color:var(--good)}
+.note.info{background:var(--surface2);color:var(--muted)}
+.note b{font-weight:700}
+.note .nt{color:var(--ink)}
+
+/* results */
+.tabs{display:grid;grid-template-columns:repeat(4,1fr);background:var(--surface2);border-radius:12px;padding:4px;gap:4px;margin:4px 0 14px}
+.tabs button{border:0;background:transparent;border-radius:9px;height:38px;font-size:13.5px;font-weight:500;color:var(--muted)}
+.tabs button.on{background:var(--surface);color:var(--ink);font-weight:700;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.hero{background:linear-gradient(160deg,var(--hero-a),var(--hero-b));color:#fff;border-radius:18px;padding:18px;display:grid;gap:14px}
+.hero{--hero-a:#0e5a50;--hero-b:#093d36}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .hero{--hero-a:#145247;--hero-b:#0b332d}:root:not([data-theme="light"]) .tabs button.on,:root:not([data-theme="light"]) .seg button.on{background:#2c3b37}}
+:root[data-theme="dark"] .hero{--hero-a:#145247;--hero-b:#0b332d}
+:root[data-theme="dark"] .tabs button.on,:root[data-theme="dark"] .seg button.on{background:#2c3b37}
+.hero .k{font-size:13px;opacity:.9}
+.hero .big{font-size:28px;font-weight:700;line-height:1.2}
+.hero .sub{font-size:13px;opacity:.85}
+.hero-g{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.hero-g div{background:rgba(255,255,255,.12);border-radius:12px;padding:10px 12px}
+.hero-g b{display:block;font-size:17px}
+.hero-g span{font-size:12px;opacity:.85}
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;min-width:0;box-shadow:var(--shadow)}
+.kpi .k{font-size:12.5px;color:var(--muted);display:flex;align-items:center;gap:6px}
+.kpi .k i{width:8px;height:8px;border-radius:3px;flex:none}
+.kpi .v{font-size:19px;font-weight:700;margin-top:2px}
+.kpi .s{font-size:12px;color:var(--muted)}
+.h2{font-size:16px;font-weight:700;margin:22px 2px 10px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.h2 small{font-size:12px;font-weight:400;color:var(--muted)}
+.stackbar{display:flex;height:14px;border-radius:99px;overflow:hidden;background:var(--surface2);gap:2px}
+.stackbar i{display:block;height:100%;min-width:3px}
+.legend{display:grid;gap:2px;margin-top:12px}
+.legend div{display:flex;align-items:center;gap:8px;font-size:13.5px;padding:6px 0;border-bottom:1px solid var(--line)}
+.legend div:last-child{border-bottom:0}
+.legend i{width:10px;height:10px;border-radius:3px;flex:none}
+.legend span{flex:1}
+.legend em{font-style:normal;color:var(--muted);font-size:12px;min-width:38px;text-align:left}
+.tl{display:grid;gap:0;position:relative}
+.tl-i{display:grid;grid-template-columns:18px 1fr auto;gap:10px;align-items:start;padding:8px 0;position:relative}
+.tl-i::before{content:"";position:absolute;right:8px;top:0;bottom:0;width:2px;background:var(--line)}
+.tl-i:first-child::before{top:14px}.tl-i:last-child::before{bottom:calc(100% - 14px)}
+.tl-i .dot{width:18px;height:18px;border-radius:50%;background:var(--surface);border:3px solid var(--accent);position:relative;z-index:1;margin-top:2px}
+.tl-i.debt .dot{border-color:var(--c-debt)}.tl-i.goal .dot{border-color:var(--c-goal)}.tl-i.inv .dot{border-color:var(--c-inv)}.tl-i.miss .dot{border-color:var(--bad)}
+.tl-i b{font-size:14px;font-weight:600;display:block}
+.tl-i span{font-size:12.5px;color:var(--muted)}
+.tl-i .when{font-size:12.5px;color:var(--muted);text-align:left;white-space:nowrap}
+.chart{position:relative}
+.chart svg{display:block;width:100%;height:auto;touch-action:pan-y}
+.chart .tip{position:absolute;top:0;pointer-events:none;background:var(--ink);color:var(--bg);font-size:12px;border-radius:8px;padding:6px 9px;white-space:nowrap;transform:translateX(50%);line-height:1.5}
+.lg-row{display:flex;gap:14px;flex-wrap:wrap;font-size:12.5px;color:var(--muted);margin-bottom:8px}
+.lg-row span{display:inline-flex;align-items:center;gap:6px}
+.lg-row i{width:14px;height:3px;border-radius:2px}
+
+/* table */
+.yrs{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin-bottom:10px;padding-bottom:2px}
+.yrs::-webkit-scrollbar{display:none}
+.yrs button{flex:1 0 auto;min-width:44px;border:1px solid var(--line);background:var(--surface);border-radius:99px;padding:6px 14px;font-size:13px;min-height:36px;white-space:nowrap}
+.yrs button.on{background:var(--ink);border-color:var(--ink);color:var(--bg);font-weight:600}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--surface);-webkit-overflow-scrolling:touch;max-height:70vh;overscroll-behavior-x:contain}
+table.t{border-collapse:separate;border-spacing:0;font-size:13px;min-width:100%}
+table.t th,table.t td{padding:9px 10px;text-align:left;white-space:nowrap;border-bottom:1px solid var(--line)}
+table.t thead th{position:sticky;top:0;z-index:2;background:var(--surface2);font-weight:600;font-size:12px;color:var(--muted);text-align:center;line-height:1.3}
+table.t th:first-child,table.t td:first-child{position:sticky;right:0;z-index:1;background:var(--surface);text-align:right;border-left:1px solid var(--line)}
+table.t thead th:first-child{z-index:3;background:var(--surface2)}
+table.t td.z{color:var(--faint)}
+table.t tr.dfc td{background:color-mix(in srgb,var(--bad-soft) 60%,var(--surface))}
+table.t tr.dfc td:first-child{background:var(--bad-soft)}
+table.t tbody tr{cursor:pointer}
+table.t tbody tr:active td{background:var(--accent-soft)}
+table.t .mo b{display:block;font-weight:600;font-size:13px}
+table.t .mo span{font-size:11px;color:var(--muted)}
+table.t .mo .ev{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--c-debt);margin-inline-start:6px;vertical-align:middle}
+table.t td.debtc{color:var(--debt);font-weight:600}
+table.t td.savc{color:var(--accent);font-weight:600}
+table.t td.neg{color:var(--bad);font-weight:600}
+table.t tfoot td{font-weight:700;background:var(--surface2);position:sticky;bottom:0}
+table.t tfoot td:first-child{background:var(--surface2)}
+th .cdot{display:inline-block;width:7px;height:7px;border-radius:2px;margin-inline-end:4px}
+
+/* debt cards */
+.dc{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden}
+.dc-h{display:grid;grid-template-columns:1fr auto;gap:4px 10px;padding:14px;cursor:pointer;width:100%;border:0;background:none;text-align:right}
+.dc-h b{font-size:15px}
+.dc-h .tag{font-size:11.5px;padding:2px 8px;border-radius:99px;background:var(--surface2);color:var(--muted);margin-inline-start:6px;font-weight:500}
+.dc-h .tag.red{background:var(--bad-soft);color:var(--bad)}
+.dc-h .meta{grid-column:1/-1;display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted)}
+.dc-h .pb{grid-column:1/-1;height:6px;border-radius:99px;background:var(--surface2);overflow:hidden}
+.dc-h .pb i{display:block;height:100%;background:var(--c-debt);border-radius:99px}
+.dc-b{border-top:1px solid var(--line);max-height:320px;overflow:auto}
+.dc-b table{width:100%;border-collapse:collapse;font-size:13px}
+.dc-b td,.dc-b th{padding:8px 14px;border-bottom:1px solid var(--line);text-align:left}
+.dc-b th{font-size:12px;color:var(--muted);font-weight:600;background:var(--surface2);position:sticky;top:0}
+.dc-b td:first-child,.dc-b th:first-child{text-align:right}
+
+/* sheet */
+.scrim{position:fixed;inset:0;background:rgba(0,0,0,.42);z-index:40;opacity:0;transition:opacity .2s}
+.scrim.on{opacity:1}
+.sheet{position:fixed;inset:auto 0 0 0;z-index:41;background:var(--surface);border-radius:20px 20px 0 0;max-height:88vh;overflow:auto;padding:8px 0 calc(20px + env(safe-area-inset-bottom,0px));transform:translateY(100%);transition:transform .25s cubic-bezier(.2,.8,.2,1);max-width:760px;margin:0 auto}
+.sheet.on{transform:none}
+.grab{width:40px;height:5px;border-radius:99px;background:var(--line);margin:4px auto 10px}
+.sheet h3{margin:0 0 4px;font-size:18px}
+.sheet .wrap{display:grid;gap:12px}
+.kv{display:grid;gap:0}
+.kv div{display:flex;justify-content:space-between;gap:10px;padding:9px 0;border-bottom:1px solid var(--line);font-size:14px}
+.kv div:last-child{border-bottom:0}
+.kv div span{color:var(--muted)}
+.kv div.tot{font-weight:700}
+.kv div.tot span{color:var(--ink)}
+.kv div.sub span{padding-inline-start:14px;font-size:13px}
+.menu{display:grid;gap:4px}
+.menu button,.menu label{display:flex;align-items:center;gap:12px;padding:14px 4px;border:0;background:none;font-size:15px;text-align:right;border-bottom:1px solid var(--line);cursor:pointer;width:100%}
+.menu .danger{color:var(--bad)}
+.toast{position:fixed;left:50%;bottom:calc(140px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:12px;font-size:14px;opacity:0;transition:.2s;z-index:60;pointer-events:none;max-width:calc(100% - 32px);text-align:center}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+
+/* welcome */
+.welcome{padding-top:18px}
+.welcome h1{font-size:28px;line-height:1.25;margin:10px 0 8px}
+.welcome p.lead{color:var(--muted);margin:0 0 20px;font-size:15px}
+.wsteps{display:grid;gap:8px;margin:0 0 20px;padding:0;list-style:none}
+.wsteps li{display:flex;gap:12px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:14px}
+.wsteps li span.n{width:26px;height:26px;border-radius:8px;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;font-weight:700;font-size:13px;flex:none}
+
+@media (min-width:640px){
+  .kpis{grid-template-columns:repeat(4,1fr)}
+  .step-h h1{font-size:24px}
+}
+@media print{
+  .top,.bbar,.tabs,.yrs,.no-print{display:none!important}
+  body{background:#fff;color:#000}
+  .tw{max-height:none;overflow:visible;border:0}
+  table.t th,table.t td{position:static!important;padding:4px 6px;font-size:10px}
+  main{padding:0}
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap topbar">
+    <div class="brand"><span class="logo" id="logo"></span><span>خطتي المالية</span></div>
+    <span class="saved" id="saved" title="البيانات محفوظة على هذا الجهاز"><i></i><span>محفوظ على جهازك</span></span>
+    <button class="iconbtn" id="menuBtn" aria-label="القائمة"></button>
+  </div>
+</header>
+<main class="wrap" id="app"></main>
+<div class="bbar" id="bbar" hidden></div>
+<div class="scrim" id="scrim" hidden></div>
+<div class="sheet" id="sheet" role="dialog" aria-modal="true" hidden></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<input type="file" id="fileIn" accept=".json,application/json" hidden>
+
+<script>
+(function(){
+"use strict";
+
+/* ---------- utilities ---------- */
+var AR_M=["يناير","فبراير","مارس","أبريل","مايو","يونيو","يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"];
+var ORD=["الأولى","الثانية","الثالثة","الرابعة","الخامسة"];
+var LS="khutati-family-v1", N=60, MAXV=1e9;
+var RISK={low:{n:"محافظ",r:4,d:"ودائع ومرابحة"},mid:{n:"متوازن",r:6,d:"صناديق متنوعة"},high:{n:"جريء",r:9,d:"أسهم وصناديق نمو"}};
+function $(s,el){return (el||document).querySelector(s)}
+function thisMonth(){var d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")}
+function addM(k,n){var p=k.split("-").map(Number),y=p[0],m=p[1]-1+n;y+=Math.floor(m/12);m=((m%12)+12)%12;return y+"-"+String(m+1).padStart(2,"0")}
+function diffM(a,b){var x=a.split("-").map(Number),y=b.split("-").map(Number);return (y[0]-x[0])*12+(y[1]-x[1])}
+function mlabel(k){if(!k)return "—";var p=k.split("-").map(Number);return AR_M[p[1]-1]+" "+p[0]}
+function validMonth(k){return typeof k==="string"&&/^\d{4}-(0[1-9]|1[0-2])$/.test(k)}
+function num(v){
+  if(typeof v==="number")return isFinite(v)?Math.min(Math.max(v,0),MAXV):0;
+  var s=String(v==null?"":v).replace(/[٠-٩]/g,function(d){return d.charCodeAt(0)-1632}).replace(/[۰-۹]/g,function(d){return d.charCodeAt(0)-1776})
+    .replace(/[٬,\s]/g,"").replace(/٫/g,".");
+  var n=parseFloat(s);return isFinite(n)?Math.min(Math.max(n,0),MAXV):0;
+}
+function rawNeg(v){var s=String(v==null?"":v).trim();return /^[-−]/.test(s)}
+function R(n){return Math.round(+n||0)}
+function f(n){return R(n).toLocaleString("en-US")}
+function F(n){return '<span class="num">'+f(n)+'</span>'}
+function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
+function sum(a,fn){return (a||[]).reduce(function(t,x){return t+(+fn(x)||0)},0)}
+function uid(){return Math.random().toString(36).slice(2,9)}
+function plural(n,one,two,few,many){n=R(n);if(n===1)return one;if(n===2)return two;if(n>=3&&n<=10)return n+" "+few;return n+" "+many}
+function months(n){return plural(n,"شهر واحد","شهرين","أشهر","شهرًا")}
+function dur(n){n=R(n);if(n<=0)return "هذا الشهر";var y=Math.floor(n/12),m=n%12,p=[];if(y)p.push(plural(y,"سنة","سنتين","سنوات","سنة"));if(m)p.push(months(m));return p.join(" و")}
+
+var IC={
+  logo:'<path d="M4 19h16M6 16V10M10 16V7M14 16v-5M18 16V4"/>',
+  wallet:'<path d="M3 7.5A2.5 2.5 0 0 1 5.5 5H18v3"/><rect x="3" y="8" width="18" height="12" rx="2.5"/><path d="M16 14h2"/>',
+  home:'<path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-5h4v5"/>',
+  card:'<rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3 10h18M7 15h4"/>',
+  clock:'<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',
+  bolt:'<path d="M13 3 5 13.5h6L10 21l8-10.5h-6z"/>',
+  target:'<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r=".8"/>',
+  shield:'<path d="M12 3 4.5 6v5.5c0 4.5 3.2 8 7.5 9.5 4.3-1.5 7.5-5 7.5-9.5V6z"/><path d="m9 12 2 2 4-4"/>',
+  bag:'<path d="M5 8h14l-1 12H6z"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8"/>',
+  trend:'<path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/>',
+  check:'<path d="M5 12.5 10 17l9-10"/>',
+  x:'<path d="M6 6l12 12M18 6 6 18"/>',
+  plus:'<path d="M12 5v14M5 12h14"/>',
+  dots:'<circle cx="12" cy="5.5" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="12" cy="18.5" r="1.2"/>',
+  edit:'<path d="M4 20h4L19 9l-4-4L4 16z"/>',
+  dl:'<path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5"/><path d="M4 19h16"/>',
+  ul:'<path d="M12 15V4m0 0L7.5 8.5M12 4l4.5 4.5"/><path d="M4 19h16"/>',
+  table:'<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M3 14h18M9 4v16"/>',
+  print:'<path d="M7 9V4h10v5"/><rect x="4" y="9" width="16" height="7" rx="1.5"/><path d="M7 14h10v6H7z"/>',
+  trash:'<path d="M4 7h16M9 7V4.5h6V7M6 7l1 13h10l1-13"/>',
+  moon:'<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>',
+  alert:'<path d="M12 4 2.5 20h19z"/><path d="M12 10v4.5M12 17.5v.01"/>',
+  info:'<circle cx="12" cy="12" r="8.5"/><path d="M12 11v5M12 8v.01"/>',
+  arrowR:'<path d="M9 6l6 6-6 6"/>',arrowL:'<path d="M15 6l-6 6 6 6"/>'
+};
+function ic(n,cls){return '<svg class="i'+(cls?" "+cls:"")+'" viewBox="0 0 24 24" aria-hidden="true">'+IC[n]+'</svg>'}
+
+/* ---------- state ---------- */
+function blank(){return {v:1,start:thisMonth(),salary:"",raise:"",extras:[],living:"",fixed:[],loans:[],overdue:[],urgent:[],goals:[],
+  ef:{months:3,custom:"",saved:"",when:"after"},box:{monthly:"",target:"",saved:"",when:"after"},inv:{monthly:"",when:"after",rest:true,risk:"mid",saved:""},
+  step:-1,view:"wiz",tab:"sum",year:0}}
+var S=blank(), storageOK=true, stateGen=0;
+function sanitize(o){
+  var b=blank(); if(!o||typeof o!=="object")return b;
+  ["salary","raise","living"].forEach(function(k){if(o[k]!=null)b[k]=String(o[k])});
+  if(validMonth(o.start))b.start=o.start;
+  function arr(k,fields){if(Array.isArray(o[k]))b[k]=o[k].filter(function(x){return x&&typeof x==="object"}).slice(0,50).map(function(x){var y={id:(typeof x.id==="string"&&/^[a-z0-9]{1,12}$/i.test(x.id))?x.id:uid()};fields.forEach(function(fl){y[fl]=x[fl]==null?"":(typeof x[fl]==="boolean"?x[fl]:String(x[fl]).slice(0,60))});return y})}
+  arr("extras",["name","amount"]);arr("fixed",["name","amount","freq"]);arr("loans",["name","monthly","months","balloon"]);
+  arr("overdue",["name","amount","penalty"]);arr("urgent",["name","amount","due"]);arr("goals",["name","amount","due","saved"]);
+  b.fixed.forEach(function(x){if(x.freq!=="y")x.freq="m"});
+  b.overdue.forEach(function(x){x.penalty=x.penalty===true});
+  b.urgent.forEach(function(x){if(!validMonth(x.due))x.due=""});
+  b.goals.forEach(function(x){if(!validMonth(x.due))x.due=addM(b.start,12)});
+  ["ef","box","inv"].forEach(function(k){if(o[k]&&typeof o[k]==="object")Object.keys(b[k]).forEach(function(fl){if(o[k][fl]!=null)b[k][fl]=typeof b[k][fl]==="boolean"?!!o[k][fl]:(typeof b[k][fl]==="number"?(+o[k][fl]||0):String(o[k][fl]))})});
+  if([3,6,0].indexOf(+b.ef.months)<0)b.ef.months=3; b.ef.months=+b.ef.months;
+  ["ef","box","inv"].forEach(function(k){if(b[k].when!=="now")b[k].when="after"});
+  if(!RISK[b.inv.risk])b.inv.risk="mid";
+  if(typeof o.step==="number"&&o.step>=-1&&o.step<STEPS.length)b.step=o.step;
+  if(o.view==="plan")b.view="plan"; if(["sum","tbl","debt","fund"].indexOf(o.tab)>=0)b.tab=o.tab;
+  if(typeof o.year==="number"&&o.year>=0&&o.year<=5)b.year=o.year;
+  return b;
+}
+function load(){try{var r=localStorage.getItem(LS);if(r)S=sanitize(JSON.parse(r))}catch(e){storageOK=false}}
+var saveT=null;
+function save(){clearTimeout(saveT);saveT=setTimeout(saveNow,250)}
+function saveNow(){
+  var el=$("#saved");
+  try{localStorage.setItem(LS,JSON.stringify(S));storageOK=true;el.className="saved";el.lastChild.textContent="محفوظ على جهازك"}
+  catch(e){storageOK=false;el.className="saved err";el.lastChild.textContent="الحفظ غير متاح، صدّر ملفًا"}
+}
+
+/* ---------- engine ---------- */
+function nm(x,i,pre){var n=String(x.name||"").trim();return n||(pre+" "+(i+1))}
+function fixedMonthly(s){return sum(s.fixed,function(x){return x.freq==="y"?num(x.amount)/12:num(x.amount)})}
+function loanMonthly(s){return sum(s.loans,function(l){return num(l.months)>=1?num(l.monthly):0})}
+function essentials0(s){return num(s.living)+fixedMonthly(s)+loanMonthly(s)}
+function income0(s){return num(s.salary)+sum(s.extras,function(x){return num(x.amount)})}
+function efTarget(s){return s.ef.months===0?num(s.ef.custom):s.ef.months*essentials0(s)}
+
+function simulate(s){
+  var start=s.start, living=num(s.living), fixedM=fixedMonthly(s), extrasM=sum(s.extras,function(x){return num(x.amount)});
+  var sal0=num(s.salary), raise=Math.min(num(s.raise),50)/100;
+  var loans=[],od=[],ug=[],goals=[];
+  s.loans.forEach(function(l,i){var mo=num(l.monthly),n=Math.min(600,Math.floor(num(l.months))),b=num(l.balloon);
+    if((mo>0&&n>=1)||b>0)loans.push({id:l.id,name:nm(l,i,"قسط"),monthly:n>=1?mo:0,left:n>=1?n:0,n:n>=1?n:0,balloon:b,bsaved:0,bpaid:b<=0,dueIdx:n>=1?n:0,endAt:null,bAt:null,orig:(n>=1?mo*n:0)+b,pays:{}})});
+  s.overdue.forEach(function(x,i){var a=num(x.amount);if(a>0)od.push({id:x.id,name:nm(x,i,"متأخر"),rem:a,orig:a,penalty:!!x.penalty,paidAt:null,pays:{},kind:"od"})});
+  s.urgent.forEach(function(x,i){var a=num(x.amount);if(a>0)ug.push({id:x.id,name:nm(x,i,"دين"),rem:a,orig:a,dueIdx:validMonth(x.due)?Math.max(0,diffM(start,x.due)):null,due:x.due,paidAt:null,pays:{},kind:"ug"})});
+  s.goals.forEach(function(x,i){var a=num(x.amount);if(a>0){var sv=Math.min(num(x.saved),a);goals.push({id:x.id,name:nm(x,i,"هدف"),target:a,saved:sv,dueIdx:validMonth(x.due)?Math.max(0,diffM(start,x.due)):null,due:x.due,reachedAt:sv>=a?0:null,spentAt:null,pays:{}})}});
+  var efT=efTarget(s), efB=Math.min(num(s.ef.saved),MAXV), boxB=num(s.box.saved), invB=num(s.inv.saved), freeB=0;
+  var boxM=num(s.box.monthly), boxT=num(s.box.target), invM=num(s.inv.monthly), rate=RISK[s.inv.risk].r/1200;
+  var invIn=invB, rows=[], ev=[], hadDebts=od.length+ug.length>0, debtsDoneAt=hadDebts?null:-1, efDoneAt=efB>=efT&&efT>0?-1:null, invStartAt=null;
+  var allDebts=od.concat(ug),defRem=0,defEver=false;
+
+  for(var i=0;i<N;i++){
+    var m=addM(start,i), sal=sal0*Math.pow(1+raise,Math.floor(i/12)), inc=sal+extrasM, loanTot=0, r;
+    r={defPay:0,i:i,m:m,inc:inc,sal:sal,living:living,fixed:fixedM,loanPay:{},loanTot:0,debtPay:{},debtTot:0,goalPay:{},balloonPay:{},goalTot:0,ef:0,box:0,inv:0,free:0,deficit:0,short:[],ev:[]};
+    loans.forEach(function(l){if(l.left>0){r.loanPay[l.id]=l.monthly;l.pays[i]=l.monthly;loanTot+=l.monthly;l.left--;if(l.left===0){if(l.balloon<=0){l.endAt=i;ev.push({i:i,t:"loan",name:l.name});r.ev.push("انتهى "+l.name)}}}});
+    r.loanTot=loanTot;
+    var cash=inc-living-fixedM-loanTot;
+    if(cash<0){r.deficit=-cash;defRem+=r.deficit;defEver=true;cash=0}
+    var take=function(x){x=Math.max(0,Math.min(x,cash));cash-=x;return x};
+
+    // 0) funds the user chose to start from month one
+    if(s.box.when==="now"&&boxM>0){var bx=take(boxT>0?Math.min(boxM,Math.max(0,boxT-boxB)):boxM);r.box+=bx;boxB+=bx}
+    if(s.inv.when==="now"&&invM>0){r.inv+=take(invM)}
+    // 1) overdue debts: penalty first, then smallest
+    od.filter(function(d){return d.rem>0.5}).sort(function(a,b){return (b.penalty-a.penalty)||(a.rem-b.rem)}).forEach(function(d){var x=take(d.rem);if(x>0){d.rem-=x;d.pays[i]=(d.pays[i]||0)+x;r.debtPay[d.id]=(r.debtPay[d.id]||0)+x}});
+    // accumulated deficit from earlier months
+    if(defRem>0.5){var dx=take(defRem);defRem-=dx;r.defPay=dx}
+    // 2) deadline-paced commitments, earliest first
+    var req=[];
+    ug.forEach(function(d){if(d.rem>0.5&&d.dueIdx!=null)req.push({k:"ug",o:d,due:d.dueIdx})});
+    loans.forEach(function(l){if(!l.bpaid)req.push({k:"bl",o:l,due:l.dueIdx})});
+    goals.forEach(function(g){if(g.reachedAt==null&&g.dueIdx!=null&&i<=g.dueIdx)req.push({k:"gl",o:g,due:g.dueIdx})});
+    req.sort(function(a,b){return a.due-b.due});
+    req.forEach(function(q){
+      var o=q.o,remain=q.k==="ug"?o.rem:q.k==="bl"?o.balloon-o.bsaved:o.target-o.saved;
+      var left=Math.max(1,q.due-i+1), need=Math.min(remain,Math.ceil(remain/left)), got=take(need);
+      if(got<need-0.5)r.short.push(q.k==="bl"?"الدفعة الأخيرة لـ«"+o.name+"»":o.name);
+      if(q.k==="ug"){o.rem-=got;if(got>0){o.pays[i]=(o.pays[i]||0)+got;r.debtPay[o.id]=(r.debtPay[o.id]||0)+got}}
+      else if(q.k==="bl"){o.bsaved+=got;if(got>0)r.balloonPay[o.id]=got}
+      else {o.saved+=got;if(got>0){o.pays[i]=got;r.goalPay[o.id]=got}}
+    });
+    // balloons due now
+    loans.forEach(function(l){if(!l.bpaid&&i>=l.dueIdx&&l.bsaved>=l.balloon-0.5){l.bpaid=true;l.bAt=i;l.endAt=i;ev.push({i:i,t:"loan",name:l.name,balloon:true});r.ev.push("سُددت الدفعة الأخيرة: "+l.name)}});
+
+    // 2) funds set to start immediately
+    if(s.ef.when==="now"&&efT>efB){var e1=take(efT-efB);r.ef+=e1;efB+=e1}
+
+    // 4) urgent debts: earliest deadline, then smallest
+    ug.filter(function(d){return d.rem>0.5}).sort(function(a,b){var ad=a.dueIdx==null?1e9:a.dueIdx,bd=b.dueIdx==null?1e9:b.dueIdx;return (ad-bd)||(a.rem-b.rem)}).forEach(function(d){var x=take(d.rem);if(x>0){d.rem-=x;d.pays[i]=(d.pays[i]||0)+x;r.debtPay[d.id]=(r.debtPay[d.id]||0)+x}});
+    allDebts.forEach(function(d){if(d.paidAt==null&&d.rem<=0.5){d.rem=0;d.paidAt=i;ev.push({i:i,t:"debt",name:d.name});r.ev.push("سُدد "+d.name)}});
+    var done=defRem<=0.5&&allDebts.every(function(d){return d.rem<=0.5});
+    if(done&&debtsDoneAt==null&&(hadDebts||defEver)){debtsDoneAt=i;ev.push({i:i,t:"alldebts"})}
+    if(!done&&debtsDoneAt===-1)debtsDoneAt=null;
+
+    if(done){
+      // 5) goals without deadline, or past deadline and not reached
+      goals.filter(function(g){return g.reachedAt==null&&(g.dueIdx==null||i>g.dueIdx)}).forEach(function(g){var x=take(g.target-g.saved);if(x>0){g.saved+=x;g.pays[i]=(g.pays[i]||0)+x;r.goalPay[g.id]=(r.goalPay[g.id]||0)+x}});
+      // 6) emergency fund
+      if(s.ef.when!=="now"&&efT>efB){var e2=take(efT-efB);r.ef+=e2;efB+=e2}
+      // 7) purchases fund
+      if(s.box.when!=="now"&&boxM>0){var b2=take(boxT>0?Math.min(boxM,Math.max(0,boxT-boxB)):boxM);r.box+=b2;boxB+=b2}
+      // 8) investment
+      if(s.inv.when!=="now"&&invM>0){r.inv+=take(invM)}
+      // 9) remainder
+      if(cash>0){if(s.inv.rest){r.inv+=cash}else{r.free+=cash}cash=0}
+    }
+    r.free+=cash; cash=0;
+    goals.forEach(function(g){if(g.reachedAt==null&&g.saved>=g.target-0.5){g.reachedAt=i}
+      if(g.spentAt==null&&g.reachedAt!=null&&(g.dueIdx==null||i>=g.dueIdx)){g.spentAt=i;ev.push({i:i,t:"goal",name:g.name,late:g.dueIdx!=null&&i>g.dueIdx});r.ev.push("تحقق "+g.name)}});
+    if(efDoneAt==null&&efT>0&&efB>=efT-0.5){efDoneAt=i;ev.push({i:i,t:"ef"})}
+    if(invStartAt==null&&r.inv>0){invStartAt=i;ev.push({i:i,t:"inv"})}
+    invB=invB*(1+rate)+r.inv; invIn+=r.inv; freeB+=r.free;
+    r.debtTot=sum(Object.keys(r.debtPay),function(k){return r.debtPay[k]})+r.defPay;r.defRem=defRem;
+    r.goalTot=sum(Object.keys(r.goalPay),function(k){return r.goalPay[k]})+sum(Object.keys(r.balloonPay),function(k){return r.balloonPay[k]});
+    r.balloonTot=sum(Object.keys(r.balloonPay),function(k){return r.balloonPay[k]});
+    r.loanRem=sum(loans,function(l){return l.left*l.monthly+(l.bpaid?0:l.balloon)});
+    r.debtRem=sum(allDebts,function(d){return d.rem});
+    r.totalDebt=r.loanRem+r.debtRem+defRem;
+    r.efB=efB;r.boxB=boxB;r.invB=invB;r.freeB=freeB;
+    r.goalB=sum(goals,function(g){return g.spentAt==null?g.saved:0});
+    r.blB=sum(loans,function(l){return l.bpaid?0:l.bsaved});
+    r.savings=efB+boxB+invB+freeB+r.goalB+r.blB;
+    rows.push(r);
+  }
+  return {rows:rows,ev:ev.sort(function(a,b){return a.i-b.i}),loans:loans,od:od,ug:ug,goals:goals,efT:efT,debtsDoneAt:debtsDoneAt,efDoneAt:efDoneAt,invStartAt:invStartAt,invIn:invIn,hadDebts:hadDebts,allDebts:allDebts,start:start,defEver:defEver};
+}
+
+function warnings(s,P){
+  var w=[],rows=P.rows,inc=income0(s),ess=essentials0(s);
+  var df=rows.filter(function(r){return r.deficit>0.5});
+  if(df.length){w.push({lv:"bad",t:"<b>مصاريفك الأساسية أعلى من دخلك</b> بمبلغ "+F(df[0].deficit)+" ريال في "+mlabel(df[0].m)+(df.length>1?"، ويتكرر العجز في "+months(df.length)+".":".")+" العجز يُحسب دينًا متراكمًا ويُسدد من الفائض لاحقًا. خفّض المعيشة أو المصاريف الثابتة بهذا المبلغ على الأقل."})}
+  P.ug.forEach(function(d){if(d.dueIdx!=null&&d.dueIdx<N&&(d.paidAt==null||d.paidAt>d.dueIdx))w.push({lv:"warn",t:"الفائض لا يكفي لسداد <b>"+esc(d.name)+"</b> بحلول "+mlabel(rows[d.dueIdx].m)+(d.paidAt!=null?"، يُسدد في "+mlabel(rows[d.paidAt].m):"")+"."})});
+  P.goals.forEach(function(g){if(g.dueIdx!=null&&g.dueIdx>=N){if(g.reachedAt==null)w.push({lv:"info",t:"موعد «<b>"+esc(g.name)+"</b>» بعد نهاية الخطة. المجموع له في آخر شهر "+F(g.saved)+" من "+F(g.target)+" ريال."});return}
+    if(g.dueIdx!=null&&(g.reachedAt==null||g.reachedAt>g.dueIdx)){w.push({lv:"warn",t:"«<b>"+esc(g.name)+"</b>» لن يكتمل بحلول "+mlabel(g.due)+(g.reachedAt!=null?"، يكتمل في "+mlabel(rows[g.reachedAt].m):"، ولا يكتمل خلال الخمس سنوات")+"."})}});
+  var unpaid=P.allDebts.filter(function(d){return d.paidAt==null});
+  if(unpaid.length)w.push({lv:"bad",t:"تبقى ديون بدون سداد بعد الخمس سنوات: "+unpaid.map(function(d){return "<b>"+esc(d.name)+"</b>"}).join("، ")+"."});
+  P.loans.forEach(function(l){if(l.balloon<=0||l.dueIdx>=N)return;
+    if(!l.bpaid)w.push({lv:"bad",t:"الدفعة الأخيرة لـ«<b>"+esc(l.name)+"</b>» ("+F(l.balloon)+" ريال) لا تكتمل خلال الخطة، وموعدها "+mlabel(rows[l.dueIdx].m)+"."});
+    else if(l.bAt>l.dueIdx)w.push({lv:"warn",t:"الدفعة الأخيرة لـ«<b>"+esc(l.name)+"</b>» موعدها "+mlabel(rows[l.dueIdx].m)+"، وتتأخر إلى "+mlabel(rows[l.bAt].m)+"."})});
+  var lm=loanMonthly(s);if(inc>0&&lm>inc/3)w.push({lv:"warn",t:"أقساطك "+F(lm)+" ريال، وهي أكثر من ثلث دخلك. تجنّب أي تمويل جديد حتى ينتهي بعضها."});
+  if(P.efT>0&&P.efDoneAt==null)w.push({lv:"warn",t:"صندوق الطوارئ لا يكتمل خلال الخطة."});
+  if(P.invStartAt==null&&num(s.inv.monthly)>0)w.push({lv:"info",t:"لا يبدأ الاستثمار خلال الخمس سنوات لأن الفائض يذهب للديون والصناديق."});
+  if(s.box.when==="now"||s.inv.when==="now"){if(P.hadDebts&&P.debtsDoneAt!=null&&P.debtsDoneAt>0)w.push({lv:"info",t:"المشتريات أو الاستثمار مفعّلة من أول شهر، وهذا يؤخّر سداد الديون. لو أجّلتها لبعد الديون تنتهي أسرع."})}
+  return w;
+}
+
+/* ---------- wizard ---------- */
+var STEPS=[
+  {k:"inc",t:"الدخل",ic:"wallet",h:"راتبك الصافي بعد الاستقطاعات، وأي دخل ثابت آخر."},
+  {k:"exp",t:"المصاريف",ic:"home",h:"ما تصرفه كل شهر بدون أقساط الديون."},
+  {k:"loan",t:"الأقساط",ic:"card",h:"تمويلات تُدفع بقسط شهري، مثل السيارة أو القرض الشخصي."},
+  {k:"od",t:"المتأخرات",ic:"clock",h:"مبالغ فات موعد سدادها وتحتاج تُقفل أولًا."},
+  {k:"ug",t:"الديون الطارئة",ic:"bolt",h:"ديون بدون قسط ثابت، مثل سلفة من شخص أو فاتورة كبيرة."},
+  {k:"goal",t:"الأهداف",ic:"target",h:"مبالغ تريد جمعها قبل تاريخ معيّن."},
+  {k:"fund",t:"الصناديق",ic:"shield",h:"احتياطي للطوارئ، وصندوق للمشتريات الكبيرة."},
+  {k:"inv",t:"الاستثمار",ic:"trend",h:"كم تستثمر شهريًا، ومتى تبدأ."},
+  {k:"rev",t:"المراجعة",ic:"check",h:"راجع الأرقام، ثم ابنِ خطتك."}
+];
+function moneyIn(path,val,ph,cls,extra){return '<div class="inp money'+(cls?" "+cls:"")+'"><input inputmode="decimal" autocomplete="off" enterkeyhint="next" data-max="100000000" data-p="'+path+'" data-t="num" value="'+esc(fmtIn(val))+'" placeholder="'+(ph||"0")+'"'+(extra||"")+'></div>'}
+function fmtIn(v){if(v===""||v==null)return "";var n=num(v);return n?n.toLocaleString("en-US",{maximumFractionDigits:2}):(String(v).trim()===""?"":"0")}
+function monthSel(path,val,opt){
+  opt=opt||{};var y0=opt.y0||(+S.start.slice(0,4)),y1=opt.y1||(y0+10),cur=validMonth(val)?val:"";
+  var cy=cur?+cur.slice(0,4):"",cm=cur?+cur.slice(5,7):"";if(cur){y0=Math.min(y0,cy);y1=Math.max(y1,cy)}
+  var h='<div class="mpick"><div class="inp"><select data-mp="'+path+'" data-part="m" aria-label="الشهر">';
+  if(opt.empty)h+='<option value=""'+(cur?"":" selected")+'>'+opt.empty+'</option>';
+  AR_M.forEach(function(n,k){h+='<option value="'+(k+1)+'"'+(cm===k+1?" selected":"")+'>'+n+'</option>'});
+  h+='</select></div><div class="inp"><select data-mp="'+path+'" data-part="y" aria-label="السنة">';
+  if(opt.empty)h+='<option value=""'+(cur?"":" selected")+'>—</option>';
+  for(var y=y0;y<=y1;y++)h+='<option value="'+y+'"'+(cy===y?" selected":"")+'>'+y+'</option>';
+  return h+'</select></div></div>';
+}
+function seg(path,val,opts){return '<div class="seg" role="radiogroup">'+opts.map(function(o){return '<button type="button" role="radio" aria-checked="'+(String(val)===String(o[0]))+'" class="'+(String(val)===String(o[0])?"on":"")+'" data-seg="'+path+'" data-v="'+o[0]+'">'+o[1]+(o[2]?'<small>'+o[2]+'</small>':'')+'</button>'}).join("")+'</div>'}
+function sw(path,on,label,sub){return '<div class="toggle"><span class="t">'+label+(sub?'<small>'+sub+'</small>':'')+'</span><button type="button" class="sw" role="switch" aria-checked="'+(!!on)+'" data-sw="'+path+'" aria-label="'+esc(label)+'"></button></div>'}
+function delBtn(list,id){return '<button type="button" class="del" data-act="del" data-list="'+list+'" data-id="'+id+'" aria-label="حذف">'+ic("x")+'</button>'}
+function nameIn(list,i,x,ph){return '<input class="nm" data-p="'+list+'.'+i+'.name" data-t="text" maxlength="40" value="'+esc(x.name)+'" placeholder="'+ph+'" aria-label="الاسم">'}
+function addBtn(list,label){return '<button type="button" class="add" data-act="add" data-list="'+list+'">'+ic("plus")+label+'</button>'}
+
+var PRESETS={fixed:["إيجار","كهرباء","ماء","جوال","إنترنت","تأمين","رسوم مدارس","اشتراكات","عاملة منزلية","مساعدة للأهل"]};
+
+function stepHTML(k){
+  var h="";
+  if(k==="inc"){
+    h+='<div class="card stack"><div class="field"><label for="sal">الراتب الصافي الشهري</label>'+moneyIn("salary",S.salary,"مثال: 12,000","big",' id="sal"')+'<p class="hint">المبلغ الذي ينزل في حسابك فعليًا.</p><p class="err-t" id="salErr" hidden>أدخل الراتب لبناء الخطة.</p></div>'
+      +'<div class="field"><span class="lbl">بداية الخطة</span>'+monthSel("start",S.start,{y0:+thisMonth().slice(0,4)-1,y1:+thisMonth().slice(0,4)+3})+'</div>'
+      +'<div class="field"><label for="rai">زيادة سنوية متوقعة على الراتب</label><div class="inp pct"><input id="rai" inputmode="decimal" data-max="50" data-p="raise" data-t="num" value="'+esc(fmtIn(S.raise))+'" placeholder="0"></div><p class="hint">اتركها صفرًا إن لم تكن متأكدًا. تُطبّق كل 12 شهر.</p></div></div>';
+    h+='<div class="sec-t">دخل إضافي ثابت <span class="sub-t">(اختياري)</span></div><div class="items">';
+    S.extras.forEach(function(x,i){h+='<div class="item"><div class="item-h">'+nameIn("extras",i,x,"دخل إضافي "+(i+1))+delBtn("extras",x.id)+'</div>'+moneyIn("extras."+i+".amount",x.amount,"المبلغ الشهري")+'</div>'});
+    h+=addBtn("extras","إضافة دخل")+'</div>';
+  }
+  else if(k==="exp"){
+    h+='<div class="card stack"><div class="field"><label for="liv">مصروف المعيشة الشهري</label>'+moneyIn("living",S.living,"مثال: 3,500","big",' id="liv"')+'<p class="hint">أكل ومقاضي، بنزين، طلعات، ومصروف شخصي.</p></div></div>';
+    h+='<div class="sec-t">مصاريف ثابتة</div><div class="items">';
+    if(!S.fixed.length)h+='<div class="empty">أضف الإيجار والفواتير وأي مصروف يتكرر.</div>';
+    S.fixed.forEach(function(x,i){h+='<div class="item"><div class="item-h">'+nameIn("fixed",i,x,"مصروف "+(i+1))+delBtn("fixed",x.id)+'</div><div class="row2">'+moneyIn("fixed."+i+".amount",x.amount,"المبلغ")+seg("fixed."+i+".freq",x.freq,[["m","شهري"],["y","سنوي"]])+'</div><div data-calc="fixed:'+x.id+'">'+calcFixed(x)+'</div></div>'});
+    h+=addBtn("fixed","إضافة مصروف");
+    var used=S.fixed.map(function(x){return x.name});
+    var pr=PRESETS.fixed.filter(function(p){return used.indexOf(p)<0});
+    if(pr.length)h+='<div class="chips" aria-label="إضافة سريعة">'+pr.map(function(p){return '<button type="button" class="chip" data-act="preset" data-list="fixed" data-name="'+p+'">+ '+p+'</button>'}).join("")+'</div>';
+    h+='</div>';
+  }
+  else if(k==="loan"){
+    h+='<div class="items">';
+    if(!S.loans.length)h+='<div class="empty">لا توجد أقساط؟ اضغط التالي.</div>';
+    S.loans.forEach(function(x,i){
+      h+='<div class="item"><div class="item-h">'+nameIn("loans",i,x,"قسط "+(i+1))+delBtn("loans",x.id)+'</div><div class="row2"><div class="field"><span class="lbl">القسط الشهري</span>'+moneyIn("loans."+i+".monthly",x.monthly,"0")+'</div><div class="field"><span class="lbl">الأشهر المتبقية</span><div class="inp cnt"><input inputmode="numeric" data-max="600" data-int="1" data-p="loans.'+i+'.months" data-t="num" value="'+esc(fmtIn(x.months))+'" placeholder="0"></div></div></div>'
+       +'<div class="field"><span class="lbl">دفعة أخيرة <span class="sub-t">(اختياري)</span></span>'+moneyIn("loans."+i+".balloon",x.balloon,"0")+'<p class="hint">مثل الدفعة الأخيرة في تمويل السيارة. الخطة تجمعها لك قبل موعدها.</p></div>'
+       +'<div data-calc="loans:'+x.id+'">'+calcLoan(x)+'</div></div>'});
+    h+=addBtn("loans","إضافة قسط")+'</div>';
+  }
+  else if(k==="od"){
+    h+='<div class="items">';
+    if(!S.overdue.length)h+='<div class="empty">لا توجد متأخرات؟ اضغط التالي.</div>';
+    S.overdue.forEach(function(x,i){h+='<div class="item"><div class="item-h">'+nameIn("overdue",i,x,"متأخر "+(i+1))+delBtn("overdue",x.id)+'</div>'+moneyIn("overdue."+i+".amount",x.amount,"المبلغ المتأخر")+sw("overdue."+i+".penalty",x.penalty,"عليه غرامة أو إيقاف خدمة","يُسدد قبل غيره")+'</div>'});
+    h+=addBtn("overdue","إضافة متأخر")+'</div><p class="hint" style="margin-top:12px">الترتيب: ما عليه غرامة أولًا، ثم الأصغر مبلغًا.</p>';
+  }
+  else if(k==="ug"){
+    h+='<div class="items">';
+    if(!S.urgent.length)h+='<div class="empty">لا توجد ديون طارئة؟ اضغط التالي.</div>';
+    S.urgent.forEach(function(x,i){h+='<div class="item"><div class="item-h">'+nameIn("urgent",i,x,"دين "+(i+1))+delBtn("urgent",x.id)+'</div>'+moneyIn("urgent."+i+".amount",x.amount,"المبلغ")+'<div class="field"><span class="lbl">آخر موعد للسداد <span class="sub-t">(اختياري)</span></span>'+monthSel("urgent."+i+".due",x.due,{empty:"بدون موعد"})+(validMonth(x.due)&&diffM(S.start,x.due)<0?'<p class="err-t">التاريخ قبل بداية الخطة، ويُعتبر مستحقًا من أول شهر.</p>':'')+'</div></div>'});
+    h+=addBtn("urgent","إضافة دين")+'</div><p class="hint" style="margin-top:12px">ما له موعد يُقسّط حتى يُسدد في وقته، والباقي يُسدد بعد المتأخرات.</p>';
+  }
+  else if(k==="goal"){
+    h+='<div class="items">';
+    if(!S.goals.length)h+='<div class="empty">مثل: زواج، سيارة، سفر، دفعة أولى لبيت.</div>';
+    S.goals.forEach(function(x,i){
+      h+='<div class="item"><div class="item-h">'+nameIn("goals",i,x,"هدف "+(i+1))+delBtn("goals",x.id)+'</div><div class="row2"><div class="field"><span class="lbl">المبلغ المطلوب</span>'+moneyIn("goals."+i+".amount",x.amount,"0")+'</div><div class="field"><span class="lbl">المجموع حاليًا</span>'+moneyIn("goals."+i+".saved",x.saved,"0")+'</div></div><div class="field"><span class="lbl">التاريخ المستهدف</span>'+monthSel("goals."+i+".due",x.due)+'</div><div data-calc="goals:'+x.id+'">'+calcGoal(x)+'</div></div>'});
+    h+=addBtn("goals","إضافة هدف")+'</div>';
+  }
+  else if(k==="fund"){
+    var t=efTarget(S);
+    h+='<div class="card stack"><div style="display:flex;gap:10px;align-items:center"><span class="step-ic" style="width:36px;height:36px;border-radius:10px">'+ic("shield")+'</span><b>صندوق الطوارئ</b></div>'
+      +'<div class="field"><span class="lbl">الحجم المستهدف</span>'+seg("ef.months",S.ef.months,[[3,"3 أشهر"],[6,"6 أشهر"],[0,"مبلغ محدد"]])+'</div>'
+      +(S.ef.months===0?'<div class="field"><span class="lbl">المبلغ المستهدف</span>'+moneyIn("ef.custom",S.ef.custom,"0")+'</div>':'<div class="calc" id="efCalc"><span>'+S.ef.months+' × مصاريفك الأساسية</span><b class="num">'+f(t)+'</b></div>')
+      +'<div class="field"><span class="lbl">الموجود حاليًا</span>'+moneyIn("ef.saved",S.ef.saved,"0")+'</div>'
+      +'<div class="field"><span class="lbl">متى يبدأ التجميع؟</span>'+seg("ef.when",S.ef.when,[["after","بعد سداد الديون","موصى به"],["now","قبل الديون الطارئة","يؤخّر السداد"]])+'</div></div>';
+    h+='<div class="card stack" style="margin-top:12px"><div style="display:flex;gap:10px;align-items:center"><span class="step-ic" style="width:36px;height:36px;border-radius:10px">'+ic("bag")+'</span><b>صندوق المشتريات</b></div><p class="hint" style="margin-top:-6px">لأجهزة وأثاث وصيانة كبيرة، بدل التقسيط.</p>'
+      +'<div class="row2"><div class="field"><span class="lbl">المبلغ الشهري</span>'+moneyIn("box.monthly",S.box.monthly,"0")+'</div><div class="field"><span class="lbl">سقف الصندوق</span>'+moneyIn("box.target",S.box.target,"بدون سقف")+'</div></div>'
+      +'<div class="field"><span class="lbl">الموجود حاليًا</span>'+moneyIn("box.saved",S.box.saved,"0")+'</div>'
+      +'<div class="field"><span class="lbl">متى يبدأ؟</span>'+seg("box.when",S.box.when,[["after","بعد سداد الديون"],["now","من أول شهر"]])+'</div></div>';
+  }
+  else if(k==="inv"){
+    h+='<div class="card stack"><div class="field"><span class="lbl">مبلغ الاستثمار الشهري</span>'+moneyIn("inv.monthly",S.inv.monthly,"0","big")+'</div>'
+      +'<div class="field"><span class="lbl">متى يبدأ؟</span>'+seg("inv.when",S.inv.when,[["after","بعد سداد الديون"],["now","من أول شهر"]])+'</div>'
+      +sw("inv.rest",S.inv.rest,"حوّل أي فائض متبقي للاستثمار","بعد ما تكتمل الديون والصناديق")
+      +'<div class="field"><span class="lbl">مستوى المخاطرة</span>'+seg("inv.risk",S.inv.risk,Object.keys(RISK).map(function(k){return [k,RISK[k].n,"نحو "+RISK[k].r+"٪ سنويًا"]}))+'<p class="hint">'+RISK[S.inv.risk].d+'. العائد تقديري للتوضيح فقط، وليس وعدًا.</p></div>'
+      +'<div class="field"><span class="lbl">استثمارات موجودة حاليًا</span>'+moneyIn("inv.saved",S.inv.saved,"0")+'</div></div>';
+  }
+  else if(k==="rev"){h+=reviewHTML()}
+  return h;
+}
+
+function calcFixed(x){return x.freq==="y"&&num(x.amount)?'<p class="hint">يعادل '+F(num(x.amount)/12)+' ريال شهريًا، ويُجنّب كل شهر.</p>':''}
+function calcLoan(x){var n=Math.floor(num(x.months)),mo=num(x.monthly),b=num(x.balloon);
+  if(mo>0&&n>=1)return '<div class="calc"><span>المتبقي '+F(mo*n+b)+' ريال</span><span>'+(b>0?'الدفعة الأخيرة ':'آخر قسط ')+mlabel(addM(S.start,b>0?n:n-1))+'</span></div>';
+  if(mo>0)return '<p class="err-t">أدخل عدد الأشهر المتبقية.</p>';
+  if(b>0)return '<div class="calc"><span>دفعة أخيرة فقط</span><span>مستحقة '+mlabel(S.start)+'</span></div>';
+  return ''}
+function calcGoal(x){if(!(num(x.amount)>0)||!validMonth(x.due))return '';var rem=Math.max(0,num(x.amount)-num(x.saved));
+  if(!rem)return '<div class="calc"><span>الهدف مكتمل</span><b>✓</b></div>';
+  var l=diffM(S.start,x.due)+1;if(l<1)return '<p class="err-t">التاريخ قبل بداية الخطة.</p>';
+  return '<div class="calc"><span>تحتاج شهريًا</span><b class="num">'+f(Math.ceil(rem/l))+'</b></div>'}
+function refreshCalcs(){[].forEach.call(app.querySelectorAll("[data-calc]"),function(el){var p=el.getAttribute("data-calc").split(":"),x=(S[p[0]]||[]).find(function(o){return o.id===p[1]});if(!x)return;
+  var h=p[0]==="fixed"?calcFixed(x):p[0]==="loans"?calcLoan(x):calcGoal(x);if(el.innerHTML!==h)el.innerHTML=h})}
+function reviewHTML(){
+  var inc=income0(S),liv=num(S.living),fx=fixedMonthly(S),lm=loanMonthly(S),sur=inc-liv-fx-lm;
+  var odT=sum(S.overdue,function(x){return num(x.amount)}),ugT=sum(S.urgent,function(x){return num(x.amount)});
+  var lT=sum(S.loans,function(l){return (num(l.months)>=1?num(l.monthly)*Math.floor(num(l.months)):0)+num(l.balloon)});
+  var gT=sum(S.goals,function(x){return Math.max(0,num(x.amount)-num(x.saved))});
+  function row(stp,icn,t,sub,v){return '<div class="rv-row"><span class="ic">'+ic(icn)+'</span><div class="tx"><b>'+t+'</b><span>'+sub+'</span></div><span class="v num">'+v+'</span><button type="button" data-go="'+stp+'">تعديل</button></div>'}
+  var issues=[];
+  if(!(num(S.salary)>0))issues.push("أدخل الراتب الصافي.");
+  S.loans.forEach(function(l,i){if(num(l.monthly)>0&&num(l.months)<1)issues.push("حدد الأشهر المتبقية لـ "+esc(nm(l,i,"قسط"))+".")});
+  var emp=0;["extras","fixed","overdue","urgent","goals"].forEach(function(k){S[k].forEach(function(x){if(!(num(x.amount)>0))emp++})});
+  S.loans.forEach(function(l){if(!(num(l.monthly)>0)&&!(num(l.balloon)>0))emp++});
+  var h='<div class="hero" style="margin-bottom:14px"><div><div class="k">الفائض الشهري بعد الأساسيات والأقساط</div><div class="big num">'+f(sur)+' <span style="font-size:15px;font-weight:500">ريال</span></div><div class="sub">منه تُوزّع الخطة على الديون والصناديق.</div></div></div>';
+  if(issues.length)h+='<div class="note bad" style="margin-bottom:12px">'+ic("alert")+'<div>'+issues.join("<br>")+'</div></div>';
+  if(sur<0&&!issues.length)h+='<div class="note bad" style="margin-bottom:12px">'+ic("alert")+'<div>مصاريفك أعلى من دخلك بـ '+F(-sur)+' ريال. تعرض الخطة العجز شهريًا.</div></div>';
+  if(num(S.salary)>0&&!(num(S.living)>0))h+='<div class="note warn" style="margin-bottom:12px">'+ic("alert")+'<div>مصروف المعيشة صفر. أدخله من خطوة المصاريف لتكون الخطة واقعية.</div></div>';
+  if(emp)h+='<div class="note info" style="margin-bottom:12px">'+ic("info")+'<div>'+(emp===1?"بند واحد بدون مبلغ، ولن يدخل":plural(emp,"","بندان بدون مبلغ","بنود بدون مبلغ","بندًا بدون مبلغ")+"، ولن تدخل")+' في الخطة.</div></div>';
+  h+='<div class="rv">'+row(0,"wallet","الدخل الشهري",(S.extras.length?"الراتب + "+plural(S.extras.length,"دخل إضافي","دخلان إضافيان","مصادر دخل إضافية","مصدر دخل إضافي"):"الراتب")+(num(S.raise)?"، زيادة "+num(S.raise)+"% سنويًا":""),f(inc))
+   +row(1,"home","المصاريف الشهرية","معيشة "+f(liv)+" + ثابتة "+f(fx),f(liv+fx))
+   +row(2,"card","الأقساط",S.loans.length?(plural(S.loans.length,"تمويل واحد","تمويلان","تمويلات","تمويلًا")+"، المتبقي "+f(lT)):"لا يوجد",f(lm))
+   +row(3,"clock","المتأخرات",S.overdue.length?plural(S.overdue.length,"بند واحد","بندان","بنود","بندًا"):"لا يوجد",f(odT))
+   +row(4,"bolt","الديون الطارئة",S.urgent.length?plural(S.urgent.length,"بند واحد","بندان","بنود","بندًا"):"لا يوجد",f(ugT))
+   +row(5,"target","الأهداف",S.goals.length?plural(S.goals.length,"هدف واحد","هدفان","أهداف","هدفًا")+"، المتبقي":"لا يوجد",f(gT))
+   +row(6,"shield","صندوق الطوارئ","المستهدف",f(efTarget(S)))
+   +row(6,"bag","صندوق المشتريات",num(S.box.monthly)?(S.box.when==="now"?"من أول شهر":"بعد الديون"):"غير مفعّل",f(num(S.box.monthly)))
+   +row(7,"trend","الاستثمار الشهري",(S.inv.when==="now"?"من أول شهر":"بعد الديون")+"، "+RISK[S.inv.risk].n+(S.inv.rest?"، مع الفائض":""),f(num(S.inv.monthly)))+'</div>';
+  h+='<div class="note info" style="margin-top:14px">'+ic("info")+'<div><b class="nt">ترتيب التوزيع كل شهر:</b> الأساسيات والأقساط، ثم ما اخترته من أول شهر للمشتريات والاستثمار، ثم المتأخرات والعجز المتراكم، ثم ما له موعد محدد، ثم الديون الطارئة، ثم الأهداف، ثم صندوق الطوارئ، ثم المشتريات، ثم الاستثمار. كلما انتهى دين انتقل مبلغه إلى البند التالي.</div></div>';
+  return h;
+}
+
+function liveHTML(){
+  var inc=income0(S),sur=inc-num(S.living)-fixedMonthly(S)-loanMonthly(S);
+  return '<span>الفائض الشهري</span><b class="num'+(sur<0?" neg":"")+'">'+f(sur)+'</b>';
+}
+
+/* ---------- plan views ---------- */
+var P=null;
+function colorOf(k){return "var(--c-"+k+")"}
+function planHTML(){
+  P=simulate(S);var W=warnings(S,P);
+  var h='<div class="tabs no-print" role="tablist">'+[["sum","الملخص"],["tbl","الجدول"],["debt","الديون"],["fund","المدخرات"]].map(function(t){return '<button role="tab" aria-selected="'+(S.tab===t[0])+'" class="'+(S.tab===t[0]?"on":"")+'" data-tab="'+t[0]+'">'+t[1]+'</button>'}).join("")+'</div>';
+  if(S.tab==="sum")h+=sumHTML(W);else if(S.tab==="tbl")h+=tblHTML();else if(S.tab==="debt")h+=debtHTML();else h+=fundHTML();
+  return h;
+}
+function sumHTML(W){
+  var rows=P.rows,last=rows[N-1],r0=rows[0],h="";
+  var totalDebt0=sum(P.allDebts,function(d){return d.orig})+sum(P.loans,function(l){return l.orig});
+  var lastLoan=P.loans.reduce(function(a,l){return Math.max(a,l.endAt!=null?l.endAt:99)},-1);
+  var hasOther=P.hadDebts||P.defEver, dEnd=P.debtsDoneAt, big,sub,lab="خالٍ من الديون";
+  var freeAt=dEnd!=null?Math.max(dEnd,lastLoan):null; if(freeAt!=null&&freeAt>=99)freeAt=null;
+  if(totalDebt0<=0&&!P.defEver){lab="وضعك";big="بدون ديون";sub=S.inv.rest?"الفائض يذهب للصناديق ثم للاستثمار.":"الفائض يذهب للصناديق، والباقي يبقى متبقيًا لك."}
+  else if(freeAt!=null&&freeAt>=0){big=mlabel(rows[freeAt].m);sub="يُسدد آخر دين"+(P.loans.length?"، شاملًا الأقساط":"")+(P.defEver?"، ومعه العجز المتراكم":"")+"، بعد "+dur(freeAt+1)+"."}
+  else if(dEnd!=null&&dEnd>=0){lab="انتهاء الديون المتأخرة والطارئة";big=mlabel(rows[dEnd].m);sub="الأقساط تستمر بعد الخمس سنوات حسب جدولها."}
+  else if(P.loans.some(function(l){return !l.bpaid&&l.left<=0})){big="بعد الخمس سنوات";sub="الدفعة الأخيرة لا تُسدد خلال الخطة."}
+  else if(!hasOther){lab="الأقساط";big="تستمر بعد 5 سنوات";sub="لا توجد ديون متأخرة أو طارئة."}
+  else {big="بعد الخمس سنوات";sub="الفائض الحالي لا يكفي لإنهاء الديون خلال الخطة."}
+  h+='<div class="hero"><div><div class="k">'+lab+'</div><div class="big">'+big+'</div><div class="sub">'+sub+'</div></div>'
+    +'<div class="hero-g"><div><span>الفائض الشهري الآن</span><b class="num">'+f(r0.inc-r0.living-r0.fixed-r0.loanTot)+'</b></div><div><span>المدخرات بعد 5 سنوات</span><b class="num">'+f(last.savings)+'</b></div></div></div>';
+  if(W.length)h+='<div class="stack" style="margin-top:12px">'+W.map(function(w){return '<div class="note '+w.lv+'">'+ic(w.lv==="info"?"info":"alert")+'<div>'+w.t+'</div></div>'}).join("")+'</div>';
+  h+='<div class="h2">أرقام الخطة</div><div class="kpis">'
+    +kpi("debt","إجمالي الديون الآن",f(totalDebt0),"شاملة الأقساط المتبقية")
+    +kpi("ef","صندوق الطوارئ",P.efT>0?(P.efDoneAt===-1?"مكتمل":P.efDoneAt!=null?mlabel(rows[P.efDoneAt].m):"لا يكتمل"):"غير محدد",P.efT>0?"المستهدف "+f(P.efT):"")
+    +kpi("inv","الاستثمار بعد 5 سنوات",f(last.invB),"منها مدفوع "+f(P.invIn))
+    +kpi("box","صندوق المشتريات",f(last.boxB),"الرصيد بعد 5 سنوات")+'</div>';
+  // salary split
+  var opts=[[0,"الشهر الأول"]];
+  if(P.debtsDoneAt!=null&&P.debtsDoneAt>=0&&P.debtsDoneAt<N-1)opts.push([P.debtsDoneAt+1,"بعد الديون"]);
+  opts.push([N-1,"آخر شهر"]);
+  if(splitIdx==null||!opts.some(function(o){return o[0]===splitIdx}))splitIdx=0;
+  h+='<div class="h2">أين يذهب دخلك <small>'+mlabel(rows[splitIdx].m)+'</small></div><div class="card">'+seg("_split",splitIdx,opts)+'<div style="height:14px"></div>'+splitHTML(rows[splitIdx])+'</div>';
+  h+='<div class="h2">الديون والمدخرات <small>60 شهرًا</small></div><div class="card">'+chartHTML()+'</div>';
+  h+='<div class="h2">المحطات الرئيسية</div><div class="card">'+timelineHTML()+'</div>';
+  h+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px" class="no-print"><button class="btn" data-go="0">'+ic("edit")+'تعديل البيانات</button><button class="btn" data-tab="tbl">'+ic("table")+'الجدول الشهري</button></div>';
+  return h;
+}
+var splitIdx=0;
+function kpi(c,k,v,s){return '<div class="kpi"><div class="k"><i style="background:'+colorOf(c)+'"></i>'+k+'</div><div class="v num">'+v+'</div><div class="s">'+s+'</div></div>'}
+function parts(r){return [["ess","المعيشة والمصاريف",r.living+r.fixed],["loan","الأقساط",r.loanTot],["debt","سداد الديون",r.debtTot],["goal","الأهداف والدفعات الأخيرة",r.goalTot],["ef","صندوق الطوارئ",r.ef],["box","صندوق المشتريات",r.box],["inv","الاستثمار",r.inv],["free","متبقي",r.free]]}
+function splitHTML(r){
+  var ps=parts(r).filter(function(p){return p[2]>0.5}),tot=sum(ps,function(p){return p[2]})||1;
+  var h='<div class="stackbar">'+ps.map(function(p){return '<i style="width:'+(p[2]/tot*100)+'%;background:'+colorOf(p[0])+'" title="'+p[1]+'"></i>'}).join("")+'</div><div class="legend">';
+  h+=ps.map(function(p){return '<div><i style="background:'+colorOf(p[0])+'"></i><span>'+p[1]+'</span><b class="num">'+f(p[2])+'</b><em class="num">'+R(p[2]/(r.inc||1)*100)+'%</em></div>'}).join("");
+  if(r.deficit>0.5)h+='<div style="color:var(--bad)"><i style="background:var(--bad)"></i><span>عجز هذا الشهر</span><b class="num">'+f(r.deficit)+'</b><em></em></div>';
+  return h+'</div>';
+}
+function chartHTML(){
+  var rows=P.rows,W=600,H=260,pl=8,pr=8,pt=16,pb=34;
+  var mx=Math.max(1,Math.max.apply(null,rows.map(function(r){return Math.max(r.totalDebt,r.savings)})));
+  var x=function(i){return W-pr-(i/(N-1))*(W-pl-pr)},y=function(v){return pt+(1-v/mx)*(H-pt-pb)};
+  function path(fn){return rows.map(function(r,i){return (i?"L":"M")+x(i).toFixed(1)+" "+y(fn(r)).toFixed(1)}).join(" ")}
+  var g="";for(var k=0;k<=4;k++){var yy=pt+k*(H-pt-pb)/4;g+='<line x1="'+pl+'" x2="'+(W-pr)+'" y1="'+yy+'" y2="'+yy+'" stroke="var(--line)" stroke-width="1"/>'}
+  for(var yr=0;yr<5;yr++){var xi=x(yr*12+5.5);g+='<text x="'+xi+'" y="'+(H-6)+'" font-size="17" fill="var(--muted)" text-anchor="middle">السنة '+(yr+1)+'</text>';if(yr)g+='<line x1="'+x(yr*12)+'" x2="'+x(yr*12)+'" y1="'+(H-pb)+'" y2="'+(H-pb+6)+'" stroke="var(--line)"/>'}
+  var area=path(function(r){return r.savings})+" L"+x(N-1)+" "+y(0)+" L"+x(0)+" "+y(0)+"Z";
+  return '<div class="lg-row"><span><i style="background:var(--c-debt)"></i>الدين المتبقي</span><span><i style="background:var(--c-ef)"></i>إجمالي المدخرات</span><span class="num" style="margin-inline-start:auto">أعلى قيمة '+f(mx)+'</span></div>'
+    +'<div class="chart" id="chart"><svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="رسم الدين المتبقي والمدخرات">'+g
+    +'<path d="'+area+'" fill="var(--c-ef)" opacity=".12"/><path d="'+path(function(r){return r.savings})+'" fill="none" stroke="var(--c-ef)" stroke-width="2.5" stroke-linejoin="round"/>'
+    +'<path d="'+path(function(r){return r.totalDebt})+'" fill="none" stroke="var(--c-debt)" stroke-width="2.5" stroke-linejoin="round"/>'
+    +'<line id="cl" y1="'+pt+'" y2="'+(H-pb)+'" stroke="var(--muted)" stroke-dasharray="3 3" visibility="hidden"/></svg><div class="tip" id="tip" hidden></div></div>';
+}
+function bindChart(){
+  var c=$("#chart");if(!c)return;var svg=c.querySelector("svg"),tip=$("#tip"),cl=$("#cl");
+  function at(ev){var b=svg.getBoundingClientRect(),px=(ev.clientX-b.left)/b.width*600;var i=Math.round((600-8-px)/(584)*(N-1));i=Math.max(0,Math.min(N-1,i));var r=P.rows[i],xx=600-8-(i/(N-1))*584;
+    cl.setAttribute("x1",xx);cl.setAttribute("x2",xx);cl.setAttribute("visibility","visible");
+    tip.hidden=false;tip.innerHTML='<b>'+mlabel(r.m)+'</b><br>الدين: <span class="num">'+f(r.totalDebt)+'</span><br>المدخرات: <span class="num">'+f(r.savings)+'</span>';
+    var lx=xx/600*b.width;tip.style.right="auto";tip.style.left=Math.max(60,Math.min(b.width-60,lx))+"px";tip.style.transform="translateX(-50%)"}
+  svg.addEventListener("pointermove",at);svg.addEventListener("pointerdown",at);
+  svg.addEventListener("pointerleave",function(){tip.hidden=true;cl.setAttribute("visibility","hidden")});
+}
+function timelineHTML(){
+  var rows=P.rows,items=[];
+  P.ev.forEach(function(e){var m=mlabel(rows[e.i].m),wh="بعد "+dur(e.i+1);
+    if(e.t==="debt")items.push(["debt","سداد "+esc(e.name),"دين",m]);
+    else if(e.t==="loan")items.push(["debt",(e.balloon?"الدفعة الأخيرة: ":"آخر قسط: ")+esc(e.name),"تمويل",m]);
+    else if(e.t==="alldebts")items.push(["","انتهاء المتأخرات والديون الطارئة","يبدأ توجيه الفائض للصناديق",m]);
+    else if(e.t==="goal")items.push([e.late?"miss":"goal","تحقيق "+esc(e.name),e.late?"بعد موعده":"في موعده",m]);
+    else if(e.t==="ef")items.push(["","اكتمال صندوق الطوارئ",f(P.efT)+" ريال",m]);
+    else if(e.t==="inv")items.push(["inv","بداية الاستثمار","أول مبلغ "+f(rows[e.i].inv)+" ريال",m]);
+  });
+  if(!items.length)return '<p class="hint">لا توجد محطات خلال الخمس سنوات.</p>';
+  return '<div class="tl">'+items.map(function(t){return '<div class="tl-i '+t[0]+'"><span class="dot"></span><div><b>'+t[1]+'</b><span>'+t[2]+'</span></div><span class="when">'+t[3]+'</span></div>'}).join("")+'</div>';
+}
+
+var COLS=[
+  ["inc","الدخل",null,function(r){return r.inc}],
+  ["ess","المعيشة<br>والمصاريف","ess",function(r){return r.living+r.fixed}],
+  ["loan","الأقساط","loan",function(r){return r.loanTot}],
+  ["debt","سداد<br>الديون","debt",function(r){return r.debtTot}],
+  ["goal","الأهداف<br>والدفعات","goal",function(r){return r.goalTot}],
+  ["ef","الطوارئ","ef",function(r){return r.ef}],
+  ["box","المشتريات","box",function(r){return r.box}],
+  ["inv","الاستثمار","inv",function(r){return r.inv}],
+  ["free","متبقي","free",function(r){return r.free-r.deficit}],
+  ["rem","الدين<br>المتبقي",null,function(r){return r.totalDebt},"debtc"],
+  ["sav","إجمالي<br>المدخرات",null,function(r){return r.savings},"savc"]
+];
+function tblHTML(){
+  var rows=P.rows,y0=+S.start.slice(0,4);
+  var h='<div class="yrs no-print"><span style="align-self:center;font-size:13px;color:var(--muted);flex:none">السنة</span>'+'<button data-year="0" class="'+(S.year===0?"on":"")+'">الكل</button>'+[1,2,3,4,5].map(function(y){return '<button data-year="'+y+'" class="'+(S.year===y?"on":"")+'" aria-label="السنة '+ORD[y-1]+'"><span class="num">'+y+'</span></button>'}).join("")+'</div>';
+  var sel=rows.filter(function(r){return S.year===0||Math.floor(r.i/12)===S.year-1});
+  h+='<p class="hint" style="margin:0 2px 8px">المبالغ بالريال. اضغط أي شهر لتفاصيله. اسحب الجدول يمين ويسار.</p>';
+  h+='<div class="tw"><table class="t"><thead><tr><th>الشهر</th>'+COLS.map(function(c){return '<th>'+(c[2]?'<span class="cdot" style="background:'+colorOf(c[2])+'"></span>':'')+c[1]+'</th>'}).join("")+'</tr></thead><tbody>';
+  sel.forEach(function(r){
+    h+='<tr tabindex="0" data-row="'+r.i+'" class="'+(r.deficit>0.5?"dfc":"")+'"><td class="mo"><b>'+AR_M[+r.m.slice(5)-1]+(r.ev.length?'<span class="ev" title="'+esc(r.ev.join("، "))+'"></span>':'')+'</b><span class="num">'+r.m.slice(0,4)+' · '+(r.i+1)+'</span></td>'
+     +COLS.map(function(c){var v=c[3](r),z=Math.abs(v)<0.5;return '<td class="'+(z?"z":(v<0?"neg":(c[4]||"")))+'"><span class="num">'+(z?"—":f(v))+'</span></td>'}).join("")+'</tr>';
+  });
+  h+='</tbody><tfoot><tr><td>المجموع</td>'+COLS.map(function(c){if(c[0]==="rem"||c[0]==="sav"){var v=c[3](sel[sel.length-1]);return '<td title="الرصيد في آخر شهر"><span class="num">'+f(v)+'</span><div style="font-size:10.5px;font-weight:500;color:var(--muted)">آخر شهر</div></td>'}return '<td><span class="num">'+f(sum(sel,c[3]))+'</span></td>'}).join("")+'</tr></tfoot></table></div>';
+  h+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px" class="no-print"><button class="btn sm" data-act="csv">'+ic("dl")+'تنزيل Excel (CSV)</button><button class="btn sm" data-act="print">'+ic("print")+'طباعة</button></div>';
+  return h;
+}
+function monthSheet(i){
+  var r=P.rows[i],h='<div class="wrap"><div class="grab"></div><div><h3>'+mlabel(r.m)+'</h3><span class="sub-t">الشهر '+(i+1)+' من 60</span></div>';
+  if(r.ev.length)h+='<div class="note ok">'+ic("check")+'<div>'+r.ev.map(esc).join("<br>")+'</div></div>';
+  if(r.deficit>0.5)h+='<div class="note bad">'+ic("alert")+'<div>عجز '+F(r.deficit)+' ريال هذا الشهر.</div></div>';
+  if(r.short.length)h+='<div class="note warn">'+ic("alert")+'<div>الفائض لا يكفي هذا الشهر لـ: '+r.short.map(esc).join("، ")+'</div></div>';
+  var kv=[["الدخل",r.inc,"tot"],["المعيشة",r.living],["المصاريف الثابتة",r.fixed]];
+  P.loans.forEach(function(l){if(r.loanPay[l.id])kv.push(["قسط "+l.name.replace(/^قسط /,""),r.loanPay[l.id]])});
+  if(r.defPay)kv.push(["سداد العجز المتراكم",r.defPay]);
+  P.allDebts.forEach(function(d){if(r.debtPay[d.id])kv.push(["سداد "+d.name,r.debtPay[d.id]])});
+  P.loans.forEach(function(l){if(r.balloonPay[l.id])kv.push(["تجميع الدفعة الأخيرة: "+l.name,r.balloonPay[l.id]])});
+  P.goals.forEach(function(g){if(r.goalPay[g.id])kv.push(["هدف: "+g.name,r.goalPay[g.id]])});
+  if(r.ef)kv.push(["صندوق الطوارئ",r.ef]);if(r.box)kv.push(["صندوق المشتريات",r.box]);if(r.inv)kv.push(["الاستثمار",r.inv]);if(r.free)kv.push(["متبقي",r.free]);
+  h+='<div class="h2" style="margin-top:4px">التوزيع</div><div class="kv">'+kv.map(function(x){return '<div class="'+(x[2]||"")+'"><span>'+esc(x[0])+'</span><b class="num">'+f(x[1])+'</b></div>'}).join("")+'</div>';
+  var bl=[["الدين المتبقي",r.totalDebt]];if(r.defRem>0.5)bl.push(["منه عجز متراكم",r.defRem]);
+  bl.push(["صندوق الطوارئ",r.efB],["صندوق المشتريات",r.boxB],["الاستثمار (تقديري)",r.invB]);
+  if(r.goalB)bl.push(["مدخر للأهداف",r.goalB]);if(r.blB)bl.push(["مدخر للدفعات الأخيرة",r.blB]);if(r.freeB)bl.push(["متبقي متراكم",r.freeB]);
+  bl.push(["إجمالي المدخرات",r.savings,"tot"]);
+  h+='<div class="h2">الأرصدة نهاية الشهر</div><div class="kv">'+bl.map(function(x){return '<div class="'+(x[2]||"")+'"><span>'+esc(x[0])+'</span><b class="num">'+f(x[1])+'</b></div>'}).join("")+'</div>';
+  h+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px"><button class="btn" data-mo="'+(i-1)+'"'+(i===0?" disabled":"")+'>'+ic("arrowR")+'السابق</button><button class="btn" data-mo="'+(i+1)+'"'+(i===N-1?" disabled":"")+'>التالي'+ic("arrowL")+'</button></div><button class="btn" data-close>إغلاق</button></div>';
+  openSheet(h);
+}
+var openDebt=null;
+function debtHTML(){
+  var rows=P.rows,h="";
+  var list=[];
+  P.od.forEach(function(d){list.push({k:"od",o:d,tag:d.penalty?["red","متأخر بغرامة"]:["","متأخر"],orig:d.orig,rem:function(r){return null},end:d.paidAt})});
+  P.ug.forEach(function(d){list.push({k:"ug",o:d,tag:["","طارئ"+(d.due?"، قبل "+mlabel(d.due):"")],orig:d.orig,end:d.paidAt})});
+  P.loans.forEach(function(l){list.push({k:"loan",o:l,tag:["","قسط "+f(l.monthly)+(l.balloon?" + دفعة أخيرة":"")],orig:l.orig,end:(l.left>0||!l.bpaid)?null:l.endAt})});
+  if(!list.length)return '<div class="empty">لا توجد ديون أو أقساط في خطتك.</div>';
+  h+='<p class="hint" style="margin:0 2px 10px">اضغط أي دين لجدول سداده الشهري.</p><div class="stack">';
+  list.forEach(function(it){
+    var o=it.o,id=o.id,sched=[],bal=it.orig;
+    for(var i=0;i<N;i++){var r=rows[i],p=0;
+      if(it.k==="loan"){p=(r.loanPay[id]||0);var bpay=(o.bAt===i?o.balloon:0);p+=bpay}else{p=r.debtPay[id]||0}
+      if(p>0){bal=Math.max(0,bal-p);sched.push([r.m,p,bal,i])}}
+    var paid=it.orig-bal,pct=it.orig?paid/it.orig*100:0;
+    h+='<div class="dc"><button class="dc-h" data-debt="'+id+'" aria-expanded="'+(openDebt===id)+'"><span><b>'+esc(o.name)+'</b><span class="tag '+it.tag[0]+'">'+it.tag[1]+'</span></span><b class="num">'+f(it.orig)+'</b>'
+      +'<span class="pb"><i style="width:'+pct.toFixed(1)+'%"></i></span><span class="meta"><span>'+(it.end!=null?"يُسدد "+mlabel(rows[it.end].m):"متبقي بعد 5 سنوات "+f(bal))+'</span><span>'+(sched.length?plural(sched.length,"دفعة واحدة","دفعتان","دفعات","دفعة"):"لا دفعات")+'</span></span></button>';
+    if(openDebt===id){h+='<div class="dc-b"><table><thead><tr><th>الشهر</th><th>المدفوع</th><th>المتبقي</th></tr></thead><tbody>'+(sched.length?sched.map(function(s){return '<tr><td>'+mlabel(s[0])+'</td><td><span class="num">'+f(s[1])+'</span></td><td><span class="num">'+f(s[2])+'</span></td></tr>'}).join(""):'<tr><td colspan="3">لا توجد دفعات خلال الخطة.</td></tr>')+'</tbody></table></div>'}
+    h+='</div>';
+  });
+  return h+'</div>';
+}
+function fundHTML(){
+  var rows=P.rows,last=rows[N-1],h='<div class="kpis">'
+   +kpi("ef","صندوق الطوارئ",f(last.efB),P.efT>0?"من "+f(P.efT):"")
+   +kpi("box","صندوق المشتريات",f(last.boxB),num(S.box.target)?"السقف "+f(num(S.box.target)):"")
+   +kpi("inv","الاستثمار",f(last.invB),"عائد تقديري "+f(last.invB-P.invIn))
+   +kpi("free","إجمالي المدخرات",f(last.savings),"نهاية الخطة")+'</div>';
+  if(P.goals.length){h+='<div class="h2">الأهداف</div><div class="stack">';
+    P.goals.forEach(function(g){var reached=g.reachedAt!=null,pc=Math.min(100,(reached?g.target:(g.saved))/g.target*100);
+      h+='<div class="dc"><div class="dc-h" style="cursor:default"><span><b>'+esc(g.name)+'</b><span class="tag '+(g.dueIdx!=null&&(!reached||g.reachedAt>g.dueIdx)?"red":"")+'">'+(g.due?"قبل "+mlabel(g.due):"بدون موعد")+'</span></span><b class="num">'+f(g.target)+'</b><span class="pb"><i style="width:'+pc.toFixed(1)+'%;background:var(--c-goal)"></i></span><span class="meta"><span>'+(reached?"يكتمل "+mlabel(rows[g.reachedAt].m):"المجموع "+f(g.saved))+'</span><span>'+R(pc)+'%</span></span></div></div>'});
+    h+='</div>'}
+  h+='<div class="h2">نمو المدخرات <small>نهاية كل سنة</small></div><div class="tw"><table class="t"><thead><tr><th>السنة</th><th><span class="cdot" style="background:var(--c-ef)"></span>الطوارئ</th><th><span class="cdot" style="background:var(--c-box)"></span>المشتريات</th><th><span class="cdot" style="background:var(--c-inv)"></span>الاستثمار</th><th><span class="cdot" style="background:var(--c-goal)"></span>أهداف ودفعات</th><th>متبقي</th><th>الإجمالي</th></tr></thead><tbody>';
+  for(var y=0;y<5;y++){var r=rows[y*12+11];h+='<tr data-row="'+r.i+'"><td class="mo"><b>السنة '+ORD[y]+'</b><span>'+mlabel(r.m)+'</span></td>'+[r.efB,r.boxB,r.invB,r.goalB+r.blB,r.freeB,r.savings].map(function(v,k){return '<td class="'+(v<0.5?"z":(k===5?"savc":""))+'"><span class="num">'+(v<0.5?"—":f(v))+'</span></td>'}).join("")+'</tr>'}
+  h+='</tbody></table></div><p class="hint" style="margin:10px 2px">عائد الاستثمار محسوب بنسبة '+RISK[S.inv.risk].r+'% سنويًا ('+RISK[S.inv.risk].n+') للتوضيح فقط. العوائد الفعلية تتغير.</p>';
+  return h;
+}
+
+/* ---------- render ---------- */
+var app=$("#app"),bbar=$("#bbar");
+function render(keepScroll){
+  var y=window.scrollY;
+  if(S.step===-1&&S.view==="wiz"){renderWelcome();return}
+  if(S.view==="plan"){
+    app.innerHTML=planHTML();
+    bbar.hidden=true; document.querySelector("main").style.paddingBottom="40px";
+    bindChart();
+  }else{
+    var st=STEPS[S.step];
+    app.innerHTML='<div class="prog"><div class="prog-head"><span>الخطوة <b class="num">'+(S.step+1)+'</b> من <span class="num">'+STEPS.length+'</span></span><b>'+st.t+'</b></div><div class="segs">'+STEPS.map(function(s,i){return '<button type="button" aria-label="'+s.t+'" data-go="'+i+'" class="'+(i===S.step?"on":(i<S.step?"done":""))+'"></button>'}).join("")+'</div></div>'
+      +'<div class="step-h"><span class="step-ic">'+ic(st.ic)+'</span><div><h1>'+st.t+'</h1><p>'+st.h+'</p></div></div>'+stepHTML(st.k);
+    document.querySelector("main").style.paddingBottom="";
+    bbar.hidden=false;
+    var last=S.step===STEPS.length-1;
+    bbar.innerHTML='<div class="wrap"><div class="live" id="live">'+liveHTML()+'</div><div class="btns">'+(S.step>0?'<button class="btn" data-nav="-1">السابق</button>':'<button class="btn" data-nav="home">رجوع</button>')
+      +(last?'<button class="btn pri" data-act="build"'+(num(S.salary)>0?"":" disabled")+'>ابنِ خطتي</button>':'<button class="btn pri" data-nav="1">التالي</button>')+'</div></div>';
+  }
+  if(keepScroll)window.scrollTo(0,y);
+}
+function renderWelcome(){
+  bbar.hidden=true;document.querySelector("main").style.paddingBottom="40px";
+  var has=num(S.salary)>0;
+  app.innerHTML='<div class="welcome"><span class="step-ic">'+ic("logo")+'</span><h1>خطتك المالية لخمس سنوات</h1><p class="lead">أدخل دخلك وديونك ومصاريفك، والصفحة ترتب لك السداد والادخار شهرًا بشهر.</p>'
+   +'<ol class="wsteps"><li><span class="n">1</span>الدخل والمصاريف</li><li><span class="n">2</span>الأقساط والديون</li><li><span class="n">3</span>الأهداف والصناديق والاستثمار</li><li><span class="n">4</span>خطة 60 شهرًا بجدول سداد كامل</li></ol>'
+   +'<div class="note info" style="margin-bottom:16px">'+ic("shield")+'<div>بياناتك تُحفظ على جهازك فقط، ولا تُرسل لأي جهة.</div></div>'
+   +'<div class="stack"><button class="btn pri" data-act="begin">'+(has?"متابعة التعبئة":"ابدأ")+'</button>'+(has?'<button class="btn" data-act="toplan">عرض خطتي</button>':'')+'<button class="btn" data-act="import">استيراد ملف محفوظ</button></div></div>';
+}
+function updateLive(){var l=$("#live");if(l)l.innerHTML=liveHTML();
+  var ef=$("#efCalc");if(ef)ef.lastChild.textContent=f(efTarget(S));
+  var b=$('[data-act="build"]');if(b)b.disabled=!(num(S.salary)>0);
+  refreshCalcs();
+}
+
+/* ---------- state paths ---------- */
+function getP(p){return p.split(".").reduce(function(o,k){return o==null?o:o[k]},S)}
+function setP(p,v){var ks=p.split("."),o=S;for(var i=0;i<ks.length-1;i++){o=o[ks[i]];if(o==null)return}o[ks[ks.length-1]]=v}
+
+/* ---------- events ---------- */
+app.addEventListener("input",function(e){
+  var t=e.target,p=t.getAttribute("data-p");if(!p)return;
+  if(t.getAttribute("data-t")==="num"){
+    t.classList.toggle("bad",rawNeg(t.value));
+    var clean=t.value.replace(/[^\d٠-٩۰-۹.,٫٬]/g,"");
+    setP(p,clean);
+  }else setP(p,t.value);
+  save();updateLive();
+});
+app.addEventListener("focusout",function(e){
+  var t=e.target;if(t.getAttribute&&t.getAttribute("data-t")==="num"){
+    var pp=t.getAttribute("data-p"),mxv=+t.getAttribute("data-max")||0,cv=num(getP(pp));
+    if(t.classList.contains("bad"))toast("أدخل رقمًا موجبًا");
+    if(t.getAttribute("data-int")&&cv%1){cv=Math.floor(cv);setP(pp,String(cv))}
+    if(mxv&&cv>mxv){setP(pp,String(mxv));toast("الحد الأعلى "+mxv);save();updateLive()}
+    t.value=fmtIn(getP(pp));t.classList.remove("bad");
+  }
+});
+app.addEventListener("change",function(e){
+  var t=e.target,mp=t.getAttribute("data-mp");
+  if(mp){
+    var wrap=t.closest(".mpick"),ms=wrap.querySelector('[data-part="m"]').value,ys=wrap.querySelector('[data-part="y"]').value,cur=getP(mp);
+    var v="";
+    if(ms===""||ys===""){
+      if(ms===""&&ys===""){v=""}else{ // fill the other part sensibly
+        var mm=ms||(validMonth(cur)?String(+cur.slice(5)):String(+S.start.slice(5)));var yy=ys||(validMonth(cur)?cur.slice(0,4):S.start.slice(0,4));
+        if(!ys&&mp!=="start"&&diffM(S.start,yy+"-"+String(mm).padStart(2,"0"))<0)yy=String(+yy+1);
+        if(t.value===""){v=""}else v=yy+"-"+String(mm).padStart(2,"0");
+      }
+    }else v=ys+"-"+String(ms).padStart(2,"0");
+    if(mp==="start"&&!validMonth(v))v=S.start;
+    setP(mp,v);save();render(true);
+  }
+});
+document.addEventListener("click",function(e){
+  var b=e.target.closest("button,[data-row],label");if(!b)return;
+  var d=b.dataset||{};
+  if(d.seg){var v=d.v;if(d.seg==="_split"){splitIdx=+v;render(true);return}
+    if(d.seg==="ef.months")v=+v;setP(d.seg,v);save();render(true);return}
+  if(d.sw){setP(d.sw,!getP(d.sw));save();b.setAttribute("aria-checked",String(!!getP(d.sw)));updateLive();return}
+  if(d.act==="add"){var L=S[d.list],o=newItem(d.list);if(L.length>=50){toast("وصلت للحد الأعلى من البنود");return}L.push(o);save();render(true);focusNew(d.list,L.length-1);return}
+  if(d.act==="preset"){var o2=newItem(d.list);o2.name=d.name;S[d.list].push(o2);save();render(true);var el=document.querySelector('[data-p="'+d.list+'.'+(S[d.list].length-1)+'.amount"]');if(el)el.focus();return}
+  if(d.act==="del"){var LL=S[d.list],ix=LL.findIndex(function(x){return x.id===d.id});if(ix<0)return;var removed=LL.splice(ix,1)[0],gen=stateGen;save();render(true);toast("تم الحذف",function(){if(gen!==stateGen||S[d.list]!==LL)return;LL.splice(Math.min(ix,LL.length),0,removed);save();render(true)});return}
+  if(d.nav){if(d.nav==="home"){S.step=-1;save();render();window.scrollTo(0,0);return}
+    var n=S.step+(+d.nav);if(+d.nav>0&&S.step===0&&!(num(S.salary)>0)){var se=$("#salErr");if(se)se.hidden=false;var si=$("#sal");if(si){si.classList.add("bad");si.focus()}return}
+    S.step=Math.max(0,Math.min(STEPS.length-1,n));save();render();window.scrollTo(0,0);return}
+  if(d.go!=null&&d.go!==""){closeSheet();S.view="wiz";S.step=+d.go;save();render();window.scrollTo(0,0);return}
+  if(d.act==="begin"){S.step=Math.max(0,S.step);if(S.step<0)S.step=0;S.view="wiz";save();render();return}
+  if(d.act==="toplan"){S.view="plan";S.step=STEPS.length-1;save();render();window.scrollTo(0,0);return}
+  if(d.act==="build"){if(!(num(S.salary)>0)){toast("أدخل الراتب أولًا");return}S.view="plan";S.tab="sum";splitIdx=0;save();render();window.scrollTo(0,0);return}
+  if(d.tab){S.tab=d.tab;save();render();window.scrollTo(0,0);return}
+  if(d.year!=null&&d.year!==""){S.year=+d.year;save();render(true);return}
+  if(d.row!=null&&d.row!==""){monthSheet(+d.row);return}
+  if(d.mo!=null&&d.mo!==""){var mi=+d.mo;if(mi>=0&&mi<N)monthSheet(mi);return}
+  if(d.debt){openDebt=openDebt===d.debt?null:d.debt;render(true);return}
+  if(d.close!=null){closeSheet();return}
+  if(d.act==="csv"){exportCSV();return}
+  if(d.act==="print"){closeSheet();if(S.tab!=="tbl"){S.tab="tbl";render()}var oy=S.year;S.year=0;render();setTimeout(function(){window.print();S.year=oy;render()},100);return}
+  if(d.act==="export"){closeSheet();exportJSON();return}
+  if(d.act==="import"){closeSheet();$("#fileIn").value="";$("#fileIn").click();return}
+  if(d.act==="theme"){var r=document.documentElement,cur=r.getAttribute("data-theme")||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"),nx=cur==="dark"?"light":"dark";r.setAttribute("data-theme",nx);try{localStorage.setItem(LS+"-theme",nx)}catch(e){}closeSheet();return}
+  if(d.act==="reset"){if(d.armed){S=blank();stateGen++;P=null;openDebt=null;saveNow();closeSheet();render();window.scrollTo(0,0);toast("تم مسح البيانات");}else{b.dataset.armed="1";b.querySelector("span").textContent="اضغط مرة ثانية للتأكيد";}return}
+  if(d.act==="edit"){closeSheet();S.view="wiz";S.step=0;save();render();window.scrollTo(0,0);return}
+});
+function newItem(list){var o={id:uid(),name:""};
+  if(list==="extras")o.amount="";if(list==="fixed"){o.amount="";o.freq="m"}if(list==="loans"){o.monthly="";o.months="";o.balloon=""}
+  if(list==="overdue"){o.amount="";o.penalty=false}if(list==="urgent"){o.amount="";o.due=""}if(list==="goals"){o.amount="";o.saved="";o.due=addM(S.start,12)}return o}
+function focusNew(list,i){var el=document.querySelector('[data-p="'+list+'.'+i+'.name"]');if(el){el.focus();el.scrollIntoView({block:"center",behavior:"smooth"})}}
+app.addEventListener("keydown",function(e){
+  if((e.key==="Enter"||e.key===" ")&&e.target.tagName==="TR"&&e.target.dataset.row){e.preventDefault();monthSheet(+e.target.dataset.row);return}
+  if(e.key==="Enter"&&e.target.tagName==="INPUT"){e.preventDefault();var ins=[].slice.call(app.querySelectorAll("input"));var k=ins.indexOf(e.target);if(k>=0&&k<ins.length-1)ins[k+1].focus();else e.target.blur()}
+});
+
+/* ---------- sheet & menu ---------- */
+var scrim=$("#scrim"),sheet=$("#sheet");
+var lastFocus=null;
+function openSheet(h){if(sheet.hidden)lastFocus=document.activeElement;sheet.innerHTML=h;sheet.setAttribute("tabindex","-1");setTimeout(function(){sheet.focus({preventScroll:true})},30);scrim.hidden=false;sheet.hidden=false;requestAnimationFrame(function(){scrim.classList.add("on");sheet.classList.add("on")});document.body.style.overflow="hidden"}
+function closeSheet(){if(sheet.hidden)return;scrim.classList.remove("on");sheet.classList.remove("on");document.body.style.overflow="";setTimeout(function(){if(!sheet.classList.contains("on")){scrim.hidden=true;sheet.hidden=true}},250);if(lastFocus&&document.contains(lastFocus))try{lastFocus.focus({preventScroll:true})}catch(e){}}
+scrim.addEventListener("click",closeSheet);
+document.addEventListener("keydown",function(e){if(e.key==="Escape")closeSheet();
+  if(e.key==="Tab"&&!sheet.hidden){var fs=[].slice.call(sheet.querySelectorAll("button:not([disabled])"));if(!fs.length)return;var a=fs[0],z=fs[fs.length-1];if(e.shiftKey&&(document.activeElement===a||document.activeElement===sheet)){e.preventDefault();z.focus()}else if(!e.shiftKey&&document.activeElement===z){e.preventDefault();a.focus()}}});
+$("#menuBtn").innerHTML=ic("dots");$("#logo").innerHTML=ic("logo");
+$("#menuBtn").addEventListener("click",function(){
+  var has=num(S.salary)>0;
+  openSheet('<div class="wrap"><div class="grab"></div><h3>القائمة</h3><div class="menu">'
+   +(S.view==="plan"?'<button data-act="edit">'+ic("edit")+'<span>تعديل البيانات</span></button>':(has?'<button data-act="toplan">'+ic("table")+'<span>عرض الخطة</span></button>':''))
+   +'<button data-act="export">'+ic("dl")+'<span>حفظ نسخة في ملف</span></button>'
+   +'<button data-act="import">'+ic("ul")+'<span>استيراد من ملف</span></button>'
+   +(has?'<button data-act="csv">'+ic("table")+'<span>تنزيل الجدول (Excel)</span></button>':'')
+   +'<button data-act="theme">'+ic("moon")+'<span>تبديل الوضع الليلي</span></button>'
+   +'<button data-act="reset" class="danger">'+ic("trash")+'<span>مسح كل البيانات</span></button>'
+   +'</div><p class="hint">البيانات محفوظة في متصفح هذا الجهاز. احفظ نسخة في ملف قبل تغيير الجوال أو مسح المتصفح.</p><button class="btn" data-close>إغلاق</button></div>');
+});
+
+/* ---------- files ---------- */
+function download(name,text,type){var b=new Blob([text],{type:type}),a=document.createElement("a");a.href=URL.createObjectURL(b);a.download=name;document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove()},500)}
+function stamp(){var d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+function exportJSON(){var o=JSON.parse(JSON.stringify(S));o.app="khutati";download("khutati-"+stamp()+".json",JSON.stringify(o,null,1),"application/json");toast("تم حفظ الملف")}
+function exportCSV(){
+  closeSheet();var PP=simulate(S),head=["الشهر","الدخل","المعيشة","المصاريف الثابتة","الأقساط","سداد الديون","الأهداف والدفعات الأخيرة","صندوق الطوارئ","صندوق المشتريات","الاستثمار","متبقي","عجز","الدين المتبقي","رصيد الطوارئ","رصيد المشتريات","رصيد الاستثمار","إجمالي المدخرات"];
+  var lines=[head.join(",")];
+  PP.rows.forEach(function(r){lines.push(['"'+mlabel(r.m)+'"',r.inc,r.living,r.fixed,r.loanTot,r.debtTot,r.goalTot,r.ef,r.box,r.inv,r.free,r.deficit,r.totalDebt,r.efB,r.boxB,r.invB,r.savings].map(function(v,k){return k?R(v):v}).join(","))});
+  download("khutati-table-"+stamp()+".csv","﻿"+lines.join("\r\n"),"text/csv;charset=utf-8");toast("تم تنزيل الجدول");
+}
+$("#fileIn").addEventListener("change",function(){
+  var fl=this.files&&this.files[0];if(!fl)return;
+  if(fl.size>500000){toast("الملف كبير وغير صالح");return}
+  var rd=new FileReader();rd.onload=function(){
+    try{var o=JSON.parse(rd.result);if(!o||typeof o!=="object"||!("salary" in o)||!Array.isArray(o.fixed))throw 0;
+      S=sanitize(o);stateGen++;S.view=num(S.salary)>0?"plan":"wiz";S.tab="sum";if(S.view==="wiz")S.step=0;saveNow();render();window.scrollTo(0,0);toast("تم استيراد البيانات")}
+    catch(e){toast("الملف غير صالح، اختر ملفًا محفوظًا من هذه الصفحة")}
+  };rd.onerror=function(){toast("تعذرت قراءة الملف")};rd.readAsText(fl);
+});
+
+/* ---------- toast ---------- */
+var tT=null,toastEl=$("#toast");
+function toast(msg,undo){clearTimeout(tT);toastEl.innerHTML=esc(msg)+(undo?' &nbsp;<button style="background:none;border:0;color:var(--accent-2);font-weight:700;pointer-events:auto">تراجع</button>':'');toastEl.style.pointerEvents=undo?"auto":"none";
+  if(undo)toastEl.querySelector("button").onclick=function(){undo();toastEl.classList.remove("on")};toastEl.classList.add("on");tT=setTimeout(function(){toastEl.classList.remove("on");toastEl.style.pointerEvents="none"},undo?4500:2200)}
+
+/* ---------- boot ---------- */
+try{var th=localStorage.getItem(LS+"-theme");if(th)document.documentElement.setAttribute("data-theme",th)}catch(e){}
+load();
+if(!storageOK){var el=$("#saved");el.className="saved err";el.lastChild.textContent="الحفظ غير متاح، صدّر ملفًا"}
+if(S.view==="plan"&&!(num(S.salary)>0))S.view="wiz";
+render();
+if("serviceWorker" in navigator&&location.protocol==="https:"){navigator.serviceWorker.register("sw.js",{scope:"./"}).catch(function(){})}
+window.__khutati={simulate:simulate,get S(){return S}};
+})();
+</script>
+</body>
+</html>
