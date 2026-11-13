@@ -17,7 +17,7 @@
   --bg:#f1f4f3; --surface:#ffffff; --surface2:#e9eeec; --ink:#0f1d1a; --muted:#5b6b66; --faint:#8a9893; --line:#dbe3e0;
   --accent:#0e5a50; --accent-2:#13786a; --accent-ink:#ffffff; --accent-soft:#dcefea;
   --debt:#b4532a; --debt-soft:#f8e4da; --bad:#b3261e; --bad-soft:#fbe3e1; --warn:#8f6000; --warn-soft:#f8ecd2; --good:#1c7a42; --good-soft:#dcf1e4;
-  --c-ess:#8c9a96; --c-loan:#55637a; --c-debt:#c0602f; --c-goal:#b58a1b; --c-ef:#13786a; --c-box:#7a4fa3; --c-inv:#2f62b0; --c-free:#5aa36d;
+  --c-ess:#8c9a96; --c-loan:#55637a; --c-bl:#2f8aa3; --c-debt:#c0602f; --c-goal:#b58a1b; --c-ef:#13786a; --c-box:#7a4fa3; --c-inv:#2f62b0; --c-free:#5aa36d;
   --font:"IBM Plex Sans Arabic",system-ui,-apple-system,"Segoe UI",Tahoma,sans-serif;
   --r:14px; --shadow:0 1px 2px rgba(15,29,26,.05),0 4px 16px rgba(15,29,26,.05);
   color-scheme:light;
@@ -26,13 +26,13 @@
   --bg:#0b1210; --surface:#121b19; --surface2:#1a2522; --ink:#e6eeeb; --muted:#9aaba5; --faint:#6f7f7a; --line:#26332f;
   --accent:#3fb39c; --accent-2:#56c7af; --accent-ink:#04201a; --accent-soft:#143a32;
   --debt:#e98d62; --debt-soft:#3a2219; --bad:#f07167; --bad-soft:#3b1a18; --warn:#e2b04a; --warn-soft:#3a2d12; --good:#62c98a; --good-soft:#143523;
-  --c-ess:#7d8c88; --c-loan:#8796b0; --c-debt:#e0814f; --c-goal:#d9ad3c; --c-ef:#3fb39c; --c-box:#a982cf; --c-inv:#6b97e0; --c-free:#7cc48d;
+  --c-ess:#7d8c88; --c-loan:#8796b0; --c-bl:#62b6cc; --c-debt:#e0814f; --c-goal:#d9ad3c; --c-ef:#3fb39c; --c-box:#a982cf; --c-inv:#6b97e0; --c-free:#7cc48d;
   --shadow:none; color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#0b1210; --surface:#121b19; --surface2:#1a2522; --ink:#e6eeeb; --muted:#9aaba5; --faint:#6f7f7a; --line:#26332f;
   --accent:#3fb39c; --accent-2:#56c7af; --accent-ink:#04201a; --accent-soft:#143a32;
   --debt:#e98d62; --debt-soft:#3a2219; --bad:#f07167; --bad-soft:#3b1a18; --warn:#e2b04a; --warn-soft:#3a2d12; --good:#62c98a; --good-soft:#143523;
-  --c-ess:#7d8c88; --c-loan:#8796b0; --c-debt:#e0814f; --c-goal:#d9ad3c; --c-ef:#3fb39c; --c-box:#a982cf; --c-inv:#6b97e0; --c-free:#7cc48d;
+  --c-ess:#7d8c88; --c-loan:#8796b0; --c-bl:#62b6cc; --c-debt:#e0814f; --c-goal:#d9ad3c; --c-ef:#3fb39c; --c-box:#a982cf; --c-inv:#6b97e0; --c-free:#7cc48d;
   --shadow:none; color-scheme:dark}
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
@@ -161,8 +161,8 @@ main{padding-bottom:calc(120px + env(safe-area-inset-bottom,0px))}
 .note .nt{color:var(--ink)}
 
 /* results */
-.tabs{display:grid;grid-template-columns:repeat(4,1fr);background:var(--surface2);border-radius:12px;padding:4px;gap:4px;margin:4px 0 14px}
-.tabs button{border:0;background:transparent;border-radius:9px;height:38px;font-size:13.5px;font-weight:500;color:var(--muted)}
+.tabs{display:grid;grid-template-columns:repeat(5,1fr);background:var(--surface2);border-radius:12px;padding:4px;gap:4px;margin:4px 0 14px}
+.tabs button{border:0;background:transparent;border-radius:9px;height:38px;font-size:13px;padding:0 2px;font-weight:500;color:var(--muted)}
 .tabs button.on{background:var(--surface);color:var(--ink);font-weight:700;box-shadow:0 1px 3px rgba(0,0,0,.08)}
 .hero{background:linear-gradient(160deg,var(--hero-a),var(--hero-b));color:#fff;border-radius:18px;padding:18px;display:grid;gap:14px}
 .hero{--hero-a:#0e5a50;--hero-b:#093d36}
@@ -182,6 +182,25 @@ main{padding-bottom:calc(120px + env(safe-area-inset-bottom,0px))}
 .kpi .k i{width:8px;height:8px;border-radius:3px;flex:none}
 .kpi .v{font-size:19px;font-weight:700;margin-top:2px}
 .kpi .s{font-size:12px;color:var(--muted)}
+.paycard{display:flex;align-items:center;gap:12px;width:100%;margin-top:12px;padding:12px 14px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);text-align:right}
+.pc-t{flex:1;min-width:0}.pc-t b{display:block;font-size:15px}.pc-t span{font-size:12.5px;color:var(--muted)}.pc-go{color:var(--muted)}
+.msw{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:10px;margin-bottom:12px}
+.msw div{text-align:center}.msw b{display:block;font-size:18px}.msw span{font-size:12.5px;color:var(--muted)}
+.msw .iconbtn{width:44px;height:44px}.msw .iconbtn:disabled{opacity:.35}
+.prow{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:center;font-size:13.5px;color:var(--muted)}
+.prow b{color:var(--ink)}
+.prow .pb,.pb{height:8px;border-radius:99px;background:var(--surface2);overflow:hidden;display:block}
+.prow .pb i{display:block;height:100%;background:var(--good);border-radius:99px}
+.pr{display:grid;grid-template-columns:minmax(0,1fr) 128px 48px;gap:8px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:10px 10px 10px 8px;box-shadow:var(--shadow)}
+.pr.on{border-color:color-mix(in srgb,var(--good) 45%,var(--line));background:color-mix(in srgb,var(--good-soft) 35%,var(--surface))}
+.pr-t{min-width:0}.pr-t b{display:block;font-size:14px;font-weight:600;overflow-wrap:anywhere}.pr-t>span{font-size:12px;color:var(--muted)}
+.pr .inp input{height:44px;font-size:15px;padding-inline-end:12px;padding-inline-start:8px}
+.pr .inp.money::after{display:none}
+.ck{width:48px;height:44px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);color:var(--faint);display:grid;place-items:center}
+.ck svg{width:22px;height:22px;stroke-width:2.6}
+.ck[aria-pressed="true"]{background:var(--good);border-color:var(--good);color:#fff}
+.pr-n{grid-column:1/-1}.pr .inp input::placeholder{color:var(--faint);font-weight:400}.btn:disabled{opacity:.45;cursor:default}
+.pn{font-size:12px;color:var(--muted);margin-top:2px}.pn.warn{color:var(--warn)}.pn.bad{color:var(--bad)}.pn.ok{color:var(--good)}
 .h2{font-size:16px;font-weight:700;margin:22px 2px 10px;display:flex;align-items:center;justify-content:space-between;gap:8px}
 .h2 small{font-size:12px;font-weight:400;color:var(--muted)}
 .stackbar{display:flex;height:14px;border-radius:99px;overflow:hidden;background:var(--surface2);gap:2px}
@@ -226,6 +245,7 @@ table.t tbody tr{cursor:pointer}
 table.t tbody tr:active td{background:var(--accent-soft)}
 table.t .mo b{display:block;font-weight:600;font-size:13px}
 table.t .mo span{font-size:11px;color:var(--muted)}
+table.t .mo .cf{display:inline-block;margin-inline-start:6px;font-size:11px;font-weight:700;color:var(--warn)}table.t .mo .cf.all{color:var(--good)}
 table.t .mo .ev{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--c-debt);margin-inline-start:6px;vertical-align:middle}
 table.t td.debtc{color:var(--debt);font-weight:600}
 table.t td.savc{color:var(--accent);font-weight:600}
@@ -369,7 +389,7 @@ function ic(n,cls){return '<svg class="i'+(cls?" "+cls:"")+'" viewBox="0 0 24 24
 /* ---------- state ---------- */
 function blank(){return {v:1,start:thisMonth(),salary:"",raise:"",extras:[],living:"",fixed:[],loans:[],overdue:[],urgent:[],goals:[],
   ef:{months:3,custom:"",saved:"",when:"after"},box:{monthly:"",target:"",saved:"",when:"after"},inv:{monthly:"",when:"after",rest:true,risk:"mid",saved:""},
-  step:-1,view:"wiz",tab:"sum",year:0}}
+  step:-1,view:"wiz",tab:"sum",year:0,paid:{}}}
 var S=blank(), storageOK=true, stateGen=0;
 function sanitize(o){
   var b=blank(); if(!o||typeof o!=="object")return b;
@@ -387,7 +407,9 @@ function sanitize(o){
   ["ef","box","inv"].forEach(function(k){if(b[k].when!=="now")b[k].when="after"});
   if(!RISK[b.inv.risk])b.inv.risk="mid";
   if(typeof o.step==="number"&&o.step>=-1&&o.step<STEPS.length)b.step=o.step;
-  if(o.view==="plan")b.view="plan"; if(["sum","tbl","debt","fund"].indexOf(o.tab)>=0)b.tab=o.tab;
+  if(o.view==="plan")b.view="plan"; if(["sum","pay","tbl","debt","fund"].indexOf(o.tab)>=0)b.tab=o.tab;
+  if(o.paid&&typeof o.paid==="object"&&!Array.isArray(o.paid))Object.keys(o.paid).slice(0,240).forEach(function(m){var src=o.paid[m];if(!validMonth(m)||!src||typeof src!=="object")return;var d={};
+    Object.keys(src).slice(0,200).forEach(function(k){if(/^(inc|liv|def|ef|box|inv|(fx|ln|d|bl|g):[a-z0-9]{1,12})$/i.test(k)&&src[k]!=null&&/^[\s\d٠-٩۰-۹.,٫٬]+$/.test(String(src[k])))d[k]=String(num(src[k]))});if(Object.keys(d).length)b.paid[m]=d});
   if(typeof o.year==="number"&&o.year>=0&&o.year<=5)b.year=o.year;
   return b;
 }
@@ -409,25 +431,37 @@ function income0(s){return num(s.salary)+sum(s.extras,function(x){return num(x.a
 function efTarget(s){return s.ef.months===0?num(s.ef.custom):s.ef.months*essentials0(s)}
 
 function simulate(s){
-  var start=s.start, living=num(s.living), fixedM=fixedMonthly(s), extrasM=sum(s.extras,function(x){return num(x.amount)});
-  var sal0=num(s.salary), raise=Math.min(num(s.raise),50)/100;
-  var loans=[],od=[],ug=[],goals=[];
+  var start=s.start, living=num(s.living), extrasM=sum(s.extras,function(x){return num(x.amount)});
+  var sal0=num(s.salary), raise=Math.min(num(s.raise),50)/100, paid=s.paid||{};
+  var fixed=[],loans=[],od=[],ug=[],goals=[];
+  s.fixed.forEach(function(x,i){var a=x.freq==="y"?num(x.amount)/12:num(x.amount);if(a>0)fixed.push({id:x.id,name:nm(x,i,"مصروف"),monthly:a,arr:0,annual:x.freq==="y"})});
   s.loans.forEach(function(l,i){var mo=num(l.monthly),n=Math.min(600,Math.floor(num(l.months))),b=num(l.balloon);
-    if((mo>0&&n>=1)||b>0)loans.push({id:l.id,name:nm(l,i,"قسط"),monthly:n>=1?mo:0,left:n>=1?n:0,n:n>=1?n:0,balloon:b,bsaved:0,bpaid:b<=0,dueIdx:n>=1?n:0,endAt:null,bAt:null,orig:(n>=1?mo*n:0)+b,pays:{}})});
+    if((mo>0&&n>=1)||b>0)loans.push({id:l.id,name:nm(l,i,"قسط"),monthly:n>=1?mo:0,left:n>=1?n:0,n:n>=1?n:0,arr:0,balloon:b,bsaved:0,bpaid:b<=0,dueIdx:n>=1?n:0,endAt:null,bAt:null,orig:(n>=1?mo*n:0)+b,pays:{}})});
   s.overdue.forEach(function(x,i){var a=num(x.amount);if(a>0)od.push({id:x.id,name:nm(x,i,"متأخر"),rem:a,orig:a,penalty:!!x.penalty,paidAt:null,pays:{},kind:"od"})});
   s.urgent.forEach(function(x,i){var a=num(x.amount);if(a>0)ug.push({id:x.id,name:nm(x,i,"دين"),rem:a,orig:a,dueIdx:validMonth(x.due)?Math.max(0,diffM(start,x.due)):null,due:x.due,paidAt:null,pays:{},kind:"ug"})});
   s.goals.forEach(function(x,i){var a=num(x.amount);if(a>0){var sv=Math.min(num(x.saved),a);goals.push({id:x.id,name:nm(x,i,"هدف"),target:a,saved:sv,dueIdx:validMonth(x.due)?Math.max(0,diffM(start,x.due)):null,due:x.due,reachedAt:sv>=a?0:null,spentAt:null,pays:{}})}});
   var efT=efTarget(s), efB=Math.min(num(s.ef.saved),MAXV), boxB=num(s.box.saved), invB=num(s.inv.saved), freeB=0;
   var boxM=num(s.box.monthly), boxT=num(s.box.target), invM=num(s.inv.monthly), rate=RISK[s.inv.risk].r/1200;
   var invIn=invB, rows=[], ev=[], hadDebts=od.length+ug.length>0, debtsDoneAt=hadDebts?null:-1, efDoneAt=efB>=efT&&efT>0?-1:null, invStartAt=null;
-  var allDebts=od.concat(ug),defRem=0,defEver=false;
+  var allDebts=od.concat(ug),defRem=0,defEver=false,carry=0;
 
   for(var i=0;i<N;i++){
-    var m=addM(start,i), sal=sal0*Math.pow(1+raise,Math.floor(i/12)), inc=sal+extrasM, loanTot=0, r;
-    r={defPay:0,i:i,m:m,inc:inc,sal:sal,living:living,fixed:fixedM,loanPay:{},loanTot:0,debtPay:{},debtTot:0,goalPay:{},balloonPay:{},goalTot:0,ef:0,box:0,inv:0,free:0,deficit:0,short:[],ev:[]};
-    loans.forEach(function(l){if(l.left>0){r.loanPay[l.id]=l.monthly;l.pays[i]=l.monthly;loanTot+=l.monthly;l.left--;if(l.left===0){if(l.balloon<=0){l.endAt=i;ev.push({i:i,t:"loan",name:l.name});r.ev.push("انتهى "+l.name)}}}});
-    r.loanTot=loanTot;
-    var cash=inc-living-fixedM-loanTot;
+    var m=addM(start,i), pc=paid[m]||{}, sal=sal0*Math.pow(1+raise,Math.floor(i/12)), r;
+    var act=function(k,p){return pc[k]!=null&&pc[k]!==""?num(pc[k]):p};
+    r={defPay:0,i:i,m:m,sal:sal,loanPay:{},fixPay:{},loanTot:0,debtPay:{},debtTot:0,goalPay:{},balloonPay:{},goalTot:0,ef:0,box:0,inv:0,free:0,deficit:0,short:[],ev:[],plan:{},arr:{},carryIn:carry,confirmed:0};
+    // essentials: actual where confirmed, unpaid part carried to next month
+    r.plan.inc=sal+extrasM; r.inc=act("inc",r.plan.inc);
+    r.plan.liv=living; r.living=act("liv",living);
+    r.fixed=0;
+    var essPlan=r.plan.liv,ess0=carry;carry=0;r.act={liv:r.living};
+    fixed.forEach(function(x){var k="fx:"+x.id,due=Math.max(0,x.monthly+x.arr);if(due<0.5&&pc[k]==null)return;r.plan[k]=due;if(x.arr>0.5)r.arr[k]=x.arr;var a=act(k,due);x.arr=Math.max(0,due-a);r.fixPay[x.id]=a;r.fixed+=a;essPlan+=due;r.act[k]=a});
+    loans.forEach(function(l){var k="ln:"+l.id,inst=l.left>0?l.monthly:0,raw=inst+l.arr,due=Math.max(0,raw);if(l.left<=0&&due<0.5&&pc[k]==null)return;
+      if(due>=0.5||pc[k]!=null){r.plan[k]=due;essPlan+=due}if(l.arr>0.5)r.arr[k]=l.arr;var a=act(k,due);if(l.left>0)l.left--;l.arr=raw-a;
+      var cap=-(l.left*l.monthly);if(l.arr<cap)l.arr=cap;r.act[k]=a;
+      r.loanPay[l.id]=a;l.pays[i]=a;r.loanTot+=a;
+      if(l.left===0&&l.arr<0.5&&l.balloon<=0&&l.endAt==null){l.endAt=i;ev.push({i:i,t:"loan",name:l.name});r.ev.push("انتهى "+l.name)}});
+    // unpaid essentials stay in hand and move to next month; overpaid ones reduce it
+    var cash=ess0+r.inc-essPlan; carry=essPlan-(r.living+r.fixed+r.loanTot);
     if(cash<0){r.deficit=-cash;defRem+=r.deficit;defEver=true;cash=0}
     var take=function(x){x=Math.max(0,Math.min(x,cash));cash-=x;return x};
 
@@ -435,7 +469,7 @@ function simulate(s){
     if(s.box.when==="now"&&boxM>0){var bx=take(boxT>0?Math.min(boxM,Math.max(0,boxT-boxB)):boxM);r.box+=bx;boxB+=bx}
     if(s.inv.when==="now"&&invM>0){r.inv+=take(invM)}
     // 1) overdue debts: penalty first, then smallest
-    od.filter(function(d){return d.rem>0.5}).sort(function(a,b){return (b.penalty-a.penalty)||(a.rem-b.rem)}).forEach(function(d){var x=take(d.rem);if(x>0){d.rem-=x;d.pays[i]=(d.pays[i]||0)+x;r.debtPay[d.id]=(r.debtPay[d.id]||0)+x}});
+    od.filter(function(d){return d.rem>0.5}).sort(function(a,b){return (b.penalty-a.penalty)||(a.rem-b.rem)}).forEach(function(d){var x=take(d.rem);if(x>0){d.rem-=x;r.debtPay[d.id]=(r.debtPay[d.id]||0)+x}});
     // accumulated deficit from earlier months
     if(defRem>0.5){var dx=take(defRem);defRem-=dx;r.defPay=dx}
     // 2) deadline-paced commitments, earliest first
@@ -448,54 +482,64 @@ function simulate(s){
       var o=q.o,remain=q.k==="ug"?o.rem:q.k==="bl"?o.balloon-o.bsaved:o.target-o.saved;
       var left=Math.max(1,q.due-i+1), need=Math.min(remain,Math.ceil(remain/left)), got=take(need);
       if(got<need-0.5)r.short.push(q.k==="bl"?"الدفعة الأخيرة لـ«"+o.name+"»":o.name);
-      if(q.k==="ug"){o.rem-=got;if(got>0){o.pays[i]=(o.pays[i]||0)+got;r.debtPay[o.id]=(r.debtPay[o.id]||0)+got}}
+      if(q.k==="ug"){o.rem-=got;if(got>0)r.debtPay[o.id]=(r.debtPay[o.id]||0)+got}
       else if(q.k==="bl"){o.bsaved+=got;if(got>0)r.balloonPay[o.id]=got}
-      else {o.saved+=got;if(got>0){o.pays[i]=got;r.goalPay[o.id]=got}}
+      else {o.saved+=got;if(got>0)r.goalPay[o.id]=got}
     });
-    // balloons due now
-    loans.forEach(function(l){if(!l.bpaid&&i>=l.dueIdx&&l.bsaved>=l.balloon-0.5){l.bpaid=true;l.bAt=i;l.endAt=i;ev.push({i:i,t:"loan",name:l.name,balloon:true});r.ev.push("سُددت الدفعة الأخيرة: "+l.name)}});
-
-    // 2) funds set to start immediately
     if(s.ef.when==="now"&&efT>efB){var e1=take(efT-efB);r.ef+=e1;efB+=e1}
-
-    // 4) urgent debts: earliest deadline, then smallest
-    ug.filter(function(d){return d.rem>0.5}).sort(function(a,b){var ad=a.dueIdx==null?1e9:a.dueIdx,bd=b.dueIdx==null?1e9:b.dueIdx;return (ad-bd)||(a.rem-b.rem)}).forEach(function(d){var x=take(d.rem);if(x>0){d.rem-=x;d.pays[i]=(d.pays[i]||0)+x;r.debtPay[d.id]=(r.debtPay[d.id]||0)+x}});
-    allDebts.forEach(function(d){if(d.paidAt==null&&d.rem<=0.5){d.rem=0;d.paidAt=i;ev.push({i:i,t:"debt",name:d.name});r.ev.push("سُدد "+d.name)}});
+    // 3) urgent debts: earliest deadline, then smallest
+    ug.filter(function(d){return d.rem>0.5}).sort(function(a,b){var ad=a.dueIdx==null?1e9:a.dueIdx,bd=b.dueIdx==null?1e9:b.dueIdx;return (ad-bd)||(a.rem-b.rem)}).forEach(function(d){var x=take(d.rem);if(x>0){d.rem-=x;r.debtPay[d.id]=(r.debtPay[d.id]||0)+x}});
     var done=defRem<=0.5&&allDebts.every(function(d){return d.rem<=0.5});
-    if(done&&debtsDoneAt==null&&(hadDebts||defEver)){debtsDoneAt=i;ev.push({i:i,t:"alldebts"})}
-    if(!done&&debtsDoneAt===-1)debtsDoneAt=null;
-
     if(done){
-      // 5) goals without deadline, or past deadline and not reached
-      goals.filter(function(g){return g.reachedAt==null&&(g.dueIdx==null||i>g.dueIdx)}).forEach(function(g){var x=take(g.target-g.saved);if(x>0){g.saved+=x;g.pays[i]=(g.pays[i]||0)+x;r.goalPay[g.id]=(r.goalPay[g.id]||0)+x}});
-      // 6) emergency fund
+      goals.filter(function(g){return g.reachedAt==null&&(g.dueIdx==null||i>g.dueIdx)}).forEach(function(g){var x=take(g.target-g.saved);if(x>0){g.saved+=x;r.goalPay[g.id]=(r.goalPay[g.id]||0)+x}});
       if(s.ef.when!=="now"&&efT>efB){var e2=take(efT-efB);r.ef+=e2;efB+=e2}
-      // 7) purchases fund
       if(s.box.when!=="now"&&boxM>0){var b2=take(boxT>0?Math.min(boxM,Math.max(0,boxT-boxB)):boxM);r.box+=b2;boxB+=b2}
-      // 8) investment
       if(s.inv.when!=="now"&&invM>0){r.inv+=take(invM)}
-      // 9) remainder
       if(cash>0){if(s.inv.rest){r.inv+=cash}else{r.free+=cash}cash=0}
     }
     r.free+=cash; cash=0;
+
+    // record plan for allocation lines, then apply confirmed amounts
+    allDebts.forEach(function(d){var k="d:"+d.id,p=r.debtPay[d.id]||0;if(p>0.5||pc[k]!=null||d.rem>0.5){r.plan[k]=p;var a=Math.min(act(k,p),p+d.rem);r.act[k]=a;d.rem-=a-p;carry+=p-a;if(a>0)r.debtPay[d.id]=a;else delete r.debtPay[d.id]}});
+    if(r.defPay>0.5||pc.def!=null){r.plan.def=r.defPay;var ad=Math.min(act("def",r.defPay),r.defPay+defRem);defRem-=ad-r.defPay;carry+=r.defPay-ad;r.defPay=ad}
+    loans.forEach(function(l){var k="bl:"+l.id,p=r.balloonPay[l.id]||0;if(l.balloon>0&&(p>0.5||pc[k]!=null||!l.bpaid)){r.plan[k]=p;var a=Math.min(act(k,p),p+(l.balloon-l.bsaved));r.act[k]=a;l.bsaved+=a-p;carry+=p-a;if(a>0)r.balloonPay[l.id]=a;else delete r.balloonPay[l.id]}});
+    goals.forEach(function(g){var k="g:"+g.id,p=r.goalPay[g.id]||0;if(p>0.5||(g.spentAt==null&&(pc[k]!=null||g.reachedAt==null))){r.plan[k]=p;var a=Math.min(act(k,p),p+(g.target-g.saved));r.act[k]=a;g.saved+=a-p;carry+=p-a;if(a>0)r.goalPay[g.id]=a;else delete r.goalPay[g.id]}});
+    if(r.ef>0.5||pc.ef!=null){r.plan.ef=r.ef;var ae=act("ef",r.ef);efB+=ae-r.ef;carry+=r.ef-ae;r.ef=ae}
+    if(r.box>0.5||pc.box!=null){r.plan.box=r.box;var ab=act("box",r.box);if(boxT>0)ab=Math.min(ab,r.box+Math.max(0,boxT-boxB));r.act.box=ab;boxB+=ab-r.box;carry+=r.box-ab;r.box=ab}
+    if(r.inv>0.5||pc.inv!=null){r.plan.inv=r.inv;var ai=act("inv",r.inv);carry+=r.inv-ai;r.inv=ai}
+    r.carryOut=carry;
+    r.act.inc=r.inc;
+    r.confirmed=Object.keys(r.plan).filter(function(k){return pc[k]!=null&&pc[k]!==""}).length;
+    r.keys=Object.keys(r.plan).filter(function(k){return r.plan[k]>0.5||(pc[k]!=null&&pc[k]!=="")}).length;
+
+    Object.keys(r.debtPay).forEach(function(id){var d=allDebts.find(function(x){return x.id===id});if(d)d.pays[i]=r.debtPay[id]});
+    goals.forEach(function(g){if(r.goalPay[g.id])g.pays[i]=r.goalPay[g.id]});
+    allDebts.forEach(function(d){if(d.paidAt==null&&d.rem<=0.5){d.rem=0;d.paidAt=i;ev.push({i:i,t:"debt",name:d.name});r.ev.push("سُدد "+d.name)}});
+    loans.forEach(function(l){if(!l.bpaid&&i>=l.dueIdx&&l.bsaved>=l.balloon-0.5){l.bpaid=true;l.bAt=i;if(l.left===0&&l.arr<0.5){l.endAt=i}ev.push({i:i,t:"loan",name:l.name,balloon:true});r.ev.push("سُددت الدفعة الأخيرة: "+l.name)}
+      if(l.balloon>0&&l.bpaid&&l.endAt==null&&l.left===0&&l.arr<0.5)l.endAt=i});
+    var doneReal=defRem<=0.5&&allDebts.every(function(d){return d.rem<=0.5});
+    if(doneReal&&debtsDoneAt==null&&(hadDebts||defEver)){debtsDoneAt=i;ev.push({i:i,t:"alldebts"})}
+    if(!doneReal&&debtsDoneAt===-1)debtsDoneAt=null;
     goals.forEach(function(g){if(g.reachedAt==null&&g.saved>=g.target-0.5){g.reachedAt=i}
       if(g.spentAt==null&&g.reachedAt!=null&&(g.dueIdx==null||i>=g.dueIdx)){g.spentAt=i;ev.push({i:i,t:"goal",name:g.name,late:g.dueIdx!=null&&i>g.dueIdx});r.ev.push("تحقق "+g.name)}});
     if(efDoneAt==null&&efT>0&&efB>=efT-0.5){efDoneAt=i;ev.push({i:i,t:"ef"})}
-    if(invStartAt==null&&r.inv>0){invStartAt=i;ev.push({i:i,t:"inv"})}
+    if(invStartAt==null&&r.inv>0.5){invStartAt=i;ev.push({i:i,t:"inv"})}
     invB=invB*(1+rate)+r.inv; invIn+=r.inv; freeB+=r.free;
     r.debtTot=sum(Object.keys(r.debtPay),function(k){return r.debtPay[k]})+r.defPay;r.defRem=defRem;
-    r.goalTot=sum(Object.keys(r.goalPay),function(k){return r.goalPay[k]})+sum(Object.keys(r.balloonPay),function(k){return r.balloonPay[k]});
     r.balloonTot=sum(Object.keys(r.balloonPay),function(k){return r.balloonPay[k]});
-    r.loanRem=sum(loans,function(l){return l.left*l.monthly+(l.bpaid?0:l.balloon)});
+    r.goalOnly=sum(Object.keys(r.goalPay),function(k){return r.goalPay[k]});
+    r.goalTot=r.goalOnly+r.balloonTot;
+    r.loanRem=sum(loans,function(l){return Math.max(0,l.left*l.monthly+l.arr)+(l.bpaid?0:l.balloon)});
     r.debtRem=sum(allDebts,function(d){return d.rem});
-    r.totalDebt=r.loanRem+r.debtRem+defRem;
+    r.fixArr=sum(fixed,function(x){return x.arr});
+    r.totalDebt=r.loanRem+r.debtRem+defRem+r.fixArr;
     r.efB=efB;r.boxB=boxB;r.invB=invB;r.freeB=freeB;
     r.goalB=sum(goals,function(g){return g.spentAt==null?g.saved:0});
     r.blB=sum(loans,function(l){return l.bpaid?0:l.bsaved});
     r.savings=efB+boxB+invB+freeB+r.goalB+r.blB;
     rows.push(r);
   }
-  return {rows:rows,ev:ev.sort(function(a,b){return a.i-b.i}),loans:loans,od:od,ug:ug,goals:goals,efT:efT,debtsDoneAt:debtsDoneAt,efDoneAt:efDoneAt,invStartAt:invStartAt,invIn:invIn,hadDebts:hadDebts,allDebts:allDebts,start:start,defEver:defEver};
+  return {rows:rows,ev:ev.sort(function(a,b){return a.i-b.i}),loans:loans,od:od,ug:ug,goals:goals,fixedL:fixed,efT:efT,debtsDoneAt:debtsDoneAt,efDoneAt:efDoneAt,invStartAt:invStartAt,invIn:invIn,hadDebts:hadDebts,allDebts:allDebts,start:start,defEver:defEver};
 }
 
 function warnings(s,P){
@@ -673,8 +717,8 @@ var P=null;
 function colorOf(k){return "var(--c-"+k+")"}
 function planHTML(){
   P=simulate(S);var W=warnings(S,P);
-  var h='<div class="tabs no-print" role="tablist">'+[["sum","الملخص"],["tbl","الجدول"],["debt","الديون"],["fund","المدخرات"]].map(function(t){return '<button role="tab" aria-selected="'+(S.tab===t[0])+'" class="'+(S.tab===t[0]?"on":"")+'" data-tab="'+t[0]+'">'+t[1]+'</button>'}).join("")+'</div>';
-  if(S.tab==="sum")h+=sumHTML(W);else if(S.tab==="tbl")h+=tblHTML();else if(S.tab==="debt")h+=debtHTML();else h+=fundHTML();
+  var h='<div class="tabs no-print" role="tablist">'+[["sum","الملخص"],["pay","الشهري"],["tbl","الجدول"],["debt","الديون"],["fund","المدخرات"]].map(function(t){return '<button role="tab" aria-selected="'+(S.tab===t[0])+'" class="'+(S.tab===t[0]?"on":"")+'" data-tab="'+t[0]+'">'+t[1]+'</button>'}).join("")+'</div>';
+  if(S.tab==="sum")h+=sumHTML(W);else if(S.tab==="pay")h+=payHTML();else if(S.tab==="tbl")h+=tblHTML();else if(S.tab==="debt")h+=debtHTML();else h+=fundHTML();
   return h;
 }
 function sumHTML(W){
@@ -690,7 +734,9 @@ function sumHTML(W){
   else if(!hasOther){lab="الأقساط";big="تستمر بعد 5 سنوات";sub="لا توجد ديون متأخرة أو طارئة."}
   else {big="بعد الخمس سنوات";sub="الفائض الحالي لا يكفي لإنهاء الديون خلال الخطة."}
   h+='<div class="hero"><div><div class="k">'+lab+'</div><div class="big">'+big+'</div><div class="sub">'+sub+'</div></div>'
-    +'<div class="hero-g"><div><span>الفائض الشهري الآن</span><b class="num">'+f(r0.inc-r0.living-r0.fixed-r0.loanTot)+'</b></div><div><span>المدخرات بعد 5 سنوات</span><b class="num">'+f(last.savings)+'</b></div></div></div>';
+    +'<div class="hero-g"><div><span>الفائض الشهري الآن</span><b class="num">'+f(income0(S)-essentials0(S))+'</b></div><div><span>المدخرات بعد 5 سنوات</span><b class="num">'+f(last.savings)+'</b></div></div></div>';
+  var ci=Math.max(0,Math.min(N-1,diffM(S.start,thisMonth()))),cr=rows[ci];
+  h+='<button class="paycard" data-paygo="'+ci+'"><span class="step-ic" style="width:40px;height:40px;border-radius:12px">'+ic("check")+'</span><span class="pc-t"><b>مدفوعات '+mlabel(cr.m)+'</b><span>'+(cr.confirmed>=cr.keys&&cr.keys?"مؤكدة بالكامل":"مؤكد "+cr.confirmed+" من "+cr.keys+" بنود")+'</span></span><span class="pc-go">'+ic("arrowL")+'</span></button>';
   if(W.length)h+='<div class="stack" style="margin-top:12px">'+W.map(function(w){return '<div class="note '+w.lv+'">'+ic(w.lv==="info"?"info":"alert")+'<div>'+w.t+'</div></div>'}).join("")+'</div>';
   h+='<div class="h2">أرقام الخطة</div><div class="kpis">'
     +kpi("debt","إجمالي الديون الآن",f(totalDebt0),"شاملة الأقساط المتبقية")
@@ -710,7 +756,7 @@ function sumHTML(W){
 }
 var splitIdx=0;
 function kpi(c,k,v,s){return '<div class="kpi"><div class="k"><i style="background:'+colorOf(c)+'"></i>'+k+'</div><div class="v num">'+v+'</div><div class="s">'+s+'</div></div>'}
-function parts(r){return [["ess","المعيشة والمصاريف",r.living+r.fixed],["loan","الأقساط",r.loanTot],["debt","سداد الديون",r.debtTot],["goal","الأهداف والدفعات الأخيرة",r.goalTot],["ef","صندوق الطوارئ",r.ef],["box","صندوق المشتريات",r.box],["inv","الاستثمار",r.inv],["free","متبقي",r.free]]}
+function parts(r){return [["ess","المعيشة والمصاريف",r.living+r.fixed],["loan","الأقساط",r.loanTot],["debt","سداد الديون",r.debtTot],["bl","ادخار الدفعة الأخيرة",r.balloonTot],["goal","الأهداف",r.goalOnly],["ef","صندوق الطوارئ",r.ef],["box","صندوق المشتريات",r.box],["inv","الاستثمار",r.inv],["free","متبقي",r.free+r.carryOut]]}
 function splitHTML(r){
   var ps=parts(r).filter(function(p){return p[2]>0.5}),tot=sum(ps,function(p){return p[2]})||1;
   var h='<div class="stackbar">'+ps.map(function(p){return '<i style="width:'+(p[2]/tot*100)+'%;background:'+colorOf(p[0])+'" title="'+p[1]+'"></i>'}).join("")+'</div><div class="legend">';
@@ -755,30 +801,31 @@ function timelineHTML(){
   return '<div class="tl">'+items.map(function(t){return '<div class="tl-i '+t[0]+'"><span class="dot"></span><div><b>'+t[1]+'</b><span>'+t[2]+'</span></div><span class="when">'+t[3]+'</span></div>'}).join("")+'</div>';
 }
 
-var COLS=[
+function cols(){
+  var hasBl=P.loans.some(function(l){return l.balloon>0}),hasG=P.goals.length>0,c=[
   ["inc","الدخل",null,function(r){return r.inc}],
   ["ess","المعيشة<br>والمصاريف","ess",function(r){return r.living+r.fixed}],
   ["loan","الأقساط","loan",function(r){return r.loanTot}],
-  ["debt","سداد<br>الديون","debt",function(r){return r.debtTot}],
-  ["goal","الأهداف<br>والدفعات","goal",function(r){return r.goalTot}],
-  ["ef","الطوارئ","ef",function(r){return r.ef}],
-  ["box","المشتريات","box",function(r){return r.box}],
-  ["inv","الاستثمار","inv",function(r){return r.inv}],
-  ["free","متبقي","free",function(r){return r.free-r.deficit}],
-  ["rem","الدين<br>المتبقي",null,function(r){return r.totalDebt},"debtc"],
-  ["sav","إجمالي<br>المدخرات",null,function(r){return r.savings},"savc"]
-];
+  ["debt","سداد<br>الديون","debt",function(r){return r.debtTot}]];
+  if(hasBl)c.push(["bl","ادخار الدفعة<br>الأخيرة","bl",function(r){return r.balloonTot}]);
+  if(hasG)c.push(["goal","الأهداف","goal",function(r){return r.goalOnly}]);
+  c.push(["ef","الطوارئ","ef",function(r){return r.ef}],["box","المشتريات","box",function(r){return r.box}],["inv","الاستثمار","inv",function(r){return r.inv}],
+  ["free","متبقي","free",function(r){return r.free+r.carryOut-r.deficit}],
+  ["rem","الدين<br>المتبقي",null,function(r){return r.totalDebt},"debtc",1]);
+  if(hasBl)c.push(["blb","رصيد الدفعة<br>الأخيرة",null,function(r){return r.blB},"savc",1]);
+  c.push(["sav","إجمالي<br>المدخرات",null,function(r){return r.savings},"savc",1]);
+  return c}
 function tblHTML(){
-  var rows=P.rows,y0=+S.start.slice(0,4);
+  var rows=P.rows,y0=+S.start.slice(0,4),COLS=cols();
   var h='<div class="yrs no-print"><span style="align-self:center;font-size:13px;color:var(--muted);flex:none">السنة</span>'+'<button data-year="0" class="'+(S.year===0?"on":"")+'">الكل</button>'+[1,2,3,4,5].map(function(y){return '<button data-year="'+y+'" class="'+(S.year===y?"on":"")+'" aria-label="السنة '+ORD[y-1]+'"><span class="num">'+y+'</span></button>'}).join("")+'</div>';
   var sel=rows.filter(function(r){return S.year===0||Math.floor(r.i/12)===S.year-1});
-  h+='<p class="hint" style="margin:0 2px 8px">المبالغ بالريال. اضغط أي شهر لتفاصيله. اسحب الجدول يمين ويسار.</p>';
+  h+='<p class="hint" style="margin:0 2px 8px">المبالغ بالريال. اضغط أي شهر لتفاصيله، و✓ تعني شهرًا أكدت مدفوعاته.</p>';
   h+='<div class="tw"><table class="t"><thead><tr><th>الشهر</th>'+COLS.map(function(c){return '<th>'+(c[2]?'<span class="cdot" style="background:'+colorOf(c[2])+'"></span>':'')+c[1]+'</th>'}).join("")+'</tr></thead><tbody>';
   sel.forEach(function(r){
-    h+='<tr tabindex="0" data-row="'+r.i+'" class="'+(r.deficit>0.5?"dfc":"")+'"><td class="mo"><b>'+AR_M[+r.m.slice(5)-1]+(r.ev.length?'<span class="ev" title="'+esc(r.ev.join("، "))+'"></span>':'')+'</b><span class="num">'+r.m.slice(0,4)+' · '+(r.i+1)+'</span></td>'
+    h+='<tr tabindex="0" data-row="'+r.i+'" class="'+(r.deficit>0.5?"dfc":"")+'"><td class="mo"><b>'+AR_M[+r.m.slice(5)-1]+(r.ev.length?'<span class="ev" title="'+esc(r.ev.join("، "))+'"></span>':'')+'</b><span class="num">'+r.m.slice(0,4)+' · '+(r.i+1)+'</span>'+(r.confirmed?'<span class="cf'+(r.confirmed>=r.keys?' all':'')+'" title="'+(r.confirmed>=r.keys?"مؤكد بالكامل":"مؤكد جزئيًا")+'">✓</span>':'')+'</td>'
      +COLS.map(function(c){var v=c[3](r),z=Math.abs(v)<0.5;return '<td class="'+(z?"z":(v<0?"neg":(c[4]||"")))+'"><span class="num">'+(z?"—":f(v))+'</span></td>'}).join("")+'</tr>';
   });
-  h+='</tbody><tfoot><tr><td>المجموع</td>'+COLS.map(function(c){if(c[0]==="rem"||c[0]==="sav"){var v=c[3](sel[sel.length-1]);return '<td title="الرصيد في آخر شهر"><span class="num">'+f(v)+'</span><div style="font-size:10.5px;font-weight:500;color:var(--muted)">آخر شهر</div></td>'}return '<td><span class="num">'+f(sum(sel,c[3]))+'</span></td>'}).join("")+'</tr></tfoot></table></div>';
+  h+='</tbody><tfoot><tr><td>المجموع</td>'+COLS.map(function(c){if(c[5]){var v=c[3](sel[sel.length-1]);return '<td title="الرصيد في آخر شهر"><span class="num">'+f(v)+'</span><div style="font-size:10.5px;font-weight:500;color:var(--muted)">آخر شهر</div></td>'}return '<td><span class="num">'+f(sum(sel,c[3]))+'</span></td>'}).join("")+'</tr></tfoot></table></div>';
   h+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px" class="no-print"><button class="btn sm" data-act="csv">'+ic("dl")+'تنزيل Excel (CSV)</button><button class="btn sm" data-act="print">'+ic("print")+'طباعة</button></div>';
   return h;
 }
@@ -787,40 +834,78 @@ function monthSheet(i){
   if(r.ev.length)h+='<div class="note ok">'+ic("check")+'<div>'+r.ev.map(esc).join("<br>")+'</div></div>';
   if(r.deficit>0.5)h+='<div class="note bad">'+ic("alert")+'<div>عجز '+F(r.deficit)+' ريال هذا الشهر.</div></div>';
   if(r.short.length)h+='<div class="note warn">'+ic("alert")+'<div>الفائض لا يكفي هذا الشهر لـ: '+r.short.map(esc).join("، ")+'</div></div>';
-  var kv=[["الدخل",r.inc,"tot"],["المعيشة",r.living],["المصاريف الثابتة",r.fixed]];
+  if(r.confirmed)h+='<div class="note '+(r.confirmed>=r.keys?"ok":"warn")+'">'+ic("check")+'<div>'+(r.confirmed>=r.keys?"كل بنود هذا الشهر مؤكدة.":"أكدت "+r.confirmed+" من "+r.keys+" بنود.")+'</div></div>';
+  var kv=[["الدخل",r.inc,"tot"]];if(Math.abs(r.carryIn)>0.5)kv.push([r.carryIn>0?"مُرحّل من الشهر السابق":"نقص مُرحّل من الشهر السابق",r.carryIn]);kv.push(["المعيشة",r.living],["المصاريف الثابتة",r.fixed]);
   P.loans.forEach(function(l){if(r.loanPay[l.id])kv.push(["قسط "+l.name.replace(/^قسط /,""),r.loanPay[l.id]])});
   if(r.defPay)kv.push(["سداد العجز المتراكم",r.defPay]);
   P.allDebts.forEach(function(d){if(r.debtPay[d.id])kv.push(["سداد "+d.name,r.debtPay[d.id]])});
-  P.loans.forEach(function(l){if(r.balloonPay[l.id])kv.push(["تجميع الدفعة الأخيرة: "+l.name,r.balloonPay[l.id]])});
+  P.loans.forEach(function(l){if(r.balloonPay[l.id])kv.push(["ادخار الدفعة الأخيرة: "+l.name,r.balloonPay[l.id]])});
   P.goals.forEach(function(g){if(r.goalPay[g.id])kv.push(["هدف: "+g.name,r.goalPay[g.id]])});
-  if(r.ef)kv.push(["صندوق الطوارئ",r.ef]);if(r.box)kv.push(["صندوق المشتريات",r.box]);if(r.inv)kv.push(["الاستثمار",r.inv]);if(r.free)kv.push(["متبقي",r.free]);
+  if(r.ef)kv.push(["صندوق الطوارئ",r.ef]);if(r.box)kv.push(["صندوق المشتريات",r.box]);if(r.inv)kv.push(["الاستثمار",r.inv]);if(r.free)kv.push(["متبقي",r.free]);if(Math.abs(r.carryOut)>0.5)kv.push([r.carryOut>0?"ينتقل للشهر القادم":"نقص ينتقل للشهر القادم",r.carryOut]);
   h+='<div class="h2" style="margin-top:4px">التوزيع</div><div class="kv">'+kv.map(function(x){return '<div class="'+(x[2]||"")+'"><span>'+esc(x[0])+'</span><b class="num">'+f(x[1])+'</b></div>'}).join("")+'</div>';
   var bl=[["الدين المتبقي",r.totalDebt]];if(r.defRem>0.5)bl.push(["منه عجز متراكم",r.defRem]);
   bl.push(["صندوق الطوارئ",r.efB],["صندوق المشتريات",r.boxB],["الاستثمار (تقديري)",r.invB]);
-  if(r.goalB)bl.push(["مدخر للأهداف",r.goalB]);if(r.blB)bl.push(["مدخر للدفعات الأخيرة",r.blB]);if(r.freeB)bl.push(["متبقي متراكم",r.freeB]);
+  if(r.goalB)bl.push(["مدخر للأهداف",r.goalB]);if(r.blB)bl.push(["مدخر للدفعة الأخيرة",r.blB]);if(r.freeB)bl.push(["متبقي متراكم",r.freeB]);
   bl.push(["إجمالي المدخرات",r.savings,"tot"]);
   h+='<div class="h2">الأرصدة نهاية الشهر</div><div class="kv">'+bl.map(function(x){return '<div class="'+(x[2]||"")+'"><span>'+esc(x[0])+'</span><b class="num">'+f(x[1])+'</b></div>'}).join("")+'</div>';
-  h+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px"><button class="btn" data-mo="'+(i-1)+'"'+(i===0?" disabled":"")+'>'+ic("arrowR")+'السابق</button><button class="btn" data-mo="'+(i+1)+'"'+(i===N-1?" disabled":"")+'>التالي'+ic("arrowL")+'</button></div><button class="btn" data-close>إغلاق</button></div>';
+  h+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px"><button class="btn" data-mo="'+(i-1)+'"'+(i===0?" disabled":"")+'>'+ic("arrowR")+'السابق</button><button class="btn" data-mo="'+(i+1)+'"'+(i===N-1?" disabled":"")+'>التالي'+ic("arrowL")+'</button></div><button class="btn pri" data-paygo="'+i+'">'+ic("check")+'تأكيد مدفوعات هذا الشهر</button><button class="btn" data-close>إغلاق</button></div>';
   openSheet(h);
 }
-var openDebt=null;
+var openDebt=null,payIdx=null,lastCommit={k:null,t:0};
+function payName(k){var t=k.split(":"),id=t[1],fnd=function(L){var o=L.find(function(x){return x.id===id});return o?o.name:""};
+  if(k==="inc")return ["inc","الدخل"];if(k==="liv")return ["exp","مصروف المعيشة"];
+  if(t[0]==="fx")return ["exp",fnd(P.fixedL)];if(t[0]==="ln")return ["loan",fnd(P.loans)];
+  if(t[0]==="d")return ["debt",fnd(P.allDebts)];if(k==="def")return ["debt","العجز المتراكم"];
+  if(t[0]==="bl")return ["save","الدفعة الأخيرة: "+fnd(P.loans)];if(t[0]==="g")return ["save","هدف: "+fnd(P.goals)];
+  if(k==="ef")return ["save","صندوق الطوارئ"];if(k==="box")return ["save","صندوق المشتريات"];return ["save","الاستثمار"]}
+var PGRP=[["inc","الدخل","wallet"],["exp","المصاريف","home"],["loan","الأقساط","card"],["debt","سداد الديون","clock"],["save","الادخار","shield"]];
+function payHTML(){
+  if(payIdx==null)payIdx=Math.max(0,Math.min(N-1,diffM(S.start,thisMonth())));
+  var i=payIdx,r=P.rows[i],pc=(S.paid||{})[r.m]||{},keys=Object.keys(r.plan),h="";
+  h+='<div class="msw"><button class="iconbtn" data-pm="'+(i-1)+'"'+(i===0?" disabled":"")+' aria-label="الشهر السابق">'+ic("arrowR")+'</button><div><b>'+mlabel(r.m)+'</b><span>الشهر '+(i+1)+' من 60'+(r.m===thisMonth()?' · الشهر الحالي':'')+'</span></div><button class="iconbtn" data-pm="'+(i+1)+'"'+(i===N-1?" disabled":"")+' aria-label="الشهر التالي">'+ic("arrowL")+'</button></div>';
+  var out=r.living+r.fixed+r.loanTot+r.debtTot+r.goalTot+r.ef+r.box+r.inv;
+  h+='<div class="card stack"><div class="prow"><span>مؤكد <b class="num">'+r.confirmed+'</b> من <span class="num">'+r.keys+'</span></span><span class="pb"><i style="width:'+(r.keys?r.confirmed/r.keys*100:0).toFixed(1)+'%"></i></span></div>'
+    +'<div class="kv"><div><span>الدخل</span><b class="num">'+f(r.inc)+'</b></div>'+(Math.abs(r.carryIn)>0.5?'<div><span>'+(r.carryIn>0?"مُرحّل من الشهر السابق":"نقص من الشهر السابق")+'</span><b class="num">'+(r.carryIn<0?"−":"")+f(Math.abs(r.carryIn))+'</b></div>':'')+'<div><span>المصروف والمدفوع والمدّخر</span><b class="num">'+f(out)+'</b></div>'
+    +(r.free>0.5?'<div><span>متبقي في يدك</span><b class="num">'+f(r.free)+'</b></div>':'')
+    +(Math.abs(r.carryOut)>0.5?'<div class="tot"><span>'+(r.carryOut>0?"ينتقل للشهر القادم":"يُخصم من الشهر القادم")+'</span><b class="num">'+f(Math.abs(r.carryOut))+'</b></div>':'')
+    +(r.deficit>0.5?'<div class="tot" style="color:var(--bad)"><span style="color:var(--bad)">عجز يُضاف للديون</span><b class="num">'+f(r.deficit)+'</b></div>':'')+'</div>'
+    +'<div class="row2"><button class="btn sm" data-payall="1"'+(r.confirmed>=r.keys?" disabled":"")+'>'+ic("check")+'تأكيد الكل</button><button class="btn sm" data-payclear="1"'+(r.confirmed?"":" disabled")+'>إلغاء التأكيد</button></div></div>';
+  h+='<p class="hint" style="margin:10px 2px 0">اضغط ✓ إذا دفعت المبلغ المخطط، أو اكتب المبلغ الفعلي ثم ✓. أي مبلغ لم يُدفع يبقى معك للشهر القادم، والخطة تُعاد تلقائيًا.</p>';
+  PGRP.forEach(function(g){
+    var ks=keys.filter(function(k){return payName(k)[0]===g[0]});if(!ks.length)return;
+    h+='<div class="h2">'+g[1]+'</div><div class="items">';
+    ks.forEach(function(k){var nmv=payName(k)[1],pl=r.plan[k],on=pc[k]!=null,typed=on?num(pc[k]):null,a=on?(r.act[k]!=null?r.act[k]:typed):null,note="",diff=on?pl-a:0;
+      if(on&&typed>a+0.5)note+='<div class="pn">المُحتسب '+F(a)+' فقط، وهو المتبقي من هذا البند</div>';
+      if(r.arr[k])note+='<div class="pn warn">يشمل '+F(r.arr[k])+' متأخر من الشهر السابق</div>';
+      if(on&&Math.abs(diff)>0.5){
+        if(g[0]==="inc")note+='<div class="pn '+(diff>0?"bad":"ok")+'">'+(diff>0?"أقل من المخطط بـ ":"أكثر من المخطط بـ ")+F(Math.abs(diff))+'</div>';
+        else if(diff>0)note+='<div class="pn warn">الباقي '+F(diff)+(k==="liv"?' يبقى معك وينتقل للشهر القادم':(g[0]==="exp"||g[0]==="loan"?' يبقى معك، ويُضاف لهذا البند في الشهر القادم':' يبقى معك للشهر القادم وتُعاد الخطة'))+'</div>';
+        else note+='<div class="pn">زيادة '+F(-diff)+' عن المخطط</div>'}
+      h+='<div class="pr'+(on?" on":"")+'"><div class="pr-t"><b>'+esc(nmv)+'</b><span>المخطط <span class="num">'+f(pl)+'</span></span></div><div class="inp money"><input inputmode="decimal" autocomplete="off" data-pay="'+k+'" value="'+(on?esc(fmtIn(typed)):"")+'" placeholder="'+f(pl)+'" aria-label="المبلغ الفعلي: '+esc(nmv)+'"></div><button type="button" class="ck" data-ck="'+k+'" aria-pressed="'+on+'" aria-label="'+(on?"إلغاء تأكيد ":"تأكيد ")+esc(nmv)+'">'+ic("check")+'</button>'+(note?'<div class="pr-n">'+note+'</div>':'')+'</div>'});
+    h+='</div>'});
+  if(!keys.length)h+='<div class="empty" style="margin-top:12px">لا توجد بنود في هذا الشهر.</div>';
+  return h;
+}
+function setPaid(m,k,v){S.paid=S.paid||{};var pc=S.paid[m]||(S.paid[m]={});if(v==null)delete pc[k];else pc[k]=String(v);if(!Object.keys(pc).length)delete S.paid[m];save()}
 function debtHTML(){
   var rows=P.rows,h="";
   var list=[];
   P.od.forEach(function(d){list.push({k:"od",o:d,tag:d.penalty?["red","متأخر بغرامة"]:["","متأخر"],orig:d.orig,rem:function(r){return null},end:d.paidAt})});
   P.ug.forEach(function(d){list.push({k:"ug",o:d,tag:["","طارئ"+(d.due?"، قبل "+mlabel(d.due):"")],orig:d.orig,end:d.paidAt})});
-  P.loans.forEach(function(l){list.push({k:"loan",o:l,tag:["","قسط "+f(l.monthly)+(l.balloon?" + دفعة أخيرة":"")],orig:l.orig,end:(l.left>0||!l.bpaid)?null:l.endAt})});
+  P.loans.forEach(function(l){list.push({k:"loan",o:l,tag:["","قسط "+f(l.monthly)+(l.balloon?" + دفعة أخيرة":"")],orig:l.orig,end:l.endAt})});
   if(!list.length)return '<div class="empty">لا توجد ديون أو أقساط في خطتك.</div>';
   h+='<p class="hint" style="margin:0 2px 10px">اضغط أي دين لجدول سداده الشهري.</p><div class="stack">';
   list.forEach(function(it){
-    var o=it.o,id=o.id,sched=[],bal=it.orig;
-    for(var i=0;i<N;i++){var r=rows[i],p=0;
-      if(it.k==="loan"){p=(r.loanPay[id]||0);var bpay=(o.bAt===i?o.balloon:0);p+=bpay}else{p=r.debtPay[id]||0}
-      if(p>0){bal=Math.max(0,bal-p);sched.push([r.m,p,bal,i])}}
+    var o=it.o,id=o.id,sched=[],bal=it.orig,isL=it.k==="loan",hasB=isL&&o.balloon>0,bs=0;
+    for(var i=0;i<N;i++){var r=rows[i],p=isL?(r.loanPay[id]||0):(r.debtPay[id]||0),bp=hasB?(r.balloonPay[id]||0):0,bpay=hasB&&o.bAt===i?o.balloon:0;
+      bs+=bp;if(bpay)bs=0;if(p>0||bp>0||bpay>0){bal=Math.max(0,bal-p-bpay);sched.push([r.m,p,bp,bal,bpay,bs])}}
     var paid=it.orig-bal,pct=it.orig?paid/it.orig*100:0;
     h+='<div class="dc"><button class="dc-h" data-debt="'+id+'" aria-expanded="'+(openDebt===id)+'"><span><b>'+esc(o.name)+'</b><span class="tag '+it.tag[0]+'">'+it.tag[1]+'</span></span><b class="num">'+f(it.orig)+'</b>'
-      +'<span class="pb"><i style="width:'+pct.toFixed(1)+'%"></i></span><span class="meta"><span>'+(it.end!=null?"يُسدد "+mlabel(rows[it.end].m):"متبقي بعد 5 سنوات "+f(bal))+'</span><span>'+(sched.length?plural(sched.length,"دفعة واحدة","دفعتان","دفعات","دفعة"):"لا دفعات")+'</span></span></button>';
-    if(openDebt===id){h+='<div class="dc-b"><table><thead><tr><th>الشهر</th><th>المدفوع</th><th>المتبقي</th></tr></thead><tbody>'+(sched.length?sched.map(function(s){return '<tr><td>'+mlabel(s[0])+'</td><td><span class="num">'+f(s[1])+'</span></td><td><span class="num">'+f(s[2])+'</span></td></tr>'}).join(""):'<tr><td colspan="3">لا توجد دفعات خلال الخطة.</td></tr>')+'</tbody></table></div>'}
+      +'<span class="pb"><i style="width:'+pct.toFixed(1)+'%"></i></span><span class="meta"><span>'+(it.end!=null?"يُسدد "+mlabel(rows[it.end].m):"متبقي بعد 5 سنوات "+f(bal))+'</span><span>'+(sched.length?plural(sched.length,"دفعة واحدة","دفعتان","دفعات","دفعة"):"لا دفعات")+'</span></span>';
+    if(hasB){var bsNow=o.bpaid?o.balloon:o.bsaved,bpct=Math.min(100,bsNow/o.balloon*100);
+      h+='<span class="meta" style="margin-top:6px"><span>الدفعة الأخيرة '+f(o.balloon)+' · موعدها '+mlabel(addM(S.start,o.dueIdx))+'</span><span>'+(o.bpaid?"سُددت "+mlabel(rows[o.bAt].m):"مدخر "+f(o.bsaved))+'</span></span><span class="pb"><i style="width:'+bpct.toFixed(1)+'%;background:var(--c-bl)"></i></span>'}
+    h+='</button>';
+    if(openDebt===id){h+='<div class="dc-b"><table><thead><tr><th>الشهر</th><th>'+(isL?"القسط":"المدفوع")+'</th>'+(hasB?'<th>ادخار الدفعة<br>الأخيرة</th>':'')+'<th>المتبقي</th></tr></thead><tbody>'+(sched.length?sched.map(function(x){return '<tr><td>'+mlabel(x[0])+(x[4]?'<div class="sub-t">سداد الدفعة الأخيرة '+f(x[4])+'</div>':'')+'</td><td><span class="num">'+(x[1]?f(x[1]):"—")+'</span></td>'+(hasB?'<td><span class="num">'+(x[2]?f(x[2]):"—")+'</span>'+(x[5]?'<div class="sub-t num">الرصيد '+f(x[5])+'</div>':'')+'</td>':'')+'<td><span class="num">'+f(x[3])+'</span></td></tr>'}).join(""):'<tr><td colspan="4">لا توجد دفعات خلال الخطة.</td></tr>')+'</tbody></table></div>'}
     h+='</div>';
   });
   return h+'</div>';
@@ -900,7 +985,12 @@ app.addEventListener("focusout",function(e){
   }
 });
 app.addEventListener("change",function(e){
-  var t=e.target,mp=t.getAttribute("data-mp");
+  var t=e.target,mp=t.getAttribute("data-mp"),pk=t.getAttribute("data-pay");
+  if(pk){var rr=P.rows[payIdx],v=t.value.trim();
+    if(v!==""&&(rawNeg(v)||!/^[\s\d٠-٩۰-۹.,٫٬]+$/.test(v))){toast("أدخل رقمًا موجبًا");t.value="";return}
+    if(v!==""&&num(v)>=MAXV)toast("الحد الأعلى "+f(MAXV));
+    setPaid(rr.m,pk,v===""?null:R(num(v)));lastCommit={k:pk,t:Date.now()};
+    setTimeout(function(){var ae=document.activeElement,nk=ae&&ae.getAttribute&&ae.getAttribute("data-pay"),ck=ae&&ae.getAttribute&&ae.getAttribute("data-ck");render(true);var el=nk?document.querySelector('[data-pay="'+nk+'"]'):ck?document.querySelector('[data-ck="'+ck+'"]'):null;if(el)el.focus({preventScroll:true})},0);return}
   if(mp){
     var wrap=t.closest(".mpick"),ms=wrap.querySelector('[data-part="m"]').value,ys=wrap.querySelector('[data-part="y"]').value,cur=getP(mp);
     var v="";
@@ -930,11 +1020,20 @@ document.addEventListener("click",function(e){
   if(d.go!=null&&d.go!==""){closeSheet();S.view="wiz";S.step=+d.go;save();render();window.scrollTo(0,0);return}
   if(d.act==="begin"){S.step=Math.max(0,S.step);if(S.step<0)S.step=0;S.view="wiz";save();render();return}
   if(d.act==="toplan"){S.view="plan";S.step=STEPS.length-1;save();render();window.scrollTo(0,0);return}
-  if(d.act==="build"){if(!(num(S.salary)>0)){toast("أدخل الراتب أولًا");return}S.view="plan";S.tab="sum";splitIdx=0;save();render();window.scrollTo(0,0);return}
+  if(d.act==="build"){if(!(num(S.salary)>0)){toast("أدخل الراتب أولًا");return}payIdx=null;S.view="plan";S.tab="sum";splitIdx=0;save();render();window.scrollTo(0,0);return}
   if(d.tab){S.tab=d.tab;save();render();window.scrollTo(0,0);return}
   if(d.year!=null&&d.year!==""){S.year=+d.year;save();render(true);return}
   if(d.row!=null&&d.row!==""){monthSheet(+d.row);return}
   if(d.mo!=null&&d.mo!==""){var mi=+d.mo;if(mi>=0&&mi<N)monthSheet(mi);return}
+  if(d.pm!=null&&d.pm!==""){var pi=+d.pm;if(pi>=0&&pi<N){payIdx=pi;render(true)}return}
+  if(d.ck){var rr=P.rows[payIdx],pc0=(S.paid[rr.m]||{});
+    if(lastCommit.k===d.ck&&Date.now()-lastCommit.t<800){lastCommit.k=null;return}
+    var inp=document.querySelector('[data-pay="'+d.ck+'"]'),tv=inp?inp.value.trim():"";
+    if(tv!==""&&pc0[d.ck]==null&&!rawNeg(tv)&&/^[\s\d٠-٩۰-۹.,٫٬]+$/.test(tv)){setPaid(rr.m,d.ck,R(num(tv)));render(true);return}
+    if(pc0[d.ck]!=null)setPaid(rr.m,d.ck,null);else setPaid(rr.m,d.ck,R(rr.plan[d.ck]));render(true);return}
+  if(d.payall){var ra=P.rows[payIdx],pa=S.paid[ra.m]||{};Object.keys(ra.plan).forEach(function(k){if(pa[k]==null&&ra.plan[k]>0.5)setPaid(ra.m,k,R(ra.plan[k]))});render(true);toast("تم تأكيد بنود "+mlabel(ra.m));return}
+  if(d.payclear){var rc=P.rows[payIdx];if(b.dataset.armed){delete S.paid[rc.m];save();render(true);toast("تم إلغاء التأكيد")}else{b.dataset.armed="1";b.textContent="اضغط مرة ثانية للتأكيد"}return}
+  if(d.paygo!=null&&d.paygo!==""){closeSheet();payIdx=+d.paygo;S.tab="pay";save();render();window.scrollTo(0,0);return}
   if(d.debt){openDebt=openDebt===d.debt?null:d.debt;render(true);return}
   if(d.close!=null){closeSheet();return}
   if(d.act==="csv"){exportCSV();return}
@@ -942,7 +1041,7 @@ document.addEventListener("click",function(e){
   if(d.act==="export"){closeSheet();exportJSON();return}
   if(d.act==="import"){closeSheet();$("#fileIn").value="";$("#fileIn").click();return}
   if(d.act==="theme"){var r=document.documentElement,cur=r.getAttribute("data-theme")||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"),nx=cur==="dark"?"light":"dark";r.setAttribute("data-theme",nx);try{localStorage.setItem(LS+"-theme",nx)}catch(e){}closeSheet();return}
-  if(d.act==="reset"){if(d.armed){S=blank();stateGen++;P=null;openDebt=null;saveNow();closeSheet();render();window.scrollTo(0,0);toast("تم مسح البيانات");}else{b.dataset.armed="1";b.querySelector("span").textContent="اضغط مرة ثانية للتأكيد";}return}
+  if(d.act==="reset"){if(d.armed){S=blank();stateGen++;payIdx=null;P=null;openDebt=null;saveNow();closeSheet();render();window.scrollTo(0,0);toast("تم مسح البيانات");}else{b.dataset.armed="1";b.querySelector("span").textContent="اضغط مرة ثانية للتأكيد";}return}
   if(d.act==="edit"){closeSheet();S.view="wiz";S.step=0;save();render();window.scrollTo(0,0);return}
 });
 function newItem(list){var o={id:uid(),name:""};
@@ -980,9 +1079,9 @@ function download(name,text,type){var b=new Blob([text],{type:type}),a=document.
 function stamp(){var d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
 function exportJSON(){var o=JSON.parse(JSON.stringify(S));o.app="khutati";download("khutati-"+stamp()+".json",JSON.stringify(o,null,1),"application/json");toast("تم حفظ الملف")}
 function exportCSV(){
-  closeSheet();var PP=simulate(S),head=["الشهر","الدخل","المعيشة","المصاريف الثابتة","الأقساط","سداد الديون","الأهداف والدفعات الأخيرة","صندوق الطوارئ","صندوق المشتريات","الاستثمار","متبقي","عجز","الدين المتبقي","رصيد الطوارئ","رصيد المشتريات","رصيد الاستثمار","إجمالي المدخرات"];
+  closeSheet();var PP=simulate(S),head=["الشهر","مؤكد","الدخل","مرحل من الشهر السابق","المعيشة","المصاريف الثابتة","الأقساط","سداد الديون","ادخار الدفعة الأخيرة","الأهداف","صندوق الطوارئ","صندوق المشتريات","الاستثمار","متبقي","ينتقل للشهر القادم","عجز","الدين المتبقي","رصيد الدفعة الأخيرة","رصيد الطوارئ","رصيد المشتريات","رصيد الاستثمار","إجمالي المدخرات"];
   var lines=[head.join(",")];
-  PP.rows.forEach(function(r){lines.push(['"'+mlabel(r.m)+'"',r.inc,r.living,r.fixed,r.loanTot,r.debtTot,r.goalTot,r.ef,r.box,r.inv,r.free,r.deficit,r.totalDebt,r.efB,r.boxB,r.invB,r.savings].map(function(v,k){return k?R(v):v}).join(","))});
+  PP.rows.forEach(function(r){lines.push(['"'+mlabel(r.m)+'"',r.confirmed?(r.confirmed>=r.keys?'"نعم"':'"جزئي"'):'""',r.inc,r.carryIn,r.living,r.fixed,r.loanTot,r.debtTot,r.balloonTot,r.goalOnly,r.ef,r.box,r.inv,r.free,r.carryOut,r.deficit,r.totalDebt,r.blB,r.efB,r.boxB,r.invB,r.savings].map(function(v,k){return k>1?R(v):v}).join(","))});
   download("khutati-table-"+stamp()+".csv","﻿"+lines.join("\r\n"),"text/csv;charset=utf-8");toast("تم تنزيل الجدول");
 }
 $("#fileIn").addEventListener("change",function(){
@@ -990,7 +1089,7 @@ $("#fileIn").addEventListener("change",function(){
   if(fl.size>500000){toast("الملف كبير وغير صالح");return}
   var rd=new FileReader();rd.onload=function(){
     try{var o=JSON.parse(rd.result);if(!o||typeof o!=="object"||!("salary" in o)||!Array.isArray(o.fixed))throw 0;
-      S=sanitize(o);stateGen++;S.view=num(S.salary)>0?"plan":"wiz";S.tab="sum";if(S.view==="wiz")S.step=0;saveNow();render();window.scrollTo(0,0);toast("تم استيراد البيانات")}
+      S=sanitize(o);stateGen++;payIdx=null;S.view=num(S.salary)>0?"plan":"wiz";S.tab="sum";if(S.view==="wiz")S.step=0;saveNow();render();window.scrollTo(0,0);toast("تم استيراد البيانات")}
     catch(e){toast("الملف غير صالح، اختر ملفًا محفوظًا من هذه الصفحة")}
   };rd.onerror=function(){toast("تعذرت قراءة الملف")};rd.readAsText(fl);
 });
